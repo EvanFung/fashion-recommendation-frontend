@@ -1,5 +1,5 @@
 import 'package:fashion/pages/ChatPage.dart';
-import 'package:fashion/pages/MomentPage.dart';
+import 'package:fashion/pages/HomePage.dart';
 import 'package:fashion/pages/ProductPage.dart';
 import 'package:fashion/pages/ProfilePage.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ class MainPageWidget extends StatefulWidget {
 
 class _MainPageWidgetState extends State<MainPageWidget> {
   final List<Widget> pages = [
-    MomentPage(),
+    HomePage(),
     ProductPage(),
     ChatPage(),
     ProfilePage(),

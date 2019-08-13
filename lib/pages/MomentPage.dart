@@ -4,7 +4,7 @@ class MomentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(child: Text('Moment')),
+      child: Center(child: Text('Moment page')),
     );
   }
 }
