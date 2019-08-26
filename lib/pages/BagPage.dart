@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatelessWidget {
+class BagPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(child: Text('Chat page')),
+      child: Center(child: Text('Bag page')),
     );
   }
 }

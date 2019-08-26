@@ -31,7 +31,16 @@ class _HomePageState extends State<HomePage>
           children: <Widget>[
             Container(
               child: TabBar(
-                tabs: <Widget>[Text('ABC'), Text('EFG')],
+                tabs: <Widget>[
+                  Tab(
+                    icon: Icon(Icons.people),
+                    child: Text('Moment'),
+                  ),
+                  Tab(
+                    icon: Icon(Icons.thumb_up),
+                    child: Text('Recommended'),
+                  ),
+                ],
               ),
             ),
             Expanded(

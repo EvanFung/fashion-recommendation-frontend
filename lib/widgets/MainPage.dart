@@ -1,6 +1,7 @@
 import 'package:fashion/pages/ChatPage.dart';
 import 'package:fashion/pages/HomePage.dart';
 import 'package:fashion/pages/ProductPage.dart';
+import 'package:fashion/pages/LooksPage.dart';
 import 'package:fashion/pages/ProfilePage.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +17,10 @@ class MainPageWidget extends StatefulWidget {
 class _MainPageWidgetState extends State<MainPageWidget> {
   final List<Widget> pages = [
     HomePage(),
-    ProductPage(),
+    LooksPage(),
     ChatPage(),
-    ProfilePage(),
-    Page5()
+    ProductPage(),
+    ProfilePage()
   ];
 
   int _selectIndex = 0;
@@ -82,43 +83,43 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                 Icons.home,
                 color: Color.fromARGB(255, 125, 125, 125),
               ),
-              title: Text('首页'),
+              title: Text('HOME'),
               activeIcon: Icon(
                 Icons.home,
               )),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.movie,
+                Icons.remove_red_eye,
                 color: Color.fromARGB(255, 125, 125, 125),
               ),
-              title: Text('书影音'),
+              title: Text('LOOKS'),
               activeIcon: Icon(
-                Icons.movie,
+                Icons.remove_red_eye,
               )),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.group,
                 color: Color.fromARGB(255, 125, 125, 125),
               ),
-              title: Text('小组'),
+              title: Text('CHATS'),
               activeIcon: Icon(
                 Icons.group,
               )),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.receipt,
+                Icons.shop,
                 color: Color.fromARGB(255, 125, 125, 125),
               ),
-              title: Text('市集'),
+              title: Text('BAG'),
               activeIcon: Icon(
-                Icons.receipt,
+                Icons.shop,
               )),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
                 color: Color.fromARGB(255, 125, 125, 125),
               ),
-              title: Text('我的'),
+              title: Text('ME'),
               activeIcon: Icon(
                 Icons.person,
               )),
