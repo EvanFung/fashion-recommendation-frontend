@@ -1,4 +1,5 @@
 import 'package:fashion/counter.dart';
+import 'package:fashion/pages/ProductDetailPage.dart';
 import 'package:fashion/widgets/MainPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,10 +19,11 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Fashion Recommendation App',
-        theme: ThemeData(primaryColor: Colors.orange),
+        theme: ThemeData(primaryColor: Colors.orange, fontFamily: 'Lato'),
         initialRoute: '/',
         routes: {
           '/': (context) => MainPageWidget(),
+          ProductDetailPage.routeName: (ctx) => ProductDetailPage(),
         },
       ),
     );

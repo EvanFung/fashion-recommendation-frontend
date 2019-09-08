@@ -15,13 +15,11 @@ class _HomePageState extends State<HomePage>
   final tabBarList = TabDataList.tabDataList.map((item) => item.tab).toList();
   final tabBarViewList =
       TabDataList.tabDataList.map((item) => item.body).toList();
-  TabController _tabController;
   Color selectColor, unselectedColor;
   TextStyle selectStyle, unselectedStyle;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 2);
     selectColor = Color.fromARGB(255, 45, 45, 45);
     unselectedColor = Color.fromARGB(255, 117, 117, 117);
     selectStyle = TextStyle(fontSize: 18, color: selectColor);
@@ -53,7 +51,6 @@ class _HomePageState extends State<HomePage>
             Expanded(
               child: Container(
                 child: TabBarView(
-                  controller: _tabController,
                   children: <Widget>[MomentPage(), RecommendPage()],
                 ),
               ),

@@ -24,7 +24,7 @@ class _RecommendPageState extends State<RecommendPage>
       child: Column(
         children: <Widget>[
           Center(
-            child: Text('Recommend page ${count}'),
+            child: Text('Recommend page $count'),
           ),
           FlatButton(
             onPressed: add,

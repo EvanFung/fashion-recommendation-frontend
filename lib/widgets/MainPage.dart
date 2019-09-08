@@ -110,7 +110,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                 Icons.shop,
                 color: Color.fromARGB(255, 125, 125, 125),
               ),
-              title: Text('BAG'),
+              title: Text('PRODUCTS'),
               activeIcon: Icon(
                 Icons.shop,
               )),
