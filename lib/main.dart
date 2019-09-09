@@ -12,8 +12,8 @@ main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (ctx) => Products(),
+    return ChangeNotifierProvider.value(
+      value: Products(),
       child: MaterialApp(
         title: 'Fashion Recommendation App',
         theme: ThemeData(primaryColor: Colors.black, fontFamily: 'Lato'),
