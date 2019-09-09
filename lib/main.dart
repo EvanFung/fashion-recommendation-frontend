@@ -4,6 +4,7 @@ import 'package:fashion/providers/products.dart';
 import 'package:fashion/widgets/MainPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'providers/Cart.dart';
 
 main() {
   runApp(MyApp());
@@ -12,8 +13,15 @@ main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: Products(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: Products(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Cart(),
+        )
+      ],
       child: MaterialApp(
         title: 'Fashion Recommendation App',
         theme: ThemeData(primaryColor: Colors.black, fontFamily: 'Lato'),
