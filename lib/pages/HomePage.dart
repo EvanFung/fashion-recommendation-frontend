@@ -15,11 +15,9 @@ class _HomePageState extends State<HomePage>
   final tabBarList = TabDataList.tabDataList.map((item) => item.tab).toList();
   final tabBarViewList =
       TabDataList.tabDataList.map((item) => item.body).toList();
-  TabController _tabController;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -30,15 +28,26 @@ class _HomePageState extends State<HomePage>
         child: Column(
           children: <Widget>[
             Container(
+              height: 70,
               child: TabBar(
                 tabs: <Widget>[
                   Tab(
-                    icon: Icon(Icons.people),
-                    child: Text('Moment'),
+                    icon: Icon(
+                      Icons.people,
+                      color: Colors.grey,
+                    ),
+                    child:
+                        Text('Moment', style: TextStyle(color: Colors.black)),
                   ),
                   Tab(
-                    icon: Icon(Icons.thumb_up),
-                    child: Text('Recommended'),
+                    icon: Icon(
+                      Icons.thumb_up,
+                      color: Colors.grey,
+                    ),
+                    child: Text(
+                      'Recommended',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ],
               ),

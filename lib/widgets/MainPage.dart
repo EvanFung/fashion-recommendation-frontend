@@ -66,7 +66,6 @@ class _MainPageWidgetState extends State<MainPageWidget> {
 //    this.title,
 //    Widget activeIcon,
 //    this.backgroundColor,
-      backgroundColor: Color.fromARGB(255, 248, 248, 248),
       bottomNavigationBar: BottomNavigationBar(
         items: [
 //        BottomNavigationBarItem({
@@ -81,7 +80,6 @@ class _MainPageWidgetState extends State<MainPageWidget> {
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
-                color: Color.fromARGB(255, 125, 125, 125),
               ),
               title: Text('HOME'),
               activeIcon: Icon(
@@ -90,7 +88,6 @@ class _MainPageWidgetState extends State<MainPageWidget> {
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.remove_red_eye,
-                color: Color.fromARGB(255, 125, 125, 125),
               ),
               title: Text('LOOKS'),
               activeIcon: Icon(
@@ -99,7 +96,6 @@ class _MainPageWidgetState extends State<MainPageWidget> {
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.group,
-                color: Color.fromARGB(255, 125, 125, 125),
               ),
               title: Text('CHATS'),
               activeIcon: Icon(
@@ -108,16 +104,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.shop,
-                color: Color.fromARGB(255, 125, 125, 125),
               ),
-              title: Text('BAG'),
+              title: Text('PRODUCTS'),
               activeIcon: Icon(
                 Icons.shop,
               )),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
-                color: Color.fromARGB(255, 125, 125, 125),
               ),
               title: Text('ME'),
               activeIcon: Icon(
@@ -134,7 +128,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
         //当前选中的索引
         currentIndex: _selectIndex,
         //选中后，底部BottomNavigationBar内容的颜色(选中时，默认为主题色)（仅当type: BottomNavigationBarType.fixed,时生效）
-        fixedColor: Color.fromARGB(255, 0, 188, 96),
+        // fixedColor: Color.fromARGB(255, 0, 188, 96),
         type: BottomNavigationBarType.fixed,
       ),
     );
