@@ -6,21 +6,7 @@ class MomentPage extends StatelessWidget {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Row(
-                children: <Widget>[],
-              ),
-              Row(
-                children: <Widget>[],
-              ),
-              Row(
-                children: <Widget>[],
-              )
-            ],
-          )
-        ],
+        children: <Widget>[],
       ),
     );
   }
