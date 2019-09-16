@@ -1,5 +1,6 @@
 import 'package:fashion/counter.dart';
 import 'package:fashion/pages/ProductDetailPage.dart';
+import 'pages/CartPage.dart';
 import 'package:fashion/providers/products.dart';
 import 'package:fashion/widgets/MainPage.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => MainPageWidget(),
           ProductDetailPage.routeName: (ctx) => ProductDetailPage(),
+          CartPage.routeName: (ctx) => CartPage(),
         },
       ),
     );

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../widgets/ProductGrid.dart';
 import '../widgets/badge.dart';
 import '../providers/Cart.dart';
+import './CartPage.dart';
 
 enum FilterOptions {
   Favorites,
@@ -48,11 +49,13 @@ class _ProductPageState extends State<ProductPage> {
           Consumer<Cart>(
             builder: (ctx, cartData, child) => Badge(
               child: child,
-              value: cartData.itemCount.toString(),
+              value: cartData.totalQuantity.toString(),
             ),
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartPage.routeName);
+              },
             ),
           )
         ],
