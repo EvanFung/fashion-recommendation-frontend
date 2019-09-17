@@ -11,6 +11,7 @@ enum FilterOptions {
 }
 
 class ProductPage extends StatefulWidget {
+  static String routeName = 'Products';
   @override
   _ProductPageState createState() => _ProductPageState();
 }
