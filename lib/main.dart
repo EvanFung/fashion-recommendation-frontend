@@ -1,4 +1,3 @@
-import 'package:fashion/counter.dart';
 import 'package:fashion/pages/ProductDetailPage.dart';
 import 'package:fashion/pages/ProductPage.dart';
 import 'pages/CartPage.dart';
