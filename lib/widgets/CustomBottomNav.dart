@@ -50,13 +50,6 @@ class CustomBottomNav extends StatelessWidget {
             )),
       ],
       onTap: (int index) {
-<<<<<<< Updated upstream
-        if (index == 3) {
-          //close drawer
-          Navigator.pop(context);
-        }
-=======
->>>>>>> Stashed changes
         pagesInfo.changePage(index);
       },
       iconSize: 24,
