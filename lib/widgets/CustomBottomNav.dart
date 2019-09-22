@@ -2,13 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/PagesInfo.dart';
 
-class CustomBottomNav extends StatefulWidget {
-  @override
-  _CustomBottomNavState createState() => _CustomBottomNavState();
-}
-
-class _CustomBottomNavState extends State<CustomBottomNav> {
-  @override
+class CustomBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     var pagesInfo = Provider.of<PagesInfo>(context);
     return BottomNavigationBar(
@@ -56,10 +50,13 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
             )),
       ],
       onTap: (int index) {
+<<<<<<< Updated upstream
         if (index == 3) {
           //close drawer
           Navigator.pop(context);
         }
+=======
+>>>>>>> Stashed changes
         pagesInfo.changePage(index);
       },
       iconSize: 24,
