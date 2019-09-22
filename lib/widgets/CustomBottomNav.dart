@@ -56,9 +56,11 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
             )),
       ],
       onTap: (int index) {
-        setState(() {
-          pagesInfo.changePage(index);
-        });
+        if (index == 3) {
+          //close drawer
+          Navigator.pop(context);
+        }
+        pagesInfo.changePage(index);
       },
       iconSize: 24,
       currentIndex: pagesInfo.selectedPageIndex,
