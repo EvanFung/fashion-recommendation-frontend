@@ -1,8 +1,10 @@
 import 'package:fashion/res/fashionAppTheme.dart';
+import 'package:fashion/widgets/home_categoryListView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../widgets/App_Drawer.dart';
 import '../res/hexColor.dart';
+import '../widgets/home_popularListView.dart';
 
 enum CategoryType { shoes, clothing, pants, accessories }
 
@@ -40,9 +42,15 @@ class _HomePageState extends State<HomePage>
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
-                  height: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.height * 1.1,
                   child: Column(
-                    children: <Widget>[getSearchBar(), getCategory()],
+                    children: <Widget>[
+                      getSearchBar(),
+                      getCategory(),
+                      Flexible(
+                        child: getPopularProduct(),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -226,8 +234,34 @@ class _HomePageState extends State<HomePage>
         ),
         SizedBox(
           height: 16,
-        )
+        ),
+        HomeCategoryListView()
       ],
+    );
+  }
+
+  Widget getPopularProduct() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Popular Fashion Items",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              letterSpacing: 0.27,
+              color: FashionAppTheme.darkerText,
+            ),
+          ),
+          Flexible(
+            child: HomePopularListView(),
+          )
+        ],
+      ),
     );
   }
 }

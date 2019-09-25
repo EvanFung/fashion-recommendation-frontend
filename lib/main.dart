@@ -38,9 +38,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Fashion Recommendation App',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textTheme: FashionAppTheme.textTheme,
-        ),
+            primarySwatch: Colors.blue,
+            textTheme: FashionAppTheme.textTheme,
+            fontFamily: 'Lato'),
         initialRoute: '/',
         routes: {
           '/': (context) => MainPageWidget(),
