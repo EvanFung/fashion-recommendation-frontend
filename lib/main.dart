@@ -11,6 +11,7 @@ import './providers/PagesInfo.dart';
 import 'pages/OrdersPage.dart';
 import 'pages/UserProductPage.dart';
 import 'pages/EditProductPage.dart';
+import 'res/fashionAppTheme.dart';
 
 main() {
   runApp(MyApp());
@@ -36,7 +37,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Fashion Recommendation App',
-        theme: ThemeData(primaryColor: Colors.black, fontFamily: 'Lato'),
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme: FashionAppTheme.textTheme,
+        ),
         initialRoute: '/',
         routes: {
           '/': (context) => MainPageWidget(),
