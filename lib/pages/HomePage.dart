@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../widgets/App_Drawer.dart';
 import '../res/hexColor.dart';
 
-enum CategoryType { shoes, clothing, pants }
+enum CategoryType { shoes, clothing, pants, accessories }
 
 /** Home page */
 class HomePage extends StatefulWidget {
@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  CategoryType categoryType = CategoryType.clothing;
   @override
   void initState() {
     super.initState();
@@ -41,9 +42,7 @@ class _HomePageState extends State<HomePage>
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   child: Column(
-                    children: <Widget>[
-                      getSearchBar(),
-                    ],
+                    children: <Widget>[getSearchBar(), getCategory()],
                   ),
                 ),
               ),
@@ -125,6 +124,110 @@ class _HomePageState extends State<HomePage>
           )
         ],
       ),
+    );
+  }
+
+  //category ui
+  Widget getButtonUI(CategoryType categoryTypeData, bool isSelected) {
+    var txt = '';
+    if (CategoryType.shoes == categoryTypeData) {
+      txt = 'Shoes';
+    } else if (CategoryType.clothing == categoryTypeData) {
+      txt = 'Clothing';
+    } else if (CategoryType.pants == categoryTypeData) {
+      txt = 'Pants';
+    } else if (CategoryType.accessories == categoryTypeData) {
+      txt = 'Accessories';
+    }
+    return Expanded(
+      child: Container(
+        decoration: new BoxDecoration(
+            color: isSelected
+                ? FashionAppTheme.nearlyBlue
+                : FashionAppTheme.nearlyWhite,
+            borderRadius: BorderRadius.all(Radius.circular(24.0)),
+            border: new Border.all(color: FashionAppTheme.nearlyBlue)),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: Colors.white24,
+            borderRadius: BorderRadius.all(Radius.circular(24.0)),
+            onTap: () {
+              setState(() {
+                categoryType = categoryTypeData;
+              });
+            },
+            child: Padding(
+              padding: EdgeInsets.only(top: 12, bottom: 12, left: 2, right: 2),
+              child: Center(
+                child: Text(
+                  txt,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    letterSpacing: 0.27,
+                    color: isSelected
+                        ? FashionAppTheme.nearlyWhite
+                        : FashionAppTheme.nearlyBlue,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getCategory() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+          child: Text(
+            'Category',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 22,
+                letterSpacing: 0.27,
+                color: FashionAppTheme.darkerText),
+          ),
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: Row(
+            children: <Widget>[
+              getButtonUI(
+                  CategoryType.clothing, categoryType == CategoryType.clothing),
+              SizedBox(
+                width: 2,
+              ),
+              getButtonUI(
+                  CategoryType.pants, categoryType == CategoryType.pants),
+              SizedBox(
+                width: 2,
+              ),
+              getButtonUI(
+                  CategoryType.shoes, categoryType == CategoryType.shoes),
+              SizedBox(
+                width: 2,
+              ),
+              getButtonUI(CategoryType.accessories,
+                  categoryType == CategoryType.accessories),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 16,
+        )
+      ],
     );
   }
 }
