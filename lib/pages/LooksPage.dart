@@ -10,6 +10,7 @@ class LooksPage extends StatelessWidget {
           children: <Widget>[
             Container(
               child: TabBar(
+                labelColor: Colors.black,
                 tabs: <Widget>[
                   Tab(
                     icon: Icon(Icons.people),
