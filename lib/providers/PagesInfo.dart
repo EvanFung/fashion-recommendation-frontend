@@ -7,6 +7,8 @@ import 'package:fashion/pages/LooksPage.dart';
 import 'package:fashion/pages/ProfilePage.dart';
 
 class PagesInfo with ChangeNotifier {
+  final GlobalKey _drawerKey = GlobalKey();
+
   final List<Widget> pages = [
     HomePage(),
     LooksPage(),
@@ -23,6 +25,10 @@ class PagesInfo with ChangeNotifier {
 
   int get selectedPageIndex {
     return selectedPage;
+  }
+
+  GlobalKey get drawerKey {
+    return _drawerKey;
   }
 
   Widget get selectedPageWidget {

@@ -50,6 +50,11 @@ class CustomBottomNav extends StatelessWidget {
             )),
       ],
       onTap: (int index) {
+        final RenderBox box =
+            pagesInfo.drawerKey.currentContext?.findRenderObject();
+        if (box != null) {
+          Navigator.of(context).pop();
+        }
         pagesInfo.changePage(index);
       },
       iconSize: 24,

@@ -20,7 +20,6 @@ class _MainPageWidgetState extends State<MainPageWidget> {
     return Scaffold(
       body: pageInfoData.selectedPageWidget,
       bottomNavigationBar: CustomBottomNav(),
-      drawer: AppDrawer(),
     );
   }
 }
