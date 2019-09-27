@@ -4,6 +4,7 @@ import '../pages/ProductPage.dart';
 import 'package:flutter/material.dart';
 import '../providers/PagesInfo.dart';
 import 'package:provider/provider.dart';
+import '../pages/chatPage.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -31,6 +32,14 @@ class AppDrawer extends StatelessWidget {
             title: Text('Manage Product'),
             onTap: () {
               Navigator.of(context).pushNamed(UserProductPage.routeName);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.chat),
+            title: Text('Chat with fashion expert'),
+            onTap: () {
+              Navigator.of(context).pushNamed(ChatPage.routeName);
             },
           ),
         ],

@@ -12,7 +12,6 @@ class PagesInfo with ChangeNotifier {
   final List<Widget> pages = [
     HomePage(),
     LooksPage(),
-    ChatPage(),
     ProductPage(),
     ProfilePage()
   ];

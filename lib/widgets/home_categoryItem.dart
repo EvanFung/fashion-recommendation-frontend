@@ -38,7 +38,7 @@ class HomeCategoryItem extends StatelessWidget {
                           Expanded(
                             child: Container(
                               decoration: new BoxDecoration(
-                                color: HexColor('#F8FAFB'),
+                                color: Colors.transparent,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(16.0)),
                               ),
@@ -71,7 +71,7 @@ class HomeCategoryItem extends StatelessWidget {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                right: 5, bottom: 8),
+                                                right: 16, bottom: 8),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment

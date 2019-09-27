@@ -60,7 +60,7 @@ class Category {
     Category(
       imagePath:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-      title: 'Web Design Course',
+      title: 'Red Shoes',
       lessonCount: 28,
       money: 208,
       rating: 4.9,
@@ -68,7 +68,7 @@ class Category {
     Category(
       imagePath:
           'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-      title: 'App Design Course',
+      title: 'Pants',
       lessonCount: 12,
       money: 25,
       rating: 4.8,
@@ -76,7 +76,7 @@ class Category {
     Category(
       imagePath:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-      title: 'Web Design Course',
+      title: 'Blue pants',
       lessonCount: 28,
       money: 208,
       rating: 4.9,

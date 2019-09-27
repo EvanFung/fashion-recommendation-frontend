@@ -18,7 +18,7 @@ class HomePopularItem extends StatelessWidget {
         return FadeTransition(
           opacity: animation,
           child: new Transform(
-            transform: new Matrix4.translationValues(
+            transform: Matrix4.translationValues(
                 0.0, 50 * (1.0 - animation.value), 0.0),
             child: InkWell(
               splashColor: Colors.transparent,
@@ -46,14 +46,13 @@ class HomePopularItem extends StatelessWidget {
                                 children: <Widget>[
                                   Expanded(
                                     child: Container(
-                                      decoration:
-                                          BoxDecoration(boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                            color: FashionAppTheme.grey
-                                                .withOpacity(0.1),
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 6.0),
-                                      ]),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white70,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.white70,
+                                                blurRadius: 9.0)
+                                          ]),
                                       child: Column(
                                         children: <Widget>[
                                           Padding(
@@ -85,7 +84,7 @@ class HomePopularItem extends StatelessWidget {
                                                   CrossAxisAlignment.center,
                                               children: <Widget>[
                                                 Text(
-                                                  "${category.lessonCount} lesson",
+                                                  "${category.lessonCount} solds",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w200,
@@ -126,23 +125,23 @@ class HomePopularItem extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 48,
-                                  ),
+                                  // SizedBox(
+                                  //   width: 48,
+                                  // ),
                                 ],
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 48,
-                          ),
+                          // SizedBox(
+                          //   height: 48,
+                          // ),
                         ],
                       ),
                     ),
                     Container(
                       child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 24, right: 16, left: 16),
+                        padding: const EdgeInsets.only(
+                            top: 14, right: 16, left: 16, bottom: 14),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius:

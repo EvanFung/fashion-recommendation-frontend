@@ -26,14 +26,6 @@ class CustomBottomNav extends StatelessWidget {
             )),
         BottomNavigationBarItem(
             icon: Icon(
-              Icons.group,
-            ),
-            title: Text('CHATS'),
-            activeIcon: Icon(
-              Icons.group,
-            )),
-        BottomNavigationBarItem(
-            icon: Icon(
               Icons.shop,
             ),
             title: Text('PRODUCTS'),

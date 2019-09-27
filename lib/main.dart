@@ -1,5 +1,6 @@
 import 'package:fashion/pages/ProductDetailPage.dart';
 import 'package:fashion/pages/ProductPage.dart';
+import 'package:fashion/pages/chatPage.dart';
 import 'pages/CartPage.dart';
 import 'package:fashion/providers/products.dart';
 import 'package:fashion/widgets/MainPage.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           OrderPage.routeName: (ctx) => OrderPage(),
           UserProductPage.routeName: (ctx) => UserProductPage(),
           EditProductPage.routeName: (ctx) => EditProductPage(),
+          ChatPage.routeName: (ctx) => ChatPage()
         },
       ),
     );
