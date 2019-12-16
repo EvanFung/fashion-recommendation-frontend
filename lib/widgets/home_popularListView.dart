@@ -18,6 +18,12 @@ class _HomePopularListViewState extends State<HomePopularListView>
     super.initState();
   }
 
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 200));
     return true;
