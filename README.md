@@ -1,6 +1,8 @@
 # fashion
 
 A new Flutter project.
+Flutter SDK  1.9.1+hotfix.2
+
 
 ## Getting Started
 Fashion item recommendation frontend starting point.

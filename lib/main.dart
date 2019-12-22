@@ -2,6 +2,7 @@ import 'package:fashion/pages/ProductDetailPage.dart';
 import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import 'package:fashion/pages/ProductPage.dart';
 import 'package:fashion/pages/chatPage.dart';
+import 'pages/splash_screen.dart';
 import 'pages/CartPage.dart';
 import 'package:fashion/providers/products.dart';
 import 'package:fashion/widgets/MainPage.dart';
@@ -58,7 +59,16 @@ class MyApp extends StatelessWidget {
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
             title: 'Fashion Recommendation App',
-            home: auth.isAuth ? MainPageWidget() : AuthScreen(),
+            home: auth.isAuth
+                ? MainPageWidget()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, authResultSnashot) =>
+                        authResultSnashot.connectionState ==
+                                ConnectionState.waiting
+                            ? SplashScreen()
+                            : AuthScreen(),
+                  ),
             theme: ThemeData(
                 primarySwatch: Colors.blue,
                 textTheme: FashionAppTheme.textTheme,

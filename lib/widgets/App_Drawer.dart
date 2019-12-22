@@ -4,6 +4,7 @@ import '../pages/ProductPage.dart';
 import 'package:flutter/material.dart';
 import '../providers/PagesInfo.dart';
 import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 import '../pages/chatPage.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -40,6 +41,17 @@ class AppDrawer extends StatelessWidget {
             title: Text('Chat with fashion expert'),
             onTap: () {
               Navigator.of(context).pushNamed(ChatPage.routeName);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () {
+              //if you forget to close the modal, it will end with this bug.
+              //This _ModalScope<dynamic> widget cannot be marked as needing to build because the framework is locked.
+              Navigator.of(context).pop();
+              Provider.of<Auth>(context, listen: false).logout();
             },
           ),
         ],
