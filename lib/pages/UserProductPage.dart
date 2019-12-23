@@ -7,7 +7,8 @@ import '../pages/EditProductPage.dart';
 class UserProductPage extends StatelessWidget {
   static const routeName = '/user-product';
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+    await Provider.of<Products>(context, listen: false)
+        .fetchAndSetProducts(true);
   }
 
   @override
@@ -45,7 +46,7 @@ class UserProductPage extends StatelessWidget {
                                       productsData.items[i].id,
                                       productsData.items[i].title,
                                       productsData.items[i].imageUrl,
-                                      productsData.items[i].creatBy),
+                                      productsData.items[i].createBy),
                                   Divider()
                                 ],
                               ),

@@ -80,7 +80,7 @@ class Auth with ChangeNotifier {
     // }
   }
 
-  Future<void> signup(String email, String password, String username) async {
+  Future<bool> signup(String email, String password, String username) async {
     const url = "https://5peu6yst.lc-cn-n1-shared.com/1.1/users";
     try {
       final response = await http.post(url,
@@ -91,9 +91,11 @@ class Auth with ChangeNotifier {
       if (responseData['error'] != null) {
         print(responseData['code']);
         throw HttpException(responseData['code'].toString());
+        return false;
       }
       _token = responseData['sessionToken'];
       _userId = responseData['objectId'];
+      return true;
     } catch (error) {
       throw error;
     }

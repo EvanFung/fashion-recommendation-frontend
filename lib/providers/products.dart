@@ -54,10 +54,13 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isFavorite).toList();
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser]) async {
     AVQuery queryProduct = AVQuery("Product");
     try {
-      final response = await queryProduct.find();
+      final response =
+          await queryProduct.whereEqualTo('createBy', this.userId).find();
+      print(response);
+      // final response = await queryProduct.find();
       List<AVObject> products = response.toList();
       final List<Product> loadedProducts = [];
       products.forEach((prod) {
@@ -67,7 +70,7 @@ class Products with ChangeNotifier {
             description: prod.get("description"),
             price: prod.get("price"),
             imageUrl: prod.get("imageUrl"),
-            creatBy: this.userId));
+            createBy: this.userId));
       });
       _items = loadedProducts;
       print('fetching products...');
@@ -92,7 +95,7 @@ class Products with ChangeNotifier {
     object.put("description", product.description);
     object.put("price", product.price);
     object.put("imageUrl", product.imageUrl);
-    object.put('creatBy', this.userId);
+    object.put('createBy', this.userId);
 
     try {
       final response = await object.save();
@@ -103,7 +106,8 @@ class Products with ChangeNotifier {
           description: product.description,
           price: product.price,
           imageUrl: product.imageUrl,
-          id: json.decode(productStr)['objectId']);
+          id: json.decode(productStr)['objectId'],
+          createBy: product.createBy);
       _items.add(newProduct);
       notifyListeners();
     } catch (error) {

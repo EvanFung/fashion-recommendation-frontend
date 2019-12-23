@@ -100,6 +100,7 @@ class _AuthCardState extends State<AuthCard> {
   Map<String, String> _authData = {'email': '', 'password': '', 'username': ''};
   var _isLoading = false;
   final _passwordController = TextEditingController();
+  var _isSuccessSignUp = false;
 
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
@@ -117,8 +118,12 @@ class _AuthCardState extends State<AuthCard> {
             .login(_authData['email'], _authData['password']);
       } else {
         // Sign user up
-        await Provider.of<Auth>(context, listen: false).signup(
+        bool result = await Provider.of<Auth>(context, listen: false).signup(
             _authData['email'], _authData['password'], _authData['username']);
+        setState(() {
+          _isSuccessSignUp = result;
+        });
+        _showErrorDialog('SignUp OK!');
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
@@ -152,7 +157,9 @@ class _AuthCardState extends State<AuthCard> {
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text('An Error occured'),
+              title: _isSuccessSignUp
+                  ? Text('Signup Success')
+                  : Text('An Error occured'),
               content: Text(message),
               actions: <Widget>[
                 FlatButton(

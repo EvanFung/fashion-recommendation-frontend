@@ -50,7 +50,7 @@ class _EditProductPageState extends State<EditProductPage> {
           'price': _editedProduct.price.toString(),
           // 'imageUrl': _editedProduct.imageUrl,
           'imageUrl': '',
-          'createBy': _editedProduct.creatBy
+          'createBy': _editedProduct.createBy
         };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
