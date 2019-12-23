@@ -51,6 +51,8 @@ class AppDrawer extends StatelessWidget {
               //if you forget to close the modal, it will end with this bug.
               //This _ModalScope<dynamic> widget cannot be marked as needing to build because the framework is locked.
               Navigator.of(context).pop();
+              //always go to login page
+              Navigator.of(context).pushReplacementNamed('/');
               Provider.of<Auth>(context, listen: false).logout();
             },
           ),

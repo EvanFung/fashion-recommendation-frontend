@@ -42,6 +42,9 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+  final String authToken;
+  Products(this.authToken, this._items);
+
   List<Product> get items {
     return [..._items];
   }
@@ -65,6 +68,7 @@ class Products with ChangeNotifier {
             imageUrl: prod.get("imageUrl")));
       });
       _items = loadedProducts;
+      print('fetching products...');
       notifyListeners();
 
       //TEST UPDATE
