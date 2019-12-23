@@ -43,7 +43,8 @@ class Products with ChangeNotifier {
   ];
 
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+  Products(this.authToken, this._items, this.userId);
 
   List<Product> get items {
     return [..._items];
@@ -65,7 +66,8 @@ class Products with ChangeNotifier {
             title: prod.get("title"),
             description: prod.get("description"),
             price: prod.get("price"),
-            imageUrl: prod.get("imageUrl")));
+            imageUrl: prod.get("imageUrl"),
+            creatBy: this.userId));
       });
       _items = loadedProducts;
       print('fetching products...');
@@ -83,12 +85,14 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
+    print('userId is $userId');
     //https://fashion-rec-sys.firebaseio.com/
     AVObject object = new AVObject("Product");
     object.put("title", product.title);
     object.put("description", product.description);
     object.put("price", product.price);
     object.put("imageUrl", product.imageUrl);
+    object.put('creatBy', this.userId);
 
     try {
       final response = await object.save();

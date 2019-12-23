@@ -44,7 +44,8 @@ class UserProductPage extends StatelessWidget {
                                   UserProductItem(
                                       productsData.items[i].id,
                                       productsData.items[i].title,
-                                      productsData.items[i].imageUrl),
+                                      productsData.items[i].imageUrl,
+                                      productsData.items[i].creatBy),
                                   Divider()
                                 ],
                               ),
