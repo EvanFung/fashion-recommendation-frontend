@@ -37,7 +37,7 @@ class _ProductPageState extends State<ProductPage> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Products>(context).fetchAndSetProducts().then((_) {
+      Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -77,6 +77,9 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ],
           ),
+          //child is is there for optimization
+          //If you have a large widget subtree under your Consumer that doesn’t change when the model changes,
+          //you can construct it once and get it through the builder.
           Consumer<Cart>(
             builder: (ctx, cartData, child) => Badge(
               child: child,

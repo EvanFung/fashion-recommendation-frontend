@@ -57,10 +57,14 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts([bool filterByUser]) async {
     AVQuery queryProduct = AVQuery("Product");
     try {
-      final response =
-          await queryProduct.whereEqualTo('createBy', this.userId).find();
+      var response;
+      if (filterByUser) {
+        response =
+            await queryProduct.whereEqualTo('createBy', this.userId).find();
+      } else {
+        response = await queryProduct.find();
+      }
       print(response);
-      // final response = await queryProduct.find();
       List<AVObject> products = response.toList();
       final List<Product> loadedProducts = [];
       products.forEach((prod) {

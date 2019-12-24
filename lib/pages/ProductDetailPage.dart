@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProductDetailPage extends StatelessWidget {
   static const routeName = '/product-detail';
@@ -45,7 +46,7 @@ class ProductDetailPage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
-            )
+            ),
           ],
         ),
       ),

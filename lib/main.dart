@@ -12,6 +12,7 @@ import 'providers/Cart.dart';
 import './providers/Orders.dart';
 import './providers/PagesInfo.dart';
 import './providers/auth.dart';
+import './providers/Rating.dart';
 import 'pages/OrdersPage.dart';
 import 'pages/UserProductPage.dart';
 import 'pages/EditProductPage.dart';
@@ -57,6 +58,10 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider.value(
             value: PagesInfo(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Rating>(
+            builder: (ctx, auth, previousRating) =>
+                Rating(auth.token, auth.userId),
           )
         ],
         child: Consumer<Auth>(
