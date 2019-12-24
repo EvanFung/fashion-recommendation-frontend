@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
+import '../providers/Rating.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProductDetailPage extends StatelessWidget {
   static const routeName = '/product-detail';
 
+  Future<RatingItem> _fetchRating(
+      BuildContext context, String productId) async {
+    final loadedRating = await Provider.of<Rating>(context, listen: false)
+        .fetchRatingItem(productId);
+    if (loadedRating != null) {
+      return loadedRating;
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    //the id is comefrom
     final productId =
         ModalRoute.of(context).settings.arguments as String; //is id
     // ...
     final loadedProduct =
         Provider.of<Products>(context, listen: false).findById(productId);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(loadedProduct.title),
@@ -47,6 +61,56 @@ class ProductDetailPage extends StatelessWidget {
                 softWrap: true,
               ),
             ),
+            FutureBuilder(
+                future: _fetchRating(context, productId),
+                builder: (ctx, AsyncSnapshot<RatingItem> snapshot) {
+                  Widget returnedWidget;
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    returnedWidget = Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    if (snapshot.hasData && snapshot.data.rating != null) {
+                      //if ratingItem is exist
+                      returnedWidget = RatingBar(
+                        initialRating: snapshot.data.rating,
+                        glow: true,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) async {
+                          await Provider.of<Rating>(context, listen: false)
+                              .addRating(
+                                  productId, rating, snapshot.data.objectId);
+                        },
+                      );
+                    } else {
+                      //rating item not exist
+                      returnedWidget = RatingBar(
+                        initialRating: snapshot.data.rating,
+                        glow: true,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) async {
+                          await Provider.of<Rating>(context, listen: false)
+                              .addRating(productId, rating);
+                        },
+                      );
+                    }
+                  }
+                  return returnedWidget;
+                }),
           ],
         ),
       ),

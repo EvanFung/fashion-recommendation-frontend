@@ -64,7 +64,6 @@ class Products with ChangeNotifier {
       } else {
         response = await queryProduct.find();
       }
-      print(response);
       List<AVObject> products = response.toList();
       final List<Product> loadedProducts = [];
       products.forEach((prod) {
