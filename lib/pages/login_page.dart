@@ -347,22 +347,24 @@ class _LoginPageState extends State<LoginPage>
                         stops: [0.0, 1.0],
                         tileMode: TileMode.clamp),
                   ),
-                  child: MaterialButton(
-                      highlightColor: Colors.transparent,
-                      splashColor: Theme.FashionAppTheme.loginGradientEnd,
-                      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 42.0),
-                        child: Text(
-                          "LOGIN",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25.0,
-                              fontFamily: "WorkSansBold"),
-                        ),
-                      ),
-                      onPressed: _submitLogin),
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : MaterialButton(
+                          highlightColor: Colors.transparent,
+                          splashColor: Theme.FashionAppTheme.loginGradientEnd,
+                          //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 42.0),
+                            child: Text(
+                              "LOGIN",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25.0,
+                                  fontFamily: "WorkSansBold"),
+                            ),
+                          ),
+                          onPressed: _submitLogin),
                 ),
               ],
             ),
