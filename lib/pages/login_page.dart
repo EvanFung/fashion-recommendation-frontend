@@ -233,7 +233,7 @@ class _LoginPageState extends State<LoginPage>
                   ),
                   child: Container(
                     width: 300.0,
-                    height: 190.0,
+                    height: 230.0,
                     child: Column(
                       children: <Widget>[
                         Padding(
@@ -322,7 +322,7 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 170.0),
+                  margin: EdgeInsets.only(top: 210.0),
                   decoration: new BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     boxShadow: <BoxShadow>[
@@ -500,7 +500,7 @@ class _LoginPageState extends State<LoginPage>
                           child: TextFormField(
                             validator: (value) {
                               if (value.isEmpty || value.length < 5) {
-                                return 'UserName is too short';
+                                return 'Username is too short';
                               }
                             },
                             onSaved: (value) {
