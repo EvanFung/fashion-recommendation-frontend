@@ -18,6 +18,7 @@ import 'pages/UserProductPage.dart';
 import 'pages/EditProductPage.dart';
 import 'res/fashionAppTheme.dart';
 import 'pages/auth_screen.dart';
+import 'pages/login_page.dart';
 
 main() {
   initPlatformState();
@@ -75,7 +76,7 @@ class MyApp extends StatelessWidget {
                         authResultSnashot.connectionState ==
                                 ConnectionState.waiting
                             ? SplashScreen()
-                            : AuthScreen(),
+                            : LoginPage(),
                   ),
             theme: ThemeData(
                 primarySwatch: Colors.blue,

@@ -82,6 +82,4 @@ class Rating with ChangeNotifier {
       return null;
     }
   }
-
-  Future<void> updateRating(String productId, double rating) async {}
 }

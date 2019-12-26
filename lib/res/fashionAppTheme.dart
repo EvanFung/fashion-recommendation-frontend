@@ -20,6 +20,10 @@ class FashionAppTheme {
   static const Color greyColor1 = Color(0xffaeaeae);
   static const Color greyColor2 = Color(0xffE8E8E8);
 
+  //login
+  static const Color loginGradientStart = const Color(0xFFfbab66);
+  static const Color loginGradientEnd = const Color(0xFFf7418c);
+
   static const TextTheme textTheme = TextTheme(
     display1: display1,
     headline: headline,
@@ -92,5 +96,12 @@ class FashionAppTheme {
     fontSize: 12,
     letterSpacing: 0.2,
     color: lightText, // was lightText
+  );
+
+  static const primaryGradient = const LinearGradient(
+    colors: const [loginGradientStart, loginGradientEnd],
+    stops: const [0.0, 1.0],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
   );
 }

@@ -29,6 +29,7 @@ dependencies:
   leancloud_flutter_plugin: ^0.0.5
   shared_preferences: ^0.5.3+1
   flutter_rating_bar: ^3.0.0+1
+  font_awesome_flutter: ^8.0.1
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,7 @@ flutter:
    - assets/images/interFace2.png
    - assets/images/interFace3.png
    - assets/images/interFace4.png
+   - assets/images/login_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
