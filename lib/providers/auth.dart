@@ -14,8 +14,8 @@ class Auth with ChangeNotifier {
   Timer _authTimer;
   int expiresIn = 3600;
   Map<String, String> authHeaders = {
-    "X-LC-Id": "5pEU6YStYoYHjxJlibN6ag7d-gzGzoHsz",
-    "X-LC-Key": "wmGw6rwPS8oquig1csmyzbUl",
+    "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+    "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
     "Content-Type": "application/json"
   };
 
@@ -81,7 +81,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> signup(String email, String password, String username) async {
-    const url = "https://5peu6yst.lc-cn-n1-shared.com/1.1/users";
+    const url = "https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users";
     try {
       final response = await http.post(url,
           headers: authHeaders,
@@ -105,7 +105,7 @@ class Auth with ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     // return _authenticate(email, password, 'verifyPassword');
-    const url = "https://5peu6yst.lc-cn-n1-shared.com/1.1/login";
+    const url = "https://wwvo3d7k.lc-cn-n1-shared.com/1.1/login";
     try {
       final response = await http.post(url,
           headers: authHeaders,

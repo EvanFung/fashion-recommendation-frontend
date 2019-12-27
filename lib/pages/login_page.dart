@@ -779,6 +779,7 @@ class _LoginPageState extends State<LoginPage>
       String errorMessage = getErrorMsg(error.toString());
       showInSnackBar(errorMessage);
     } catch (error) {
+      print(error);
       var errorMessage = 'Could not authenticate. Please try again later!';
       showInSnackBar(errorMessage);
     }

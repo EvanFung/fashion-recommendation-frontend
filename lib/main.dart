@@ -28,12 +28,12 @@ main() {
 void initPlatformState() {
   LeancloudFlutterPlugin leancloudFlutterPlugin =
       LeancloudFlutterPlugin.getInstance();
-  String appId = "5pEU6YStYoYHjxJlibN6ag7d-gzGzoHsz";
-  String appKey = "wmGw6rwPS8oquig1csmyzbUl";
+  String appId = "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz";
+  String appKey = "2nDU7yqQoMpsGMTFbWYTdxgG";
   leancloudFlutterPlugin.setLogLevel(LeancloudLoggerLevel.OFF);
   leancloudFlutterPlugin.setRegion(LeancloudCloudRegion.NorthChina);
   leancloudFlutterPlugin.setServer(
-      LeancloudOSService.API, "https://5peu6yst.lc-cn-n1-shared.com");
+      LeancloudOSService.API, "https://wwvo3d7k.lc-cn-n1-shared.com");
   leancloudFlutterPlugin.initialize(appId, appKey);
 }
 
