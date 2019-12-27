@@ -12,7 +12,7 @@ class Auth with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
-  int expiresIn = 3600;
+  int expiresIn = 3600 * 24;
   Map<String, String> authHeaders = {
     "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
     "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../providers/Product.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EditProductPage extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -16,6 +17,7 @@ class _EditProductPageState extends State<EditProductPage> {
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
+
   var _editedProduct = Product(
     id: null,
     title: '',
@@ -31,6 +33,44 @@ class _EditProductPageState extends State<EditProductPage> {
   };
   var _isInit = true;
   var _isLoading = false;
+
+  //dropdown menu variable
+  List<String> _category = <String>[
+    'Accessories',
+    'Apparel',
+    'Personal Care',
+    'Footwear'
+  ];
+  List<List<String>> _subCategory = <List<String>>[
+    [
+      'Watches',
+      'Socks',
+      'Belts',
+      'Bags',
+      'Shoe Accessories',
+      'Jewellery',
+      'Bags',
+      'Wallets',
+      'Belts',
+      'Accessories',
+      'Eyewear',
+      'Ties'
+    ],
+    [
+      'Topwear',
+      'Bottomwear',
+      'Innerwear',
+      'Loungewear and Nightwear',
+      'Saree',
+      'Dress'
+    ],
+    ['Fragrance', 'Lips', 'Skin Care', 'Makeup'],
+    ['Shoes', 'Flip Flops', 'Sandal']
+  ];
+  String _mainCategoryValue = 'Accessories';
+  int _mainCategoryIndex = 0;
+  int _subCategoryIndex = 0;
+
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
@@ -292,6 +332,62 @@ class _EditProductPageState extends State<EditProductPage> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Main Categories'),
+                        DropdownButton(
+                          isExpanded: false,
+                          value: _mainCategoryValue,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              //avoid index out of bound when user select sub category first, then select main category
+                              _subCategoryIndex = 0;
+                              _mainCategoryValue = newValue;
+                              _mainCategoryIndex = _category.indexOf(newValue);
+                            });
+                          },
+                          items: _category
+                              .map<DropdownMenuItem<String>>(
+                                  (String value) => DropdownMenuItem<String>(
+                                        child: Text(value),
+                                        value: value,
+                                      ))
+                              .toList(),
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Sub Categories'),
+                        DropdownButton(
+                          value: _subCategory[_mainCategoryIndex]
+                              [_subCategoryIndex],
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _subCategoryIndex =
+                                  _subCategory[_mainCategoryIndex]
+                                      .indexOf(newValue);
+                              _subCategory[_mainCategoryIndex]
+                                  [_subCategoryIndex] = newValue;
+                            });
+                          },
+                          items: _subCategory[_mainCategoryIndex]
+                              .map<DropdownMenuItem<String>>(
+                                  (String value) => DropdownMenuItem<String>(
+                                        child: Text(value),
+                                        value: value,
+                                      ))
+                              .toList(),
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),

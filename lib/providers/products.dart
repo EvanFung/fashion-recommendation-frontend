@@ -153,7 +153,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = 'https://5peu6yst.lc-cn-n1-shared.com/1.1/classes/Product/$id';
+    final url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$id';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
@@ -161,8 +161,8 @@ class Products with ChangeNotifier {
     final response = await http.delete(
       url,
       headers: {
-        "X-LC-Id": "5pEU6YStYoYHjxJlibN6ag7d-gzGzoHsz",
-        "X-LC-Key": "wmGw6rwPS8oquig1csmyzbUl",
+        "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+        "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
         "Content-Type": "application/json"
       },
     );
