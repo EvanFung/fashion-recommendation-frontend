@@ -69,6 +69,13 @@ flutter:
    - assets/images/cm2.jpeg
    - assets/images/cm3.jpeg
    - assets/images/cm4.jpeg
+   - assets/images/accessories.jpg
+   - assets/images/shoes.jpeg
+   - assets/images/personalCare.jpeg
+   - assets/images/clothes.jpeg
+   - assets/images/people.jpeg
+   - assets/images/people2.jpeg
+   - assets/images/login_logo.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

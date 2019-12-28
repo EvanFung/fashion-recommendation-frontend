@@ -2,7 +2,6 @@ import '../res/fashionAppTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/PagesInfo.dart';
-import '../widgets/CustomBottomNav.dart';
 import '../widgets/App_Drawer.dart';
 import 'package:flutter/services.dart';
 import '../widgets/custom_bottom_nav.dart';
