@@ -5,6 +5,7 @@ import '../providers/PagesInfo.dart';
 import '../widgets/CustomBottomNav.dart';
 import '../widgets/App_Drawer.dart';
 import 'package:flutter/services.dart';
+import '../widgets/custom_bottom_nav.dart';
 
 class MainPageWidget extends StatefulWidget {
   MainPageWidget({Key key}) : super(key: key);
@@ -32,7 +33,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
     var pageInfoData = Provider.of<PagesInfo>(context);
     return Scaffold(
       body: pageInfoData.selectedPageWidget,
-      bottomNavigationBar: CustomBottomNav(),
+      bottomNavigationBar: CustomNavigationBar(),
     );
   }
 }

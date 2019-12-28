@@ -6,6 +6,7 @@ import '../pages/home_page.dart';
 import 'package:fashion/pages/ProductPage.dart';
 import 'package:fashion/pages/LooksPage.dart';
 import 'package:fashion/pages/ProfilePage.dart';
+import '../pages/notification_screen.dart';
 
 class PagesInfo with ChangeNotifier {
   final GlobalKey _drawerKey = GlobalKey();
@@ -14,6 +15,7 @@ class PagesInfo with ChangeNotifier {
     HomePage(),
     LooksPage(),
     ProductPage(),
+    NotificationScreen(),
     ProfilePage()
   ];
   int selectedPage = 0;
