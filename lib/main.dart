@@ -78,10 +78,7 @@ class MyApp extends StatelessWidget {
                             ? SplashScreen()
                             : LoginPage(),
                   ),
-            theme: ThemeData(
-                primarySwatch: Colors.blue,
-                textTheme: FashionAppTheme.textTheme,
-                fontFamily: 'Lato'),
+            theme: FashionAppTheme.lightTheme,
             // initialRoute: '/',
             routes: {
               // '/': (context) => AuthScreen(),

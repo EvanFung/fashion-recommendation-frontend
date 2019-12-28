@@ -24,6 +24,16 @@ class FashionAppTheme {
   static const Color loginGradientStart = const Color(0xFFfbab66);
   static const Color loginGradientEnd = const Color(0xFFf7418c);
 
+  //home
+
+  static Color lightPrimary = Color(0xfffcfcff);
+  static Color darkPrimary = Colors.black;
+  static Color lightAccent = Color(0xff5563ff);
+  static Color darkAccent = Color(0xff5563ff);
+  static Color lightBG = Color(0xfffcfcff);
+  static Color darkBG = Colors.black;
+  static Color ratingBG = Colors.yellow[600];
+
   static const TextTheme textTheme = TextTheme(
     display1: display1,
     headline: headline,
@@ -103,5 +113,25 @@ class FashionAppTheme {
     stops: const [0.0, 1.0],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
+  );
+
+  static ThemeData lightTheme = ThemeData(
+    backgroundColor: lightBG,
+    primaryColor: lightPrimary,
+    accentColor: lightAccent,
+    cursorColor: lightAccent,
+    scaffoldBackgroundColor: lightBG,
+    appBarTheme: AppBarTheme(
+      textTheme: TextTheme(
+        title: TextStyle(
+          color: darkBG,
+          fontSize: 18.0,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+//      iconTheme: IconThemeData(
+//        color: lightAccent,
+//      ),
+    ),
   );
 }

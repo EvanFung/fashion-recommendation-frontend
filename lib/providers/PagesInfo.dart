@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fashion/pages/ChatPage.dart';
-import 'package:fashion/pages/HomePage.dart';
+// import 'package:fashion/pages/HomePage.dart';
+import '../pages/home_page.dart';
 import 'package:fashion/pages/ProductPage.dart';
 import 'package:fashion/pages/LooksPage.dart';
 import 'package:fashion/pages/ProfilePage.dart';
