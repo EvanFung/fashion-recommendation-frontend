@@ -19,17 +19,20 @@ class _EditProductPageState extends State<EditProductPage> {
   final _form = GlobalKey<FormState>();
 
   var _editedProduct = Product(
-    id: null,
-    title: '',
-    price: 0,
-    description: '',
-    imageUrl: '',
-  );
+      id: null,
+      title: '',
+      price: 0,
+      description: '',
+      imageUrl: '',
+      mainCategory: _mainCategoryValue,
+      subCategory: _subCategoryValue);
   var _initValues = {
     'title': '',
     'description': '',
     'price': '',
     'imageUrl': '',
+    'mainCategory': 'Accessories',
+    'subCategory': 'Watches'
   };
   var _isInit = true;
   var _isLoading = false;
@@ -67,7 +70,8 @@ class _EditProductPageState extends State<EditProductPage> {
     ['Fragrance', 'Lips', 'Skin Care', 'Makeup'],
     ['Shoes', 'Flip Flops', 'Sandal']
   ];
-  String _mainCategoryValue = 'Accessories';
+  static String _mainCategoryValue = 'Accessories';
+  static String _subCategoryValue = 'Watches';
   int _mainCategoryIndex = 0;
   int _subCategoryIndex = 0;
 
@@ -91,7 +95,9 @@ class _EditProductPageState extends State<EditProductPage> {
           'price': _editedProduct.price.toString(),
           // 'imageUrl': _editedProduct.imageUrl,
           'imageUrl': '',
-          'createBy': _editedProduct.createBy
+          'createBy': _editedProduct.createBy,
+          'mainCategory': _editedProduct.mainCategory,
+          'subCategory': _editedProduct.subCategory
         };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
@@ -207,7 +213,9 @@ class _EditProductPageState extends State<EditProductPage> {
                             description: _editedProduct.description,
                             imageUrl: _editedProduct.imageUrl,
                             id: _editedProduct.id,
-                            isFavorite: _editedProduct.isFavorite);
+                            isFavorite: _editedProduct.isFavorite,
+                            mainCategory: _editedProduct.mainCategory,
+                            subCategory: _editedProduct.subCategory);
                       },
                     ),
                     TextFormField(
@@ -239,7 +247,9 @@ class _EditProductPageState extends State<EditProductPage> {
                             description: _editedProduct.description,
                             imageUrl: _editedProduct.imageUrl,
                             id: _editedProduct.id,
-                            isFavorite: _editedProduct.isFavorite);
+                            isFavorite: _editedProduct.isFavorite,
+                            mainCategory: _editedProduct.mainCategory,
+                            subCategory: _editedProduct.subCategory);
                       },
                     ),
                     TextFormField(
@@ -259,13 +269,14 @@ class _EditProductPageState extends State<EditProductPage> {
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
-                          title: _editedProduct.title,
-                          price: _editedProduct.price,
-                          description: value,
-                          imageUrl: _editedProduct.imageUrl,
-                          id: _editedProduct.id,
-                          isFavorite: _editedProduct.isFavorite,
-                        );
+                            title: _editedProduct.title,
+                            price: _editedProduct.price,
+                            description: value,
+                            imageUrl: _editedProduct.imageUrl,
+                            id: _editedProduct.id,
+                            isFavorite: _editedProduct.isFavorite,
+                            mainCategory: _editedProduct.mainCategory,
+                            subCategory: _editedProduct.subCategory);
                       },
                     ),
                     Row(
@@ -320,13 +331,14 @@ class _EditProductPageState extends State<EditProductPage> {
                             },
                             onSaved: (value) {
                               _editedProduct = Product(
-                                title: _editedProduct.title,
-                                price: _editedProduct.price,
-                                description: _editedProduct.description,
-                                imageUrl: value,
-                                id: _editedProduct.id,
-                                isFavorite: _editedProduct.isFavorite,
-                              );
+                                  title: _editedProduct.title,
+                                  price: _editedProduct.price,
+                                  description: _editedProduct.description,
+                                  imageUrl: value,
+                                  id: _editedProduct.id,
+                                  isFavorite: _editedProduct.isFavorite,
+                                  mainCategory: _editedProduct.mainCategory,
+                                  subCategory: _editedProduct.subCategory);
                             },
                           ),
                         ),
@@ -349,6 +361,17 @@ class _EditProductPageState extends State<EditProductPage> {
                               _subCategoryIndex = 0;
                               _mainCategoryValue = newValue;
                               _mainCategoryIndex = _category.indexOf(newValue);
+
+                              //editProduct
+                              _editedProduct = Product(
+                                  title: _editedProduct.title,
+                                  price: _editedProduct.price,
+                                  description: _editedProduct.description,
+                                  imageUrl: _editedProduct.imageUrl,
+                                  id: _editedProduct.id,
+                                  isFavorite: _editedProduct.isFavorite,
+                                  mainCategory: newValue,
+                                  subCategory: _editedProduct.subCategory);
                             });
                           },
                           items: _category
@@ -376,6 +399,17 @@ class _EditProductPageState extends State<EditProductPage> {
                                       .indexOf(newValue);
                               _subCategory[_mainCategoryIndex]
                                   [_subCategoryIndex] = newValue;
+                              _subCategoryValue = newValue;
+
+                              _editedProduct = Product(
+                                  title: _editedProduct.title,
+                                  price: _editedProduct.price,
+                                  description: _editedProduct.description,
+                                  imageUrl: _editedProduct.imageUrl,
+                                  id: _editedProduct.id,
+                                  isFavorite: _editedProduct.isFavorite,
+                                  mainCategory: _editedProduct.mainCategory,
+                                  subCategory: newValue);
                             });
                           },
                           items: _subCategory[_mainCategoryIndex]

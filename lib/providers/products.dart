@@ -99,6 +99,8 @@ class Products with ChangeNotifier {
     object.put("price", product.price);
     object.put("imageUrl", product.imageUrl);
     object.put('createBy', this.userId);
+    object.put('mainCategory', product.mainCategory);
+    object.put('subCategory', product.subCategory);
 
     try {
       final response = await object.save();
@@ -144,7 +146,10 @@ class Products with ChangeNotifier {
       prod.put("description", newProduct.description);
       prod.put("imageUrl", newProduct.imageUrl);
       prod.put("price", newProduct.price);
-      await prod.save();
+      prod.put('mainCategory', newProduct.mainCategory);
+      prod.put('subCategory', newProduct.subCategory);
+      final response = await prod.save();
+      print(response);
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {

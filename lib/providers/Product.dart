@@ -7,6 +7,8 @@ class Product with ChangeNotifier {
   final double price;
   final String imageUrl;
   final String createBy;
+  final String mainCategory;
+  final String subCategory;
   bool isFavorite;
 
   Product(
@@ -16,6 +18,8 @@ class Product with ChangeNotifier {
       @required this.price,
       @required this.imageUrl,
       this.createBy,
+      this.mainCategory,
+      this.subCategory,
       this.isFavorite = false});
 
   void toggleFavoriteStatus() {
