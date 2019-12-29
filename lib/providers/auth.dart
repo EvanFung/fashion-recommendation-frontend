@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -140,10 +141,26 @@ class Auth with ChangeNotifier {
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 
-  Future<void> uploadProfilePic(File image) async {
-    var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$_userId.jpeg';
+  Future<void> uploadProfilePic(File image, String fileName) async {
+    var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$fileName';
     final response = await http.post(url,
         headers: imgHeaders, body: image.readAsBytesSync());
     print(response.body);
+    final responsedData = json.decode(response.body) as Map<String, dynamic>;
+    print(responsedData['objectId']);
+    //attach this file object to current user.
+    url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users/$_userId';
+    final responseInUserReq = await http.put(url,
+        headers: {
+          "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+          "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+          "Content-Type": "application/json",
+          "X-LC-Session": this._token
+        },
+        body: json.encode({
+          'name': fileName,
+          'profilePic': {'id': responsedData['objectId'], '__type': 'File'}
+        }));
+    print(responseInUserReq.body);
   }
 }

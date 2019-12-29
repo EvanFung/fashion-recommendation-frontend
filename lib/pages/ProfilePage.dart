@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
+import '../providers/auth.dart';
 
 class _ContactCategory extends StatelessWidget {
   const _ContactCategory({Key key, this.icon, this.children}) : super(key: key);
@@ -112,20 +113,21 @@ class _ProfilePageState extends State<ProfilePage> {
   final double _appBarHeight = 256.0;
   AppBarBehavior _appBarBehavior = AppBarBehavior.pinned;
 
-  //upload image
-  // File _storedImage;
+  // upload image
+  File _storedImage;
 
-  // Future<void> _takePicture() async {
-  //   final imageFile =
-  //       await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
-  //   setState(() {
-  //     _storedImage = imageFile;
-  //   });
+  Future<void> _takePicture() async {
+    final imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _storedImage = imageFile;
+    });
 
-  //   final appDir = await syspath.getApplicationDocumentsDirectory();
-  //   final fileName = await path.basename(imageFile.path);
-  //   final saveImage = await imageFile.copy('${appDir.path}/$fileName');
-  // }
+    final appDir = await syspath.getApplicationDocumentsDirectory();
+    final fileName = await path.basename(imageFile.path);
+
+    final saveImage = await imageFile.copy('${appDir.path}/$fileName');
+    await Provider.of<Auth>(context).uploadProfilePic(imageFile, fileName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,13 +147,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   Icons.create,
                 ),
                 tooltip: 'Edit',
-                onPressed:
-                    // _takePicture
-                    () {
-                  _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                    content: Text("Editing isn't supported in this screen."),
-                  ));
-                },
+                onPressed: _takePicture
+                //     () {
+                //   _scaffoldKey.currentState.showSnackBar(const SnackBar(
+                //     content: Text("Editing isn't supported in this screen."),
+                //   ));
+                // }
+                ,
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -162,11 +164,17 @@ class _ProfilePageState extends State<ProfilePage> {
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  Image.asset(
-                    'assets/images/people2.jpeg',
-                    fit: BoxFit.cover,
-                    height: _appBarHeight,
-                  ),
+                  _storedImage != null
+                      ? Image.file(
+                          _storedImage,
+                          fit: BoxFit.cover,
+                          height: _appBarHeight,
+                        )
+                      : Image.asset(
+                          'assets/images/people2.jpeg',
+                          fit: BoxFit.cover,
+                          height: _appBarHeight,
+                        ),
                   // This gradient ensures that the toolbar icons are distinct
                   // against the background image.
                   const DecoratedBox(
@@ -296,13 +304,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               .logout();
                         },
                       ),
-                      // _storedImage != null
-                      //     ? Image.file(
-                      //         _storedImage,
-                      //         fit: BoxFit.cover,
-                      //         width: double.infinity,
-                      //       )
-                      //     : Text('No image taken'),
+                      _storedImage != null
+                          ? Image.file(
+                              _storedImage,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            )
+                          : Text('No image taken'),
                     ],
                   ),
                 ),
