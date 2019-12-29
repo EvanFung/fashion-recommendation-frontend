@@ -6,6 +6,10 @@ import '../providers/PagesInfo.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import '../pages/chatPage.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspath;
 
 class _ContactCategory extends StatelessWidget {
   const _ContactCategory({Key key, this.icon, this.children}) : super(key: key);
@@ -107,6 +111,22 @@ class _ProfilePageState extends State<ProfilePage> {
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
   AppBarBehavior _appBarBehavior = AppBarBehavior.pinned;
+
+  //upload image
+  // File _storedImage;
+
+  // Future<void> _takePicture() async {
+  //   final imageFile =
+  //       await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
+  //   setState(() {
+  //     _storedImage = imageFile;
+  //   });
+
+  //   final appDir = await syspath.getApplicationDocumentsDirectory();
+  //   final fileName = await path.basename(imageFile.path);
+  //   final saveImage = await imageFile.copy('${appDir.path}/$fileName');
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +145,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   Icons.create,
                 ),
                 tooltip: 'Edit',
-                onPressed: () {
+                onPressed:
+                    // _takePicture
+                    () {
                   _scaffoldKey.currentState.showSnackBar(const SnackBar(
                     content: Text("Editing isn't supported in this screen."),
                   ));
@@ -167,6 +189,48 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: _ContactCategory(
                   icon: Icons.call,
                   children: <Widget>[
+                    _ContactItem(
+                      icon: Icons.message,
+                      tooltip: 'Send message',
+                      onPressed: () {
+                        _scaffoldKey.currentState.showSnackBar(const SnackBar(
+                          content: Text(
+                              'Pretend that this opened your SMS application.'),
+                        ));
+                      },
+                      lines: const <String>[
+                        '(650) 555-1234',
+                        'Mobile',
+                      ],
+                    ),
+                    _ContactItem(
+                      icon: Icons.message,
+                      tooltip: 'Send message',
+                      onPressed: () {
+                        _scaffoldKey.currentState.showSnackBar(const SnackBar(
+                          content: Text(
+                              'Pretend that this opened your SMS application.'),
+                        ));
+                      },
+                      lines: const <String>[
+                        '(650) 555-1234',
+                        'Mobile',
+                      ],
+                    ),
+                    _ContactItem(
+                      icon: Icons.message,
+                      tooltip: 'Send message',
+                      onPressed: () {
+                        _scaffoldKey.currentState.showSnackBar(const SnackBar(
+                          content: Text(
+                              'Pretend that this opened your SMS application.'),
+                        ));
+                      },
+                      lines: const <String>[
+                        '(650) 555-1234',
+                        'Mobile',
+                      ],
+                    ),
                     _ContactItem(
                       icon: Icons.message,
                       tooltip: 'Send message',
@@ -232,6 +296,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               .logout();
                         },
                       ),
+                      // _storedImage != null
+                      //     ? Image.file(
+                      //         _storedImage,
+                      //         fit: BoxFit.cover,
+                      //         width: double.infinity,
+                      //       )
+                      //     : Text('No image taken'),
                     ],
                   ),
                 ),

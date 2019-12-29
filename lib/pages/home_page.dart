@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/restaurants.dart';
 import '../widgets/slide_item.dart';
 import '../models/categories.dart';
-import '../widgets/App_Drawer.dart';
 
 class HomePage extends StatefulWidget {
   @override
