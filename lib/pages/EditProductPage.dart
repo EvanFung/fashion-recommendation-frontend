@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../providers/Product.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:io';
 
 class EditProductPage extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -74,6 +76,9 @@ class _EditProductPageState extends State<EditProductPage> {
   static String _subCategoryValue = 'Watches';
   int _mainCategoryIndex = 0;
   int _subCategoryIndex = 0;
+
+  //upload image
+  Future<File> _storedImage;
 
   @override
   void initState() {
@@ -279,71 +284,6 @@ class _EditProductPageState extends State<EditProductPage> {
                             subCategory: _editedProduct.subCategory);
                       },
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          width: 100,
-                          height: 100,
-                          margin: EdgeInsets.only(
-                            top: 8,
-                            right: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          child: _imageUrlController.text.isEmpty
-                              ? Text('Enter a URL')
-                              : FittedBox(
-                                  child: Image.network(
-                                    _imageUrlController.text,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            decoration: InputDecoration(labelText: 'Image URL'),
-                            keyboardType: TextInputType.url,
-                            textInputAction: TextInputAction.done,
-                            controller: _imageUrlController,
-                            focusNode: _imageUrlFocusNode,
-                            onFieldSubmitted: (_) {
-                              _saveForm();
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter an image URL.';
-                              }
-                              if (!value.startsWith('http') &&
-                                  !value.startsWith('https')) {
-                                return 'Please enter a valid URL.';
-                              }
-                              if (!value.endsWith('.png') &&
-                                  !value.endsWith('.jpg') &&
-                                  !value.endsWith('.jpeg')) {
-                                return 'Please enter a valid image URL.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _editedProduct = Product(
-                                  title: _editedProduct.title,
-                                  price: _editedProduct.price,
-                                  description: _editedProduct.description,
-                                  imageUrl: value,
-                                  id: _editedProduct.id,
-                                  isFavorite: _editedProduct.isFavorite,
-                                  mainCategory: _editedProduct.mainCategory,
-                                  subCategory: _editedProduct.subCategory);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -421,11 +361,71 @@ class _EditProductPageState extends State<EditProductPage> {
                               .toList(),
                         )
                       ],
-                    )
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            FlatButton(
+                              color: Theme.of(context).buttonColor,
+                              child: Text('Choose Image'),
+                              onPressed: _chooseImage,
+                            ),
+                            FlatButton(
+                              color: Theme.of(context).buttonColor,
+                              child: Text('Upload Image'),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _showImage()
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
     );
+  }
+
+  Widget _showImage() {
+    return FutureBuilder<File>(
+      future: _storedImage,
+      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.data != null) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Container(
+              child: Image.file(
+                snapshot.data,
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+        } else if (snapshot.error != null) {
+          return const Text(
+            'Error Picking Image',
+            textAlign: TextAlign.center,
+          );
+        } else {
+          return const Text(
+            'No Image Selected',
+            textAlign: TextAlign.center,
+          );
+        }
+      },
+    );
+  }
+
+  void _chooseImage() async {
+    setState(() {
+      _storedImage = ImagePicker.pickImage(source: ImageSource.gallery);
+    });
   }
 }
