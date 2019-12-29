@@ -84,9 +84,11 @@ class ProductDetailPage extends StatelessWidget {
                           color: Colors.amber,
                         ),
                         onRatingUpdate: (rating) async {
-                          await Provider.of<Rating>(context, listen: false)
-                              .addRating(
-                                  productId, rating, snapshot.data.objectId);
+                          // await Provider.of<Rating>(context, listen: false)
+                          //     .addRating(productId, snapshot.data.rating,
+                          //         snapshot.data.objectId);
+                          //not allow user to rate item twice.
+                          Provider.of<Rating>(context).reverseRatingBack();
                         },
                       );
                     } else {

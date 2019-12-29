@@ -101,6 +101,8 @@ class Products with ChangeNotifier {
     object.put('createBy', this.userId);
     object.put('mainCategory', product.mainCategory);
     object.put('subCategory', product.subCategory);
+    object.put('numOfRating', 0);
+    object.put('rating', 0);
 
     try {
       final response = await object.save();

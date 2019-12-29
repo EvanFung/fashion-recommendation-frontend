@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RatingItem {
   //objectId is the leancloud objectId.
@@ -21,7 +22,7 @@ class Rating with ChangeNotifier {
   final String authToken;
   final String userId;
   Rating(this.authToken, this.userId);
-  //productId, RatingItem
+  //objectId, RatingItem
   Map<String, RatingItem> _items = {};
 
   Map<String, RatingItem> get items {
@@ -36,6 +37,23 @@ class Rating with ChangeNotifier {
     avRating.put('productId', productId);
     avRating.put('userId', this.userId);
     avRating.put('rating', rating);
+
+    //update product #rating and total of the rating score, I will use REST API because there is no SDK for this operation
+    final url =
+        'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$productId';
+    final responseOnProduct = await http.put(url,
+        headers: {
+          "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+          "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          "numOfRating": {"__op": "Increment", "amount": 1},
+          "rating": {"__op": "Increment", "amount": rating}
+        }));
+
+    // print(responseOnProduct.body);
+
     final response = await avRating.save();
     //parsing it to map object
     final ratingResultString = json.decode(response.toString())['fields'];
@@ -81,5 +99,9 @@ class Rating with ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  void reverseRatingBack() {
+    notifyListeners();
   }
 }
