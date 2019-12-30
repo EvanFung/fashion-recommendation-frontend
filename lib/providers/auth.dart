@@ -158,9 +158,7 @@ class Auth with ChangeNotifier {
           "X-LC-Session": this._token
         },
         body: json.encode({
-          'name': fileName,
           'profilePic': {'id': responsedData['objectId'], '__type': 'File'}
         }));
-    print(responseInUserReq.body);
   }
 }

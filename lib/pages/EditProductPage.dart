@@ -78,6 +78,9 @@ class _EditProductPageState extends State<EditProductPage> {
 
   //upload image
   Future<File> _storedImage;
+  bool isUploaded = false;
+  //completed upload the file, we get the file id.
+  String fileId;
 
   @override
   void initState() {
@@ -148,7 +151,7 @@ class _EditProductPageState extends State<EditProductPage> {
     } else {
       try {
         await Provider.of<Products>(context, listen: false)
-            .addProduct(_editedProduct);
+            .addProduct(_editedProduct, fileId);
       } catch (error) {
         await showDialog(
           context: context,
@@ -372,7 +375,7 @@ class _EditProductPageState extends State<EditProductPage> {
                             FlatButton(
                               color: Theme.of(context).buttonColor,
                               child: Text('Upload Image'),
-                              onPressed: _uploadImage,
+                              onPressed: isUploaded ? null : _uploadImage,
                             ),
                           ],
                         ),
@@ -396,7 +399,7 @@ class _EditProductPageState extends State<EditProductPage> {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
           return ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(10.0),
             child: Container(
               child: Image.file(
                 snapshot.data,
@@ -442,7 +445,15 @@ class _EditProductPageState extends State<EditProductPage> {
   Future<void> _uploadImage() async {
     File imageFile = await _storedImage;
     final fileName = await path.basename(imageFile.path);
-    await Provider.of<Products>(context).uploadProductImage(
-        imageFile, _editedProduct.id, _editedProduct, fileName);
+    String uploadedFileId = await Provider.of<Products>(context)
+        .updateUploadProductImage(
+            imageFile, _editedProduct.id, _editedProduct, fileName);
+    print(uploadedFileId);
+    if (uploadedFileId != null) {
+      setState(() {
+        isUploaded = true;
+        fileId = uploadedFileId;
+      });
+    }
   }
 }

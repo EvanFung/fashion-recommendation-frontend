@@ -30,7 +30,7 @@ class UserProductItem extends StatelessWidget {
                 Navigator.of(context)
                     .pushNamed(EditProductPage.routeName, arguments: id);
               },
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).accentColor,
             ),
             IconButton(
               icon: Icon(Icons.delete),

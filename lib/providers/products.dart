@@ -70,7 +70,9 @@ class Products with ChangeNotifier {
       } else {
         response = await queryProduct.find();
       }
+
       List<AVObject> products = response.toList();
+      print(products[0].get('profilePic'));
       final List<Product> loadedProducts = [];
       products.forEach((prod) {
         loadedProducts.add(Product(
@@ -96,7 +98,7 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product product) async {
+  Future<void> addProduct(Product product, [String fileId]) async {
     print('userId is $userId');
     //https://fashion-rec-sys.firebaseio.com/
     AVObject object = new AVObject("Product");
@@ -114,15 +116,33 @@ class Products with ChangeNotifier {
       final response = await object.save();
       print(response.toString());
       String productStr = json.decode(response.toString())['fields'];
+      String productId = json.decode(productStr)['objectId'];
       final newProduct = Product(
           title: product.title,
           description: product.description,
           price: product.price,
           imageUrl: product.imageUrl,
-          id: json.decode(productStr)['objectId'],
+          id: productId,
           createBy: product.createBy);
       _items.add(newProduct);
       notifyListeners();
+      if (productId != null && fileId != null) {
+        print(fileId);
+        print(productId);
+        //attach file to the product.
+        var url =
+            'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$productId';
+        final responseFile = await http.put(url,
+            headers: {
+              "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+              "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+              "Content-Type": "application/json",
+            },
+            body: json.encode({
+              'profilePic': {'id': fileId, '__type': 'File'}
+            }));
+        print(responseFile.body);
+      }
     } catch (error) {
       print(error);
       throw error;
@@ -192,7 +212,7 @@ class Products with ChangeNotifier {
   }
 
 //return the file id
-  Future<String> uploadProductImage(
+  Future<String> updateUploadProductImage(
       File image, String productId, Product newProduct, String fileName) async {
     //update the provider product.
     int prodIndex = _items.indexWhere((prod) => prod.id == productId);
@@ -209,9 +229,22 @@ class Products with ChangeNotifier {
         headers: imgHeaders, body: image.readAsBytesSync());
     Map<String, dynamic> fileData =
         json.decode(response.body) as Map<String, dynamic>;
-    print(fileData['objectId']);
     //retrieve file object id
     String fileId = fileData['objectId'];
+    print(fileId);
+    if (productId != null) {
+      url =
+          'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$productId';
+      final responseOnUpdate = await http.put(url,
+          headers: {
+            "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+            "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+            "Content-Type": "application/json",
+          },
+          body: json.encode({
+            'profilePic': {'id': fileId, '__type': 'File'}
+          }));
+    }
     return fileId;
   }
 }
