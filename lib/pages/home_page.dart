@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/restaurants.dart';
 import '../widgets/slide_item.dart';
 import '../models/categories.dart';
+import '../pages/categories.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -160,6 +161,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onPressed: () {
                         print('see all pressed');
+                        Navigator.of(context).pushNamed(Categories.routeName);
                       },
                     ),
                   ],

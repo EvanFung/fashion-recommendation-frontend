@@ -19,6 +19,7 @@ import 'pages/EditProductPage.dart';
 import 'res/fashionAppTheme.dart';
 import 'pages/auth_screen.dart';
 import 'pages/login_page.dart';
+import 'pages/categories.dart';
 
 main() {
   initPlatformState();
@@ -88,7 +89,8 @@ class MyApp extends StatelessWidget {
               OrderPage.routeName: (ctx) => OrderPage(),
               UserProductPage.routeName: (ctx) => UserProductPage(),
               EditProductPage.routeName: (ctx) => EditProductPage(),
-              ChatPage.routeName: (ctx) => ChatPage()
+              ChatPage.routeName: (ctx) => ChatPage(),
+              Categories.routeName: (ctx) => Categories()
             },
           ),
         ));
