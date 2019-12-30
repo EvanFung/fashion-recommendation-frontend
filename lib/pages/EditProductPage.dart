@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/products.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
+import 'package:path/path.dart' as path;
 
 class EditProductPage extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -54,9 +55,7 @@ class _EditProductPageState extends State<EditProductPage> {
       'Bags',
       'Shoe Accessories',
       'Jewellery',
-      'Bags',
       'Wallets',
-      'Belts',
       'Accessories',
       'Eyewear',
       'Ties'
@@ -334,13 +333,10 @@ class _EditProductPageState extends State<EditProductPage> {
                               [_subCategoryIndex],
                           onChanged: (String newValue) {
                             setState(() {
+                              _subCategoryValue = newValue;
                               _subCategoryIndex =
                                   _subCategory[_mainCategoryIndex]
                                       .indexOf(newValue);
-                              _subCategory[_mainCategoryIndex]
-                                  [_subCategoryIndex] = newValue;
-                              _subCategoryValue = newValue;
-
                               _editedProduct = Product(
                                   title: _editedProduct.title,
                                   price: _editedProduct.price,
@@ -353,12 +349,12 @@ class _EditProductPageState extends State<EditProductPage> {
                             });
                           },
                           items: _subCategory[_mainCategoryIndex]
-                              .map<DropdownMenuItem<String>>(
-                                  (String value) => DropdownMenuItem<String>(
-                                        child: Text(value),
-                                        value: value,
-                                      ))
-                              .toList(),
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              child: Text(value),
+                              value: value,
+                            );
+                          }).toList(),
                         )
                       ],
                     ),
@@ -376,7 +372,7 @@ class _EditProductPageState extends State<EditProductPage> {
                             FlatButton(
                               color: Theme.of(context).buttonColor,
                               child: Text('Upload Image'),
-                              onPressed: () {},
+                              onPressed: _uploadImage,
                             ),
                           ],
                         ),
@@ -423,9 +419,30 @@ class _EditProductPageState extends State<EditProductPage> {
     );
   }
 
-  void _chooseImage() async {
+  Future<void> _chooseImage() async {
     setState(() {
       _storedImage = ImagePicker.pickImage(source: ImageSource.gallery);
     });
+
+    File file = await _storedImage;
+    setState(() {
+      _editedProduct = Product(
+          title: _editedProduct.title,
+          price: _editedProduct.price,
+          description: _editedProduct.description,
+          imageUrl: _editedProduct.imageUrl,
+          id: _editedProduct.id,
+          isFavorite: _editedProduct.isFavorite,
+          mainCategory: _editedProduct.mainCategory,
+          subCategory: _editedProduct.subCategory,
+          image: file);
+    });
+  }
+
+  Future<void> _uploadImage() async {
+    File imageFile = await _storedImage;
+    final fileName = await path.basename(imageFile.path);
+    await Provider.of<Products>(context).uploadProductImage(
+        imageFile, _editedProduct.id, _editedProduct, fileName);
   }
 }

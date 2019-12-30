@@ -5,8 +5,14 @@ import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import './Product.dart';
 import '../models/http_exception.dart';
 import '../models/MyAVObject.dart';
+import 'dart:io';
 
 class Products with ChangeNotifier {
+  Map<String, String> imgHeaders = {
+    "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+    "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+    "Content-Type": "image/jpg"
+  };
   List<Product> _items = [
     // Product(
     //   id: 'p1',
@@ -183,5 +189,29 @@ class Products with ChangeNotifier {
 
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
+  }
+
+//return the file id
+  Future<String> uploadProductImage(
+      File image, String productId, Product newProduct, String fileName) async {
+    //update the provider product.
+    int prodIndex = _items.indexWhere((prod) => prod.id == productId);
+    //product was found
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+    }
+    notifyListeners();
+
+    //upload file to server and attach this file to the corresponding product object.
+
+    var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$fileName';
+    final response = await http.post(url,
+        headers: imgHeaders, body: image.readAsBytesSync());
+    Map<String, dynamic> fileData =
+        json.decode(response.body) as Map<String, dynamic>;
+    print(fileData['objectId']);
+    //retrieve file object id
+    String fileId = fileData['objectId'];
+    return fileId;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'dart:io';
 
 class Product with ChangeNotifier {
   final String id;
@@ -9,6 +10,7 @@ class Product with ChangeNotifier {
   final String createBy;
   final String mainCategory;
   final String subCategory;
+  final File image;
   bool isFavorite;
 
   Product(
@@ -20,6 +22,7 @@ class Product with ChangeNotifier {
       this.createBy,
       this.mainCategory,
       this.subCategory,
+      this.image,
       this.isFavorite = false});
 
   void toggleFavoriteStatus() {
