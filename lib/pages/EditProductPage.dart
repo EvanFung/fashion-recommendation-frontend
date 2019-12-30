@@ -6,6 +6,7 @@ import '../providers/products.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
 import 'package:path/path.dart' as path;
+import '../models/file_meta.dart';
 
 class EditProductPage extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -80,7 +81,7 @@ class _EditProductPageState extends State<EditProductPage> {
   Future<File> _storedImage;
   bool isUploaded = false;
   //completed upload the file, we get the file id.
-  String fileId;
+  FileMeta fileMeta;
 
   @override
   void initState() {
@@ -151,7 +152,7 @@ class _EditProductPageState extends State<EditProductPage> {
     } else {
       try {
         await Provider.of<Products>(context, listen: false)
-            .addProduct(_editedProduct, fileId);
+            .addProduct(_editedProduct, fileMeta);
       } catch (error) {
         await showDialog(
           context: context,
@@ -445,14 +446,14 @@ class _EditProductPageState extends State<EditProductPage> {
   Future<void> _uploadImage() async {
     File imageFile = await _storedImage;
     final fileName = await path.basename(imageFile.path);
-    String uploadedFileId = await Provider.of<Products>(context)
+    FileMeta uploadedFileMeta = await Provider.of<Products>(context)
         .updateUploadProductImage(
             imageFile, _editedProduct.id, _editedProduct, fileName);
-    print(uploadedFileId);
-    if (uploadedFileId != null) {
+    print('fileMeta 452 $uploadedFileMeta');
+    if (uploadedFileMeta != null) {
       setState(() {
         isUploaded = true;
-        fileId = uploadedFileId;
+        fileMeta = uploadedFileMeta;
       });
     }
   }

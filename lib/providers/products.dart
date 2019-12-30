@@ -6,6 +6,7 @@ import './Product.dart';
 import '../models/http_exception.dart';
 import '../models/MyAVObject.dart';
 import 'dart:io';
+import '../models/file_meta.dart';
 
 class Products with ChangeNotifier {
   Map<String, String> imgHeaders = {
@@ -72,7 +73,6 @@ class Products with ChangeNotifier {
       }
 
       List<AVObject> products = response.toList();
-      print(products[0].get('profilePic'));
       final List<Product> loadedProducts = [];
       products.forEach((prod) {
         loadedProducts.add(Product(
@@ -98,14 +98,14 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product product, [String fileId]) async {
+  Future<void> addProduct(Product product, FileMeta fileMeta) async {
     print('userId is $userId');
     //https://fashion-rec-sys.firebaseio.com/
     AVObject object = new AVObject("Product");
     object.put("title", product.title);
     object.put("description", product.description);
     object.put("price", product.price);
-    object.put("imageUrl", product.imageUrl);
+    object.put("imageUrl", fileMeta.url);
     object.put('createBy', this.userId);
     object.put('mainCategory', product.mainCategory);
     object.put('subCategory', product.subCategory);
@@ -126,8 +126,8 @@ class Products with ChangeNotifier {
           createBy: product.createBy);
       _items.add(newProduct);
       notifyListeners();
-      if (productId != null && fileId != null) {
-        print(fileId);
+      if (productId != null && fileMeta != null) {
+        print(fileMeta.objectId);
         print(productId);
         //attach file to the product.
         var url =
@@ -139,7 +139,7 @@ class Products with ChangeNotifier {
               "Content-Type": "application/json",
             },
             body: json.encode({
-              'profilePic': {'id': fileId, '__type': 'File'}
+              'profilePic': {'id': fileMeta.objectId, '__type': 'File'}
             }));
         print(responseFile.body);
       }
@@ -212,7 +212,7 @@ class Products with ChangeNotifier {
   }
 
 //return the file id
-  Future<String> updateUploadProductImage(
+  Future<FileMeta> updateUploadProductImage(
       File image, String productId, Product newProduct, String fileName) async {
     //update the provider product.
     int prodIndex = _items.indexWhere((prod) => prod.id == productId);
@@ -229,9 +229,7 @@ class Products with ChangeNotifier {
         headers: imgHeaders, body: image.readAsBytesSync());
     Map<String, dynamic> fileData =
         json.decode(response.body) as Map<String, dynamic>;
-    //retrieve file object id
     String fileId = fileData['objectId'];
-    print(fileId);
     if (productId != null) {
       url =
           'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$productId';
@@ -245,6 +243,9 @@ class Products with ChangeNotifier {
             'profilePic': {'id': fileId, '__type': 'File'}
           }));
     }
-    return fileId;
+    return FileMeta(
+        url: fileData['url'],
+        name: fileData['name'],
+        objectId: fileData['objectId']);
   }
 }
