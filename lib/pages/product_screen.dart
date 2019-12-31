@@ -8,6 +8,7 @@ import '../providers/products.dart';
 import './CartPage.dart';
 import 'package:provider/provider.dart';
 import '../providers/Product.dart';
+import '../pages/ProductDetailPage.dart';
 
 const double _kAppBarHeight = 128.0;
 const double _kFabHalfSize = 28.0;
@@ -287,7 +288,8 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('card was tapped');
+        Navigator.of(context)
+            .pushNamed(ProductDetailPage.routeName, arguments: product.id);
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -354,7 +356,9 @@ class RecipeCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3.0)),
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text('HOT'),
+                  child: Text(
+                    'HOT',
+                  ),
                 ),
               ),
             ),
