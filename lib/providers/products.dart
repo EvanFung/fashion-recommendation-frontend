@@ -75,13 +75,17 @@ class Products with ChangeNotifier {
       List<AVObject> products = response.toList();
       final List<Product> loadedProducts = [];
       products.forEach((prod) {
-        loadedProducts.add(Product(
-            id: prod.get("objectId"),
-            title: prod.get("title"),
-            description: prod.get("description"),
-            price: prod.get("price"),
-            imageUrl: prod.get("imageUrl"),
-            createBy: this.userId));
+        loadedProducts.add(
+          Product(
+              id: prod.get("objectId"),
+              title: prod.get("title"),
+              description: prod.get("description"),
+              price: prod.get("price"),
+              imageUrl: prod.get("imageUrl"),
+              createBy: this.userId,
+              rating: prod.get('rating'),
+              numOfRating: prod.get('numOfRating')),
+        );
       });
       _items = loadedProducts;
       print('fetching products...');
@@ -123,7 +127,9 @@ class Products with ChangeNotifier {
           price: product.price,
           imageUrl: product.imageUrl,
           id: productId,
-          createBy: product.createBy);
+          createBy: product.createBy,
+          rating: 0.0,
+          numOfRating: 0);
       _items.add(newProduct);
       notifyListeners();
       if (productId != null && fileMeta != null) {

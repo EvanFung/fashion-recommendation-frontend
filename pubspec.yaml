@@ -80,6 +80,8 @@ flutter:
    - assets/images/people.jpeg
    - assets/images/people2.jpeg
    - assets/images/login_logo.png
+   - assets/images/logo_small.png
+   - assets/images/shop.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
