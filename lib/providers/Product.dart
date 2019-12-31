@@ -11,7 +11,7 @@ class Product with ChangeNotifier {
   final String mainCategory;
   final String subCategory;
   final File image;
-  final int numOfRating;
+  final double numOfRating;
   final double rating;
   bool isFavorite;
 

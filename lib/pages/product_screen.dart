@@ -9,6 +9,7 @@ import './CartPage.dart';
 import 'package:provider/provider.dart';
 import '../providers/Product.dart';
 import '../pages/ProductDetailPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 const double _kAppBarHeight = 128.0;
 const double _kFabHalfSize = 28.0;
@@ -306,10 +307,26 @@ class RecipeCard extends StatelessWidget {
                     tag: product.imageUrl,
                     child: AspectRatio(
                       aspectRatio: 4.0 / 3.0,
-                      child: Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.cover,
-                        semanticLabel: 'food',
+                      child:
+                          // Image.network(
+                          //   product.imageUrl,
+                          //   fit: BoxFit.cover,
+                          //   semanticLabel: 'food',
+                          // ),
+                          CachedNetworkImage(
+                        imageUrl: product.imageUrl,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        imageBuilder: (BuildContext context,
+                                ImageProvider imageProvider) =>
+                            Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          )),
+                        ),
                       ),
                     ),
                   ),

@@ -83,8 +83,8 @@ class Products with ChangeNotifier {
               price: prod.get("price"),
               imageUrl: prod.get("imageUrl"),
               createBy: this.userId,
-              rating: prod.get('rating'),
-              numOfRating: prod.get('numOfRating')),
+              rating: double.parse(prod.get('rating').toString()),
+              numOfRating: double.parse(prod.get('numOfRating').toString())),
         );
       });
       _items = loadedProducts;
@@ -129,7 +129,7 @@ class Products with ChangeNotifier {
           id: productId,
           createBy: product.createBy,
           rating: 0.0,
-          numOfRating: 0);
+          numOfRating: 0.0);
       _items.add(newProduct);
       notifyListeners();
       if (productId != null && fileMeta != null) {

@@ -9,8 +9,8 @@ class ProductDetailPage extends StatelessWidget {
 
   Future<RatingItem> _fetchRating(
       BuildContext context, String productId) async {
-    final loadedRating =
-        await Provider.of<Rating>(context).fetchRatingItem(productId);
+    final loadedRating = await Provider.of<Rating>(context, listen: false)
+        .fetchRatingItem(productId);
     if (loadedRating != null) {
       return loadedRating;
     } else {
@@ -24,8 +24,9 @@ class ProductDetailPage extends StatelessWidget {
     final productId =
         ModalRoute.of(context).settings.arguments as String; //is id
     // ...
-    final loadedProduct =
-        Provider.of<Products>(context, listen: false).findById(productId);
+    final loadedProduct = Provider.of<Products>(
+      context,
+    ).findById(productId);
 
     return Scaffold(
       appBar: AppBar(
