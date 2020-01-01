@@ -86,6 +86,26 @@ flutter:
    - assets/images/login_logo.png
    - assets/images/logo_small.png
    - assets/images/shop.png
+   - assets/images/bags.jpeg
+   - assets/images/belts.jpeg
+   - assets/images/bottomwear.jpeg
+   - assets/images/dress.jpeg
+   - assets/images/eyewear.jpeg
+   - assets/images/flipflops.jpeg
+   - assets/images/fragrance.jpeg
+   - assets/images/innerwear.jpeg
+   - assets/images/jewellery.jpeg
+   - assets/images/lips.jpeg
+   - assets/images/makeup.jpeg
+   - assets/images/nightwear.jpeg
+   - assets/images/sandal.jpeg
+   - assets/images/saree.jpeg
+   - assets/images/shoe_accesories.jpeg
+   - assets/images/skincare.jpeg
+   - assets/images/socks.jpeg
+   - assets/images/ties.jpeg
+   - assets/images/wallets.jpeg
+   - assets/images/watch.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
