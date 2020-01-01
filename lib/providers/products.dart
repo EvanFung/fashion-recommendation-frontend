@@ -7,6 +7,7 @@ import '../models/http_exception.dart';
 import '../models/MyAVObject.dart';
 import 'dart:io';
 import '../models/file_meta.dart';
+import '../utils/image_utils.dart';
 
 class Products with ChangeNotifier {
   Map<String, String> imgHeaders = {
@@ -133,8 +134,6 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
       notifyListeners();
       if (productId != null && fileMeta != null) {
-        print(fileMeta.objectId);
-        print(productId);
         //attach file to the product.
         var url =
             'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$productId';
@@ -227,12 +226,16 @@ class Products with ChangeNotifier {
       _items[prodIndex] = newProduct;
     }
     notifyListeners();
-
+    //compress the images
+    File compressedImage = await EImageUtils(image).compress(
+      quality: 10,
+    );
+    File resizedImage = await EImageUtils(compressedImage).resize(width: 512);
     //upload file to server and attach this file to the corresponding product object.
 
     var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$fileName';
     final response = await http.post(url,
-        headers: imgHeaders, body: image.readAsBytesSync());
+        headers: imgHeaders, body: resizedImage.readAsBytesSync());
     Map<String, dynamic> fileData =
         json.decode(response.body) as Map<String, dynamic>;
     String fileId = fileData['objectId'];

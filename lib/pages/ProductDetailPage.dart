@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
@@ -36,13 +37,34 @@ class ProductDetailPage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(
-                loadedProduct.imageUrl,
-                fit: BoxFit.cover,
-              ),
-            ),
+                height: 300,
+                width: double.infinity,
+                child:
+
+                    // Image.network(
+                    //   loadedProduct.imageUrl,
+                    //   fit: BoxFit.cover,
+                    // ),
+
+                    CachedNetworkImage(
+                  imageUrl: loadedProduct.imageUrl,
+                  imageBuilder:
+                      (BuildContext context, ImageProvider imgaeProvider) =>
+                          Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                      image: imgaeProvider,
+                      fit: BoxFit.cover,
+                    )),
+                  ),
+                  placeholder: (BuildContext context, String url) => SizedBox(
+                    child: CircularProgressIndicator(),
+                    height: 6,
+                    width: 6,
+                  ),
+                  errorWidget: (BuildContext context, String url, error) =>
+                      Icon(Icons.error),
+                )),
             SizedBox(
               height: 10,
             ),

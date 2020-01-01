@@ -91,6 +91,7 @@ class Rating with ChangeNotifier {
         .whereEqualTo('productId', productId)
         .find();
     if (ratings.length != 0) {
+      notifyListeners();
       return RatingItem(
           objectId: ratings[0].get('objectId'),
           productId: ratings[0].get('productId'),
