@@ -228,7 +228,7 @@ class Products with ChangeNotifier {
     notifyListeners();
     //compress the images
     File compressedImage = await EImageUtils(image).compress(
-      quality: 10,
+      quality: 60,
     );
     File resizedImage = await EImageUtils(compressedImage).resize(width: 512);
     //upload file to server and attach this file to the corresponding product object.

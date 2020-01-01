@@ -10,8 +10,8 @@ class ProductDetailPage extends StatelessWidget {
 
   Future<RatingItem> _fetchRating(
       BuildContext context, String productId) async {
-    final loadedRating = await Provider.of<Rating>(context, listen: false)
-        .fetchRatingItem(productId);
+    final loadedRating =
+        await Provider.of<Rating>(context).fetchRatingItem(productId);
     if (loadedRating != null) {
       return loadedRating;
     } else {
@@ -37,34 +37,33 @@ class ProductDetailPage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-                height: 300,
-                width: double.infinity,
-                child:
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                loadedProduct.imageUrl,
+                fit: BoxFit.cover,
+              ),
 
-                    // Image.network(
-                    //   loadedProduct.imageUrl,
-                    //   fit: BoxFit.cover,
-                    // ),
-
-                    CachedNetworkImage(
-                  imageUrl: loadedProduct.imageUrl,
-                  imageBuilder:
-                      (BuildContext context, ImageProvider imgaeProvider) =>
-                          Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: imgaeProvider,
-                      fit: BoxFit.cover,
-                    )),
-                  ),
-                  placeholder: (BuildContext context, String url) => SizedBox(
-                    child: CircularProgressIndicator(),
-                    height: 6,
-                    width: 6,
-                  ),
-                  errorWidget: (BuildContext context, String url, error) =>
-                      Icon(Icons.error),
-                )),
+              //     CachedNetworkImage(
+              //   imageUrl: loadedProduct.imageUrl,
+              //   imageBuilder:
+              //       (BuildContext context, ImageProvider imgaeProvider) =>
+              //           Container(
+              //     decoration: BoxDecoration(
+              //         image: DecorationImage(
+              //       image: imgaeProvider,
+              //       fit: BoxFit.cover,
+              //     )),
+              //   ),
+              //   placeholder: (BuildContext context, String url) => SizedBox(
+              //     child: CircularProgressIndicator(),
+              //     height: 6,
+              //     width: 6,
+              //   ),
+              //   errorWidget: (BuildContext context, String url, error) =>
+              //       Icon(Icons.error),
+              // )
+            ),
             SizedBox(
               height: 10,
             ),
