@@ -161,7 +161,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onPressed: () {
                         print('see all pressed');
-                        Navigator.of(context).pushNamed(Categories.routeName);
+                        Navigator.of(context)
+                            .pushNamed(Categories.routeName, arguments: 'All');
                       },
                     ),
                   ],
@@ -181,7 +182,9 @@ class _HomePageState extends State<HomePage> {
 
                       return GestureDetector(
                         onTap: () {
-                          print('was tap lar!');
+                          print(cat['name']);
+                          Navigator.of(context).pushNamed(Categories.routeName,
+                              arguments: cat['name']);
                         },
                         child: Padding(
                           padding: EdgeInsets.only(right: 10.0),

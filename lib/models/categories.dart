@@ -42,8 +42,8 @@ Map<String, List<SubCategory>> subCategories = {
     SubCategory(
         name: 'Shoe Accessories', img: 'assets/images/shoe_accesories.jpeg'),
     SubCategory(name: 'Jewellery', img: 'assets/images/jewellery.jpeg'),
-    SubCategory(name: 'Wallets', img: 'assets/images/wallents.jpeg'),
-    SubCategory(name: 'Accessories', img: 'assets/images/accessories.jpeg'),
+    SubCategory(name: 'Wallets', img: 'assets/images/wallets.jpeg'),
+    SubCategory(name: 'Accessories', img: 'assets/images/accessories.jpg'),
     SubCategory(name: 'Eyewear', img: 'assets/images/eyewear.jpeg'),
     SubCategory(name: 'Ties', img: 'assets/images/ties.jpeg'),
     SubCategory(name: 'Fragrance', img: 'assets/images/fragrance.jpeg'),
@@ -68,8 +68,8 @@ Map<String, List<SubCategory>> subCategories = {
     SubCategory(
         name: 'Shoe Accessories', img: 'assets/images/shoe_accesories.jpeg'),
     SubCategory(name: 'Jewellery', img: 'assets/images/jewellery.jpeg'),
-    SubCategory(name: 'Wallets', img: 'assets/images/wallents.jpeg'),
-    SubCategory(name: 'Accessories', img: 'assets/images/accessories.jpeg'),
+    SubCategory(name: 'Wallets', img: 'assets/images/wallets.jpeg'),
+    SubCategory(name: 'Accessories', img: 'assets/images/accessories.jpg'),
     SubCategory(name: 'Eyewear', img: 'assets/images/eyewear.jpeg'),
     SubCategory(name: 'Ties', img: 'assets/images/ties.jpeg'),
   ],
