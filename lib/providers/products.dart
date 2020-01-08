@@ -78,14 +78,16 @@ class Products with ChangeNotifier {
       products.forEach((prod) {
         loadedProducts.add(
           Product(
-              id: prod.get("objectId"),
-              title: prod.get("title"),
-              description: prod.get("description"),
-              price: prod.get("price"),
-              imageUrl: prod.get("imageUrl"),
-              createBy: this.userId,
-              rating: double.parse(prod.get('rating').toString()),
-              numOfRating: double.parse(prod.get('numOfRating').toString())),
+            id: prod.get("objectId"),
+            title: prod.get("title"),
+            description: prod.get("description"),
+            price: prod.get("price"),
+            imageUrl: prod.get("imageUrl"),
+            createBy: this.userId,
+            rating: double.parse(prod.get('rating').toString()),
+            numOfRating: double.parse(prod.get('numOfRating').toString()),
+            pId: prod.get('pId').toString(),
+          ),
         );
       });
       _items = loadedProducts;

@@ -15,6 +15,7 @@ class Auth with ChangeNotifier {
   String _userId;
   Timer _authTimer;
   int expiresIn = 3600 * 24;
+  String _uId;
   Map<String, String> authHeaders = {
     "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
     "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
@@ -44,6 +45,10 @@ class Auth with ChangeNotifier {
     return _userId;
   }
 
+  String get uId {
+    return _uId;
+  }
+
   Future<bool> signup(String email, String password, String username) async {
     const url = "https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users";
     try {
@@ -59,6 +64,7 @@ class Auth with ChangeNotifier {
       }
       _token = responseData['sessionToken'];
       _userId = responseData['objectId'];
+      _uId = responseData['uId'].toString();
       return true;
     } catch (error) {
       throw error;
@@ -83,6 +89,9 @@ class Auth with ChangeNotifier {
       //I/flutter ( 2204): {email: hhhhhao@gmail.com, sessionToken: aymdwjz3ikpu0lzdim1i8luvo, updatedAt: 2019-12-16T15:23:32.609Z, objectId: 5df7a1747796d900684723f8, username: evanfungvsnsns, createdAt: 2019-12-16T15:23:32.609Z, emailVerified: false, mobilePhoneVerified: false}
       _token = responseData['sessionToken'];
       _userId = responseData['objectId'];
+      _uId = responseData['uId'].toString();
+      print(responseData['uId'].toString());
+      print(_uId);
       _expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
       _autoLogout();
       notifyListeners();
@@ -90,7 +99,8 @@ class Auth with ChangeNotifier {
       final userData = json.encode({
         'token': _token,
         'userId': _userId,
-        'expiryDate': _expiryDate.toIso8601String()
+        'expiryDate': _expiryDate.toIso8601String(),
+        'uId': _uId
       });
       prefs.setString('userData', userData);
     } catch (error) {
@@ -112,8 +122,10 @@ class Auth with ChangeNotifier {
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
+    print(extractedUserData['uId']);
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
+    _uId = extractedUserData['uId'];
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
@@ -124,6 +136,7 @@ class Auth with ChangeNotifier {
     _token = null;
     _userId = null;
     _expiryDate = null;
+    _uId = null;
     if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;

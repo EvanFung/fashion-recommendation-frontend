@@ -12,6 +12,7 @@ class ProductDetailPage extends StatelessWidget {
       BuildContext context, String productId) async {
     final loadedRating =
         await Provider.of<Rating>(context).fetchRatingItem(productId);
+
     if (loadedRating != null) {
       return loadedRating;
     } else {
@@ -128,7 +129,7 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                         onRatingUpdate: (rating) async {
                           await Provider.of<Rating>(context, listen: false)
-                              .addRating(productId, rating);
+                              .addRating(productId, loadedProduct.pId, rating);
                         },
                       );
                     }

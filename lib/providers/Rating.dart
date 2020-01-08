@@ -3,25 +3,31 @@ import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+/** productId is the objectId of the product, pId is the auto increament id of the product which used for recommendation */
 class RatingItem {
   //objectId is the leancloud objectId.
   final String objectId;
   final String userId;
   final String productId;
   final double rating;
+  final String pId;
+  final String uId;
 
   RatingItem({
     this.objectId,
     this.userId,
     this.productId,
     this.rating,
+    this.pId,
+    this.uId,
   });
 }
 
 class Rating with ChangeNotifier {
   final String authToken;
   final String userId;
-  Rating(this.authToken, this.userId);
+  final String uId;
+  Rating(this.authToken, this.userId, this.uId);
   //objectId, RatingItem
   Map<String, RatingItem> _items = {};
 
@@ -29,13 +35,16 @@ class Rating with ChangeNotifier {
     return {..._items};
   }
 
-  Future<void> addRating(String productId, double rating,
+  Future<void> addRating(String productId, String pId, double rating,
       [String objectId]) async {
+    print(uId);
     //add rating object to leancloud.
     AVObject avRating = AVObject('Rating');
     if (objectId != null) avRating.put('objectId', objectId);
+    avRating.put('pId', pId);
     avRating.put('productId', productId);
     avRating.put('userId', this.userId);
+    avRating.put('uId', this.uId);
     avRating.put('rating', rating);
 
     //update product #rating and total of the rating score, I will use REST API because there is no SDK for this operation
@@ -67,6 +76,8 @@ class Rating with ChangeNotifier {
               userId: this.userId,
               productId: productId,
               rating: rating,
+              uId: this.uId,
+              pId: pId,
               objectId: ratingItem['objectId']));
     } else {
       _items.putIfAbsent(
@@ -74,6 +85,8 @@ class Rating with ChangeNotifier {
           () => RatingItem(
               userId: this.userId,
               productId: productId,
+              uId: this.uId,
+              pId: pId,
               rating: rating,
               objectId: ratingItem['objectId']));
     }

@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProxyProvider<Auth, Rating>(
             builder: (ctx, auth, previousRating) =>
-                Rating(auth.token, auth.userId),
+                Rating(auth.token, auth.userId, auth.uId),
           )
         ],
         child: Consumer<Auth>(

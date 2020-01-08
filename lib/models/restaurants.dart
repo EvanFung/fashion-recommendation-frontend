@@ -1,30 +1,30 @@
 List restaurants = [
   {
-    "img": "assets/images/food1.jpeg",
+    "img": "assets/images/shoes.jpeg",
     "title": "Happy Jones",
     "address": "1278 Loving Acres RoadKansas City, MO 64110",
     "rating": "4.5"
   },
   {
-    "img": "assets/images/food2.jpeg",
+    "img": "assets/images/ties.jpeg",
     "title": "Uncle Boons",
     "address": "1278 Loving Acres RoadKansas City, MO 64110",
     "rating": "4.5"
   },
   {
-    "img": "assets/images/food3.jpeg",
+    "img": "assets/images/wallets.jpeg",
     "title": "Happy Jones",
     "address": "1278 Loving Acres RoadKansas City, MO 64110",
     "rating": "4.5"
   },
   {
-    "img": "assets/images/food4.jpeg",
+    "img": "assets/images/watch.jpeg",
     "title": "Uncle Boons",
     "address": "1278 Loving Acres RoadKansas City, MO 64110",
     "rating": "4.5"
   },
   {
-    "img": "assets/images/food5.jpeg",
+    "img": "assets/images/socks.jpeg",
     "title": "Happy Jones",
     "address": "1278 Loving Acres RoadKansas City, MO 64110",
     "rating": "4.5"
