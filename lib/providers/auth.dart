@@ -90,8 +90,6 @@ class Auth with ChangeNotifier {
       _token = responseData['sessionToken'];
       _userId = responseData['objectId'];
       _uId = responseData['uId'].toString();
-      print(responseData['uId'].toString());
-      print(_uId);
       _expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
       _autoLogout();
       notifyListeners();
@@ -122,7 +120,6 @@ class Auth with ChangeNotifier {
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
-    print(extractedUserData['uId']);
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _uId = extractedUserData['uId'];

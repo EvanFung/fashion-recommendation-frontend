@@ -37,7 +37,6 @@ class Rating with ChangeNotifier {
 
   Future<void> addRating(String productId, String pId, double rating,
       [String objectId]) async {
-    print(uId);
     //add rating object to leancloud.
     AVObject avRating = AVObject('Rating');
     if (objectId != null) avRating.put('objectId', objectId);

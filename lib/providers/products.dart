@@ -67,15 +67,18 @@ class Products with ChangeNotifier {
     try {
       var response;
       if (filterByUser) {
-        response =
-            await queryProduct.whereEqualTo('createBy', this.userId).find();
+        response = await queryProduct
+            .whereEqualTo('createBy', this.userId)
+            .limit(10)
+            .find();
       } else {
-        response = await queryProduct.find();
+        response = await queryProduct.limit(10).find();
       }
 
       List<AVObject> products = response.toList();
       final List<Product> loadedProducts = [];
       products.forEach((prod) {
+        print(prod.get('rating').runtimeType == int);
         loadedProducts.add(
           Product(
             id: prod.get("objectId"),
@@ -116,8 +119,8 @@ class Products with ChangeNotifier {
     object.put('createBy', this.userId);
     object.put('mainCategory', product.mainCategory);
     object.put('subCategory', product.subCategory);
-    object.put('numOfRating', 0);
-    object.put('rating', 0);
+    object.put('numOfRating', 0.0);
+    object.put('rating', 0.0);
 
     try {
       final response = await object.save();
@@ -131,8 +134,8 @@ class Products with ChangeNotifier {
           imageUrl: product.imageUrl,
           id: productId,
           createBy: product.createBy,
-          rating: 0.0,
-          numOfRating: 0.0);
+          rating: 0,
+          numOfRating: 0);
       _items.add(newProduct);
       notifyListeners();
       if (productId != null && fileMeta != null) {
@@ -258,5 +261,9 @@ class Products with ChangeNotifier {
         url: fileData['url'],
         name: fileData['name'],
         objectId: fileData['objectId']);
+  }
+
+  void notifyProduct() {
+    notifyListeners();
   }
 }
