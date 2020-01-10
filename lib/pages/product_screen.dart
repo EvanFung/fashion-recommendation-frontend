@@ -68,6 +68,7 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   var _isInit = true;
   var _isLoading = false;
   var indexOfPage = 1;
+  var productList = [];
 
   ScrollController _scrollController = ScrollController();
 
@@ -91,17 +92,17 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   @override
   void didChangeDependencies() {
     //it will run after the app fully operate.
-    // if (_isInit) {
-    //   setState(() {
-    //     _isLoading = true;
-    //   });
-    //   Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-    //   });
-    // }
-    // _isInit = false;
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
 
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -120,41 +121,26 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
     await Provider.of<Products>(context).fetchProductByPage(indexOfPage);
   }
 
-  Stream<void> fetchProducts(BuildContext context) {
-    Provider.of<Products>(context, listen: false).fetchAndSetProducts(false);
+  Future<void> fetchProducts(BuildContext context) async {
+    await Provider.of<Products>(context).fetchAndSetProducts(false);
   }
 
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    // final productsData = Provider.of<Products>(context);
-    // final products =
-    //     _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
+    final productsData = Provider.of<Products>(context);
+    final products =
+        _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
     return Scaffold(
-      key: scaffoldKey,
-      body: StreamBuilder(
-          stream: fetchProducts(context),
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return CustomScrollView(
-                controller: _scrollController,
-                semanticChildCount: categories.length,
-                slivers: <Widget>[
-                  _buildAppBar(context, statusBarHeight),
-                  Consumer<Products>(
-                    builder: (BuildContext context, Products productsData, _) =>
-                        _buildBody(context, statusBarHeight, _showFavoritesOnly,
-                            productsData.items),
-                  ),
-                ],
-              );
-            }
-          }),
-    );
+        key: scaffoldKey,
+        body: CustomScrollView(
+          controller: _scrollController,
+          semanticChildCount: products.length,
+          slivers: <Widget>[
+            _buildAppBar(context, statusBarHeight),
+            _buildBody(context, statusBarHeight, _showFavoritesOnly, products),
+          ],
+        ));
   }
 
   Widget _buildAppBar(BuildContext context, double statusBarHeight) {
