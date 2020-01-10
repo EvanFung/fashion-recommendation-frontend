@@ -15,40 +15,8 @@ class Products with ChangeNotifier {
     "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
     "Content-Type": "image/jpg"
   };
-  List<Product> _items = [
-    // Product(
-    //   id: 'p1',
-    //   title: 'Red Shirt',
-    //   description: 'A red shirt - it is pretty red!',
-    //   price: 29.99,
-    //   imageUrl:
-    //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    // ),
-    // Product(
-    //   id: 'p2',
-    //   title: 'Trousers',
-    //   description: 'A nice pair of trousers.',
-    //   price: 59.99,
-    //   imageUrl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    // ),
-    // Product(
-    //   id: 'p3',
-    //   title: 'Yellow Scarf',
-    //   description: 'Warm and cozy - exactly what you need for the winter.',
-    //   price: 19.99,
-    //   imageUrl:
-    //       'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    // ),
-    // Product(
-    //   id: 'p4',
-    //   title: 'A Pan',
-    //   description: 'Prepare any meal you want.',
-    //   price: 49.99,
-    //   imageUrl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    // ),
-  ];
+  Set<String> _sourceKeyWords = Set();
+  List<Product> _items = [];
 
   final String authToken;
   final String userId;
@@ -57,6 +25,10 @@ class Products with ChangeNotifier {
 
   List<Product> get items {
     return [..._items];
+  }
+
+  Set<String> get sourceKeyWords {
+    return _sourceKeyWords;
   }
 
   List<Product> get favoriteItems {
@@ -287,5 +259,43 @@ class Products with ChangeNotifier {
     });
     _items.addAll(loadedProducts);
     notifyListeners();
+  }
+
+  // fetch all products title and article type for user seaching keyword...
+  Future<void> fetchProductTitle() async {
+    //adding title to the source keywords list
+    //adding article type to the source keywords list
+    AVQuery query = AVQuery('Product');
+    var response = await query.limit(1000).find();
+    List<AVObject> products = response.toList();
+    Set<String> keywords = Set();
+    products.forEach((prod) {
+      keywords.add(prod.get('title'));
+    });
+    _sourceKeyWords = keywords;
+    notifyListeners();
+  }
+
+  Future<Product> searchByTitle(String title) async {
+    AVQuery query = AVQuery('Product');
+    var response = await query.whereEqualTo('title', title).find();
+    List<AVObject> products = response.toList();
+    //if found
+    if (products.length > 0) {
+      AVObject prod = products[0];
+      return Product(
+        id: prod.get("objectId"),
+        title: prod.get("title"),
+        description: prod.get("description"),
+        price: prod.get("price"),
+        imageUrl: prod.get("imageUrl"),
+        createBy: this.userId,
+        rating: double.parse(prod.get('rating').toString()),
+        numOfRating: double.parse(prod.get('numOfRating').toString()),
+        pId: prod.get('pId').toString(),
+      );
+    } else {
+      return null;
+    }
   }
 }

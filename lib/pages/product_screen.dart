@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../providers/Product.dart';
 import '../pages/ProductDetailPage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../widgets/product_search.dart';
 
 const double _kAppBarHeight = 128.0;
 const double _kFabHalfSize = 28.0;
@@ -69,6 +70,7 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   var _isLoading = false;
   var indexOfPage = 1;
   var productList = [];
+  List<String> sourceKeyWords = [];
 
   ScrollController _scrollController = ScrollController();
 
@@ -97,6 +99,12 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
         _isLoading = true;
       });
       Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+
+      Provider.of<Products>(context).fetchProductTitle().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -141,14 +149,15 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
                 controller: _scrollController,
                 semanticChildCount: products.length,
                 slivers: <Widget>[
-                  _buildAppBar(context, statusBarHeight),
+                  _buildAppBar(context, statusBarHeight, productsData),
                   _buildBody(
                       context, statusBarHeight, _showFavoritesOnly, products),
                 ],
               ));
   }
 
-  Widget _buildAppBar(BuildContext context, double statusBarHeight) {
+  Widget _buildAppBar(
+      BuildContext context, double statusBarHeight, Products productsData) {
     return SliverAppBar(
       pinned: true,
       expandedHeight: _kAppBarHeight,
@@ -157,9 +166,14 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
           icon: const Icon(Icons.search),
           tooltip: 'Search',
           onPressed: () {
-            scaffoldKey.currentState.showSnackBar(const SnackBar(
-              content: Text('NOT SUPPORT RIGHT NOW'),
-            ));
+            // scaffoldKey.currentState.showSnackBar(const SnackBar(
+            //   content: Text('NOT SUPPORT RIGHT NOW'),
+            // ));
+            // Consumer<Products>(builder: (BuildContext context, productsData,_) =>,);
+            showSearch(
+                context: context,
+                delegate: ProductSearch(
+                    productsData.sourceKeyWords, productsData.items));
           },
         ),
         PopupMenuButton(
@@ -320,7 +334,7 @@ class RecipeCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
-            .pushNamed(ProductDetailPage.routeName, arguments: product.id);
+            .pushNamed(ProductDetailPage.routeName, arguments: product);
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

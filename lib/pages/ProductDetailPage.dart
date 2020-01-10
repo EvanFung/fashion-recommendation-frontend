@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
+import '../providers/Product.dart';
 import '../providers/Rating.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -23,16 +24,23 @@ class ProductDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //the id is comefrom
-    final productId =
-        ModalRoute.of(context).settings.arguments as String; //is id
-    // ...
-    final loadedProduct = Provider.of<Products>(
-      context,
-    ).findById(productId);
+    final product = ModalRoute.of(context).settings.arguments as Product;
+    // // ...
+    // var loadedProduct;
+
+    // loadedProduct = Provider.of<Products>(
+    //   context,
+    // ).findById(product.id);
+
+    // //if product is not in our loading product list.
+    // //that means the product is coming from search function.
+    // if (loadedProduct == null) {
+
+    // }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(loadedProduct.title),
+        title: Text(product.title),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -48,7 +56,7 @@ class ProductDetailPage extends StatelessWidget {
                     // ),
 
                     CachedNetworkImage(
-                  imageUrl: loadedProduct.imageUrl,
+                  imageUrl: product.imageUrl,
                   imageBuilder:
                       (BuildContext context, ImageProvider imgaeProvider) =>
                           Container(
@@ -70,7 +78,7 @@ class ProductDetailPage extends StatelessWidget {
               height: 10,
             ),
             Text(
-              '\$${loadedProduct.price}',
+              '\$${product.price}',
               style: TextStyle(color: Colors.grey, fontSize: 20),
             ),
             SizedBox(
@@ -80,13 +88,13 @@ class ProductDetailPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
               child: Text(
-                loadedProduct.description,
+                product.description,
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
             ),
             FutureBuilder(
-                future: _fetchRating(context, productId),
+                future: _fetchRating(context, product.id),
                 builder: (ctx, AsyncSnapshot<RatingItem> snapshot) {
                   Widget returnedWidget;
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -130,7 +138,7 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                         onRatingUpdate: (rating) async {
                           await Provider.of<Rating>(context, listen: false)
-                              .addRating(productId, loadedProduct.pId, rating);
+                              .addRating(product.id, product.pId, rating);
                         },
                       );
                     }
