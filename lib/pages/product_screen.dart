@@ -133,14 +133,19 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
         _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
     return Scaffold(
         key: scaffoldKey,
-        body: CustomScrollView(
-          controller: _scrollController,
-          semanticChildCount: products.length,
-          slivers: <Widget>[
-            _buildAppBar(context, statusBarHeight),
-            _buildBody(context, statusBarHeight, _showFavoritesOnly, products),
-          ],
-        ));
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : CustomScrollView(
+                controller: _scrollController,
+                semanticChildCount: products.length,
+                slivers: <Widget>[
+                  _buildAppBar(context, statusBarHeight),
+                  _buildBody(
+                      context, statusBarHeight, _showFavoritesOnly, products),
+                ],
+              ));
   }
 
   Widget _buildAppBar(BuildContext context, double statusBarHeight) {
