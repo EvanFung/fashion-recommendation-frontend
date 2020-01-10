@@ -52,6 +52,7 @@ class Products with ChangeNotifier {
 
   final String authToken;
   final String userId;
+
   Products(this.authToken, this._items, this.userId);
 
   List<Product> get items {
@@ -74,11 +75,9 @@ class Products with ChangeNotifier {
       } else {
         response = await queryProduct.limit(10).find();
       }
-
-      List<AVObject> products = response.toList();
       final List<Product> loadedProducts = [];
+      List<AVObject> products = response.toList();
       products.forEach((prod) {
-        print(prod.get('rating').runtimeType == int);
         loadedProducts.add(
           Product(
             id: prod.get("objectId"),
@@ -94,7 +93,6 @@ class Products with ChangeNotifier {
         );
       });
       _items = loadedProducts;
-      print('fetching products...');
       notifyListeners();
 
       //TEST UPDATE
@@ -263,7 +261,31 @@ class Products with ChangeNotifier {
         objectId: fileData['objectId']);
   }
 
-  void notifyProduct() {
+  Future<void> fetchProductByPage(int page) async {
+    print('pages = $page');
+    AVQuery query = AVQuery('Product');
+    var response = await query
+        .limit(10)
+        .skip(10 * page)
+        .orderByDescending('createAt')
+        .find();
+
+    List<AVObject> products = response.toList();
+    final List<Product> loadedProducts = [];
+    products.forEach((prod) {
+      loadedProducts.add(Product(
+        id: prod.get("objectId"),
+        title: prod.get("title"),
+        description: prod.get("description"),
+        price: prod.get("price"),
+        imageUrl: prod.get("imageUrl"),
+        createBy: this.userId,
+        rating: double.parse(prod.get('rating').toString()),
+        numOfRating: double.parse(prod.get('numOfRating').toString()),
+        pId: prod.get('pId').toString(),
+      ));
+    });
+    _items.addAll(loadedProducts);
     notifyListeners();
   }
 }

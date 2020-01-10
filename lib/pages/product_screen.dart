@@ -67,54 +67,93 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   var _showFavoritesOnly = false;
   var _isInit = true;
   var _isLoading = false;
+  var indexOfPage = 1;
+
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     //CONTEXT INSIDE the initState wont work!!!!
     // TODO: implement initState
     super.initState();
-    // Provider.of<Products>(context).fetchAndSetProducts();
+
+    _scrollController.addListener(() {
+      //if we are bottom of the page
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print('scroll to bottom now.');
+
+        fetchNextPageProduct(context);
+      }
+    });
   }
 
   @override
   void didChangeDependencies() {
     //it will run after the app fully operate.
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
+    // if (_isInit) {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
+    //   Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //   });
+    // }
+    // _isInit = false;
 
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
   @override
+  void dispose() {
+    _scrollController = null;
+    super.dispose();
+  }
+
+  Future<void> fetchNextPageProduct(BuildContext context) async {
+    setState(() {
+      indexOfPage += 1;
+    });
+    await Provider.of<Products>(context).fetchProductByPage(indexOfPage);
+  }
+
+  Stream<void> fetchProducts(BuildContext context) {
+    Provider.of<Products>(context, listen: false).fetchAndSetProducts(false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final productsData = Provider.of<Products>(context);
-    final products =
-        _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
+    // final productsData = Provider.of<Products>(context);
+    // final products =
+    //     _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
     return Scaffold(
       key: scaffoldKey,
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : CustomScrollView(
-              semanticChildCount: categories.length,
-              slivers: <Widget>[
-                _buildAppBar(context, statusBarHeight),
-                _buildBody(
-                    context, statusBarHeight, _showFavoritesOnly, products),
-              ],
-            ),
+      body: StreamBuilder(
+          stream: fetchProducts(context),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return CustomScrollView(
+                controller: _scrollController,
+                semanticChildCount: categories.length,
+                slivers: <Widget>[
+                  _buildAppBar(context, statusBarHeight),
+                  Consumer<Products>(
+                    builder: (BuildContext context, Products productsData, _) =>
+                        _buildBody(context, statusBarHeight, _showFavoritesOnly,
+                            productsData.items),
+                  ),
+                ],
+              );
+            }
+          }),
     );
   }
 
@@ -335,13 +374,8 @@ class RecipeCard extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Image.network(
-                          product.imageUrl,
-                          width: 48.0,
-                          height: 48.0,
-                        ),
-                      ),
+                          padding: const EdgeInsets.all(16.0),
+                          child: Icon(Icons.store_mall_directory)),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -394,7 +428,10 @@ class RecipeCard extends StatelessWidget {
                         color: Theme.of(context).accentColor,
                         size: 15,
                       ),
-                      Text(product.rating.toString())
+                      (product.rating / product.numOfRating).toString() == 'NaN'
+                          ? Text('0')
+                          : Text(
+                              (product.rating / product.numOfRating).toString())
                     ],
                   ),
                 ),
