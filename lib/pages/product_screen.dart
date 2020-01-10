@@ -136,7 +136,7 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final productsData = Provider.of<Products>(context);
+    final productsData = Provider.of<Products>(context, listen: false);
     final products =
         _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
     return Scaffold(
@@ -242,9 +242,9 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
           mainAxisSpacing: 8.0,
         ),
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final Product product = products[index];
-          return RecipeCard(
-            product: product,
+          return ChangeNotifierProvider.value(
+            value: products[index],
+            child: RecipeCard(),
           );
         }, childCount: products.length),
       ),
@@ -322,15 +322,15 @@ class _LogoState extends State<Logo> {
 }
 
 class RecipeCard extends StatelessWidget {
-  final Product product;
   TextStyle get titleStyle =>
       const PestoStyle(fontSize: 24.0, fontWeight: FontWeight.w600);
   TextStyle get authorStyle =>
       const PestoStyle(fontWeight: FontWeight.w500, color: Colors.black54);
 
-  const RecipeCard({this.product});
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
@@ -378,9 +378,9 @@ class RecipeCard extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Icon(Icons.store_mall_directory)),
+                      SizedBox(
+                        width: 20.0,
+                      ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,9 +392,12 @@ class RecipeCard extends StatelessWidget {
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text(
-                              product.description,
-                              style: authorStyle,
+                            Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Text(
+                                product.description,
+                                style: authorStyle,
+                              ),
                             )
                           ],
                         ),
@@ -407,15 +410,14 @@ class RecipeCard extends StatelessWidget {
             Positioned(
               top: 6.0,
               left: 6.0,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3.0)),
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'HOT',
-                  ),
-                ),
+              child: IconButton(
+                color: Colors.red,
+                icon: Icon(product.isFavorite
+                    ? Icons.favorite
+                    : Icons.favorite_border),
+                onPressed: () {
+                  product.toggleFavoriteStatus();
+                },
               ),
             ),
             Positioned(

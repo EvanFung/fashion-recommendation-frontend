@@ -20,13 +20,6 @@ class ProductSearch extends SearchDelegate {
     "Casual",
     "Tshirt"
   ];
-  // var sourceList = [
-  //   "dart",
-  //   "dart 入门",
-  //   "flutter",
-  //   "flutter 编程",
-  //   "flutter 编程开发",
-  // ];
   @override
   String get searchFieldLabel => searchHint;
 
@@ -116,7 +109,6 @@ class ProductSearch extends SearchDelegate {
           ),
         ),
         onTap: () {
-          //  query.replaceAll("", suggest[index].toString());
           searchHint = "";
           query = suggest[index].toString();
           showResults(context);
