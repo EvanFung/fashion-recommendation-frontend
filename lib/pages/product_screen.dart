@@ -70,7 +70,6 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   var _isLoading = false;
   var indexOfPage = 1;
   var productList = [];
-  List<String> sourceKeyWords = [];
 
   ScrollController _scrollController = ScrollController();
 
@@ -170,10 +169,10 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
             //   content: Text('NOT SUPPORT RIGHT NOW'),
             // ));
             // Consumer<Products>(builder: (BuildContext context, productsData,_) =>,);
+
             showSearch(
                 context: context,
-                delegate: ProductSearch(
-                    productsData.sourceKeyWords, productsData.items));
+                delegate: ProductSearch(productsData.sourceKeyWords));
           },
         ),
         PopupMenuButton(
@@ -409,7 +408,7 @@ class RecipeCard extends StatelessWidget {
             ),
             Positioned(
               top: 6.0,
-              left: 6.0,
+              right: 6.0,
               child: IconButton(
                 color: Colors.red,
                 icon: Icon(product.isFavorite
@@ -422,7 +421,7 @@ class RecipeCard extends StatelessWidget {
             ),
             Positioned(
               top: 6.0,
-              right: 6.0,
+              left: 6.0,
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(3.0)),

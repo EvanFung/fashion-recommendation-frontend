@@ -5,12 +5,10 @@ import '../providers/products.dart';
 import '../pages/ProductDetailPage.dart';
 
 class ProductSearch extends SearchDelegate {
-  final Set<String> sourceList;
-  final List<Product> products;
-
-  ProductSearch(this.sourceList, this.products);
   String searchHint = "Search fashion items...";
-
+  final Set<String> sourceList;
+  List<String> result = List();
+  ProductSearch(this.sourceList);
   var suggestList = [
     "Formal",
     "Wallets",
@@ -38,7 +36,12 @@ class ProductSearch extends SearchDelegate {
       ),
       IconButton(
         icon: Icon(Icons.search),
-        onPressed: () => query = "",
+        onPressed: () async {
+          result = await Provider.of<Products>(context)
+              .fetchProductTitleByQuery(query);
+          print(result.length);
+          showResults(context);
+        },
       )
     ];
   }
@@ -58,15 +61,13 @@ class ProductSearch extends SearchDelegate {
   ///展示搜索结果
   @override
   Widget buildResults(BuildContext context) {
-    List<String> result = List();
-
     ///模拟搜索过程
-    for (var str in sourceList) {
-      ///query 就是输入框的 TextEditingController
-      if (query.isNotEmpty && str.toLowerCase().contains(query.toLowerCase())) {
-        result.add(str);
-      }
-    }
+    // for (var str in sourceList) {
+    //   ///query 就是输入框的 TextEditingController
+    //   if (query.isNotEmpty && str.contains(query)) {
+    //     result.add(str);
+    //   }
+    // }
 
     ///展示搜索结果
     return ListView.builder(

@@ -276,6 +276,7 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
+  //when user select source keyword, return a products object.
   Future<Product> searchByTitle(String title) async {
     AVQuery query = AVQuery('Product');
     var response = await query.whereEqualTo('title', title).find();
@@ -297,5 +298,31 @@ class Products with ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  Future<List<String>> fetchProductTitleByQuery(String query) async {
+    var searchCondition =
+        'where={"title":{"\$regex":"$query","\$options":"i"}}';
+    var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product?' +
+        searchCondition;
+    var uri = Uri.encodeFull(url);
+    final response = await http.get(uri, headers: {
+      "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+      "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+      "Content-Type": "application/json",
+    });
+    final responseResult = json.decode(response.body) as Map<String, dynamic>;
+    List results = responseResult['results'] as List<dynamic>;
+
+    //keyword container
+    List<String> keywords = List();
+
+    results.forEach((prod) {
+      Map<String, dynamic> p = prod as Map<String, dynamic>;
+      //add title to keywords set
+      keywords.add(p['title']);
+    });
+
+    return keywords;
   }
 }

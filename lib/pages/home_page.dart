@@ -3,6 +3,7 @@ import '../models/restaurants.dart';
 import '../widgets/slide_item.dart';
 import '../models/categories.dart';
 import '../pages/categories.dart';
+import '../widgets/product_search.dart';
 
 class HomePage extends StatefulWidget {
   @override
