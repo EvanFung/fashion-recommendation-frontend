@@ -4,6 +4,8 @@ import '../widgets/slide_item.dart';
 import '../models/categories.dart';
 import '../pages/categories.dart';
 import '../widgets/product_search.dart';
+import 'package:provider/provider.dart';
+import '../providers/products.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,8 +15,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchControl = new TextEditingController();
   final FocusNode _searchNode = FocusNode();
+  var _isLoading = false;
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+
+    if (_isInit) {
+      Provider.of<Products>(context).fetchProductTitle().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final productsData = Provider.of<Products>(context, listen: false);
     return Scaffold(
         appBar: PreferredSize(
           child: Padding(
@@ -27,6 +49,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: TextField(
+                onTap: () {
+                  showSearch(
+                      context: context,
+                      delegate: ProductSearch(productsData.sourceKeyWords));
+                },
                 focusNode: _searchNode,
                 style: TextStyle(
                   fontSize: 15.0,
@@ -51,10 +78,10 @@ class _HomePageState extends State<HomePage> {
                     Icons.search,
                     color: Colors.black,
                   ),
-                  suffixIcon: Icon(
-                    Icons.filter_list,
-                    color: Colors.black,
-                  ),
+                  // suffixIcon: Icon(
+                  //   Icons.filter_list,
+                  //   color: Colors.black,
+                  // ),
                   hintStyle: TextStyle(
                     fontSize: 15.0,
                     color: Colors.black,
