@@ -37,9 +37,9 @@ class ProductSearch extends SearchDelegate {
       IconButton(
         icon: Icon(Icons.search),
         onPressed: () async {
+          result.clear();
           result = await Provider.of<Products>(context)
               .fetchProductTitleByQuery(query);
-          print(result.length);
           showResults(context);
         },
       )
@@ -112,6 +112,13 @@ class ProductSearch extends SearchDelegate {
         onTap: () {
           searchHint = "";
           query = suggest[index].toString();
+          result.clear();
+          for (var str in sourceList) {
+            ///query 就是输入框的 TextEditingController
+            if (query.isNotEmpty && str.contains(query)) {
+              result.add(str);
+            }
+          }
           showResults(context);
         },
       ),
