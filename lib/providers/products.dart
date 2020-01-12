@@ -316,6 +316,7 @@ class Products with ChangeNotifier {
 
     //keyword container
     List<String> keywords = List();
+    print(results.length);
 
     results.forEach((prod) {
       Map<String, dynamic> p = prod as Map<String, dynamic>;

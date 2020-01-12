@@ -436,8 +436,8 @@ class RecipeCard extends StatelessWidget {
                       ),
                       (product.rating / product.numOfRating).toString() == 'NaN'
                           ? Text('0')
-                          : Text(
-                              (product.rating / product.numOfRating).toString())
+                          : Text((product.rating / product.numOfRating)
+                              .toStringAsFixed(2))
                     ],
                   ),
                 ),
