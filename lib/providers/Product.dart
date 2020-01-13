@@ -15,24 +15,32 @@ class Product with ChangeNotifier {
   final double rating;
   final String pId; //auto increament id of product. use for rating.
   bool isFavorite;
+  bool isRated;
 
-  Product(
-      {@required this.id,
-      @required this.title,
-      @required this.description,
-      @required this.price,
-      @required this.imageUrl,
-      this.createBy,
-      this.mainCategory,
-      this.subCategory,
-      this.image,
-      this.isFavorite = false,
-      this.numOfRating,
-      this.rating,
-      this.pId});
+  Product({
+    @required this.id,
+    @required this.title,
+    @required this.description,
+    @required this.price,
+    @required this.imageUrl,
+    this.createBy,
+    this.mainCategory,
+    this.subCategory,
+    this.image,
+    this.isFavorite = false,
+    this.numOfRating,
+    this.rating,
+    this.pId,
+    this.isRated = false,
+  });
 
   void toggleFavoriteStatus() {
     isFavorite = !isFavorite;
+    notifyListeners();
+  }
+
+  void setRated() {
+    isRated = true;
     notifyListeners();
   }
 }

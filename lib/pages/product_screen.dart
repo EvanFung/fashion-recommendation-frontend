@@ -19,6 +19,7 @@ const double _kRecipePageMaxWidth = 500.0;
 enum FilterOptions {
   Favorites,
   All,
+  Rated,
 }
 
 class PestoStyle extends TextStyle {
@@ -69,7 +70,7 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   var _isInit = true;
   var _isLoading = false;
   var indexOfPage = 1;
-  var productList = [];
+  var _showRatedOnly = false;
 
   ScrollController _scrollController = ScrollController();
 
@@ -136,6 +137,8 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     final productsData = Provider.of<Products>(context, listen: false);
+    // final products =
+    //     _showRatedOnly ? productsData.ratedItems : productsData.items;
     final products =
         _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
     return Scaffold(
@@ -180,9 +183,9 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
             setState(() {
               if (selectedValue == FilterOptions.Favorites) {
                 _showFavoritesOnly = true;
-              } else {
+              } else if (selectedValue == FilterOptions.All) {
                 _showFavoritesOnly = false;
-              }
+              } else if (selectedValue == FilterOptions.Rated) {}
             });
           },
           icon: Icon(Icons.more_vert),
@@ -194,6 +197,10 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
             PopupMenuItem(
               child: Text('All'),
               value: FilterOptions.All,
+            ),
+            PopupMenuItem(
+              child: Text('Rated'),
+              value: FilterOptions.Rated,
             ),
           ],
         ),

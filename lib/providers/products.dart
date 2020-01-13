@@ -35,6 +35,10 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isFavorite).toList();
   }
 
+  List<Product> get ratedItems {
+    return _items.where((product) => product.isRated).toList();
+  }
+
   Future<void> fetchAndSetProducts([bool filterByUser]) async {
     AVQuery queryProduct = AVQuery("Product");
     try {
@@ -325,5 +329,28 @@ class Products with ChangeNotifier {
     });
 
     return keywords;
+  }
+
+  Future<List<String>> getRatedProductByUID(String uId) async {
+    AVQuery query = AVQuery('Rating');
+    List<AVObject> ratings = await query.whereEqualTo('uId', uId).find();
+    if (ratings.length > 0) {
+      List<String> pIds = List();
+      ratings.forEach((rating) {
+        pIds.add(rating.get('pId'));
+      });
+      return pIds;
+    } else {
+      return null;
+    }
+  }
+
+  List<Product> getProductByPIDs(List<String> pIds) {
+    List<Product> products = List();
+    pIds.forEach((pid) {
+      Product p = _items.firstWhere((product) => product.pId == pid);
+      products.add(p);
+    });
+    return products;
   }
 }
