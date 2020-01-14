@@ -71,6 +71,7 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   var _isLoading = false;
   var indexOfPage = 1;
   var _showRatedOnly = false;
+  var products = null;
 
   ScrollController _scrollController = ScrollController();
 
@@ -83,7 +84,8 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
     _scrollController.addListener(() {
       //if we are bottom of the page
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+              _scrollController.position.maxScrollExtent &&
+          !_showRatedOnly) {
         print('scroll to bottom now.');
 
         fetchNextPageProduct(context);
@@ -137,10 +139,22 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     final productsData = Provider.of<Products>(context, listen: false);
-    // final products =
-    //     _showRatedOnly ? productsData.ratedItems : productsData.items;
     final products =
         _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
+    // Provider.of<Products>(context, listen: false).getRatedProductByUID();
+    // if (_showRatedOnly) {
+    //   Provider.of<Products>(context, listen: false)
+    //       .getRatedProductByUID()
+    //       .then((prods) {
+    //     setState(() {
+    //       products = prods;
+    //     });
+    //   });
+    // } else {
+    //   setState(() {
+    //     products = productsData.items;
+    //   });
+    // }
     return Scaffold(
         key: scaffoldKey,
         body: _isLoading
@@ -183,9 +197,25 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
             setState(() {
               if (selectedValue == FilterOptions.Favorites) {
                 _showFavoritesOnly = true;
+                _showRatedOnly = false;
               } else if (selectedValue == FilterOptions.All) {
                 _showFavoritesOnly = false;
-              } else if (selectedValue == FilterOptions.Rated) {}
+                _showRatedOnly = false;
+                setState(() {
+                  _isLoading = true;
+                });
+                Provider.of<Products>(context)
+                    .fetchAndSetProducts(false)
+                    .then((_) {
+                  setState(() {
+                    _isLoading = false;
+                  });
+                });
+              } else if (selectedValue == FilterOptions.Rated) {
+                _showRatedOnly = true;
+                _showFavoritesOnly = false;
+                Provider.of<Products>(context).getRatedProduct();
+              }
             });
           },
           icon: Icon(Icons.more_vert),

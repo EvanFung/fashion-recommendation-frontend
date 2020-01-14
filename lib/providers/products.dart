@@ -20,8 +20,9 @@ class Products with ChangeNotifier {
 
   final String authToken;
   final String userId;
+  final String uId;
 
-  Products(this.authToken, this._items, this.userId);
+  Products(this.authToken, this._items, this.userId, this.uId);
 
   List<Product> get items {
     return [..._items];
@@ -331,26 +332,41 @@ class Products with ChangeNotifier {
     return keywords;
   }
 
-  Future<List<String>> getRatedProductByUID(String uId) async {
-    AVQuery query = AVQuery('Rating');
-    List<AVObject> ratings = await query.whereEqualTo('uId', uId).find();
+  Future<void> getRatedProduct() async {
+    AVQuery queryRating = AVQuery('Rating');
+    AVQuery queryProduct = AVQuery('Product');
+    List<AVObject> ratings =
+        await queryRating.whereEqualTo('uId', this.uId).find();
+    List<AVObject> products = await queryProduct.limit(1000).find();
+    List<Product> loadedProducts = [];
+
     if (ratings.length > 0) {
       List<String> pIds = List();
       ratings.forEach((rating) {
         pIds.add(rating.get('pId'));
       });
-      return pIds;
+      print(pIds);
+      print(products.length);
+      pIds.forEach((pId) {
+        AVObject p =
+            products.firstWhere((prod) => prod.get('pId').toString() == pId);
+        loadedProducts.add(Product(
+          id: p.get("objectId"),
+          title: p.get("title"),
+          description: p.get("description"),
+          price: p.get("price"),
+          imageUrl: p.get("imageUrl"),
+          createBy: this.userId,
+          rating: double.parse(p.get('rating').toString()),
+          numOfRating: double.parse(p.get('numOfRating').toString()),
+          pId: p.get('pId').toString(),
+        ));
+      });
+
+      _items = loadedProducts;
+      notifyListeners();
     } else {
       return null;
     }
-  }
-
-  List<Product> getProductByPIDs(List<String> pIds) {
-    List<Product> products = List();
-    pIds.forEach((pid) {
-      Product p = _items.firstWhere((product) => product.pId == pid);
-      products.add(p);
-    });
-    return products;
   }
 }
