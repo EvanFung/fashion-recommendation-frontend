@@ -6,6 +6,7 @@ import '../pages/categories.dart';
 import '../widgets/product_search.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
+import '../providers/Product.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,10 +24,15 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement didChangeDependencies
 
     if (_isInit) {
+      _isLoading = true;
       Provider.of<Products>(context).fetchProductTitle().then((_) {
         setState(() {
           _isLoading = false;
         });
+      });
+      _isLoading = true;
+      Provider.of<Products>(context).getTrendingProduct().then((_) {
+        _isLoading = false;
       });
     }
 
@@ -119,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     FlatButton(
                       child: Text(
-                        "See all (43)",
+                        "See all (10)",
                         style: TextStyle(
 //                      fontSize: 22,
 //                      fontWeight: FontWeight.w800,
@@ -150,16 +156,16 @@ class _HomePageState extends State<HomePage> {
                     scrollDirection: Axis.horizontal,
                     primary: false,
                     shrinkWrap: true,
-                    itemCount: restaurants == null ? 0 : restaurants.length,
+                    itemCount: productsData.trendingProducts.length,
                     itemBuilder: (BuildContext cotext, int index) {
-                      Map restaurant = restaurants[index];
+                      Product product = productsData.trendingProducts[index];
                       return Padding(
                         padding: EdgeInsets.only(right: 10.0),
                         child: SlideItem(
-                          image: restaurant['img'],
-                          title: restaurant['title'],
-                          address: restaurant['address'],
-                          rating: restaurant['rating'],
+                          image: product.imageUrl,
+                          title: product.title,
+                          address: product.description,
+                          rating: product.rating.toString(),
                         ),
                       );
                     },

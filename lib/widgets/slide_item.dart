@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../res/fashionAppTheme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class SlideItem extends StatefulWidget {
   final String image;
@@ -35,18 +36,35 @@ class _SlideItemState extends State<SlideItem> {
               Stack(
                 children: <Widget>[
                   Container(
-                    height: MediaQuery.of(context).size.height / 3.7,
+                    height: MediaQuery.of(context).size.height / 3.9,
                     width: MediaQuery.of(context).size.width,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                      ),
-                      child: Image.asset(
-                        "${widget.image}",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                        child:
+
+                            // Image.network(
+                            //   "${widget.image}",
+                            //   fit: BoxFit.cover,
+                            // ),
+                            CachedNetworkImage(
+                          imageUrl: "${widget.image}",
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          imageBuilder: (BuildContext context,
+                                  ImageProvider imageProvider) =>
+                              Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            )),
+                          ),
+                        )),
                   ),
                   Positioned(
                     top: 6.0,
@@ -83,7 +101,7 @@ class _SlideItemState extends State<SlideItem> {
                       child: Padding(
                         padding: EdgeInsets.all(4.0),
                         child: Text(
-                          " OPEN ",
+                          " HOT ",
                           style: TextStyle(
                             fontSize: 10,
                             color: Colors.green,

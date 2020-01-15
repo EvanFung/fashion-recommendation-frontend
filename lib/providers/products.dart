@@ -17,6 +17,7 @@ class Products with ChangeNotifier {
   };
   Set<String> _sourceKeyWords = Set();
   List<Product> _items = [];
+  List<Product> _trendingProducts = [];
 
   final String authToken;
   final String userId;
@@ -26,6 +27,10 @@ class Products with ChangeNotifier {
 
   List<Product> get items {
     return [..._items];
+  }
+
+  List<Product> get trendingProducts {
+    return [..._trendingProducts];
   }
 
   Set<String> get sourceKeyWords {
@@ -369,4 +374,43 @@ class Products with ChangeNotifier {
       return null;
     }
   }
+
+  Future<void> getTrendingProduct() async {
+    AVQuery query = AVQuery('Product');
+    List<Product> loadedProducts = [];
+    //get the most ratted products
+    List<AVObject> products =
+        await query.orderByDescending('numOfRating').find();
+    if (products.length > 10) {
+      products.sort(
+          (prodA, prodB) => prodB.get('rating').compareTo(prodA.get('rating')));
+      for (int i = 0; i < 10; i++) {
+        loadedProducts.add(Product(
+          id: products[i].get("objectId"),
+          title: products[i].get("title"),
+          description: products[i].get("description"),
+          price: products[i].get("price"),
+          imageUrl: products[i].get("imageUrl"),
+          createBy: this.userId,
+          rating: double.parse(products[i].get('rating').toString()),
+          numOfRating: double.parse(products[i].get('numOfRating').toString()),
+          pId: products[i].get('pId').toString(),
+        ));
+      }
+      _trendingProducts = loadedProducts;
+      notifyListeners();
+    }
+  }
+
+  int compareRating(int a, int b) {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  Future<void> getRecommendProduct() async {}
 }

@@ -139,7 +139,6 @@ class ProductDetailPage extends StatelessWidget {
                         onRatingUpdate: (rating) async {
                           await Provider.of<Rating>(context, listen: false)
                               .addRating(product.id, product.pId, rating);
-                          Provider.of<Product>(context).setRated();
                         },
                       );
                     }
