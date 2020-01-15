@@ -11,6 +11,7 @@ import '../providers/Product.dart';
 import '../pages/ProductDetailPage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../widgets/product_search.dart';
+import '../widgets/logo.dart';
 
 const double _kAppBarHeight = 128.0;
 const double _kFabHalfSize = 28.0;
@@ -141,20 +142,6 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
     final productsData = Provider.of<Products>(context, listen: false);
     final products =
         _showFavoritesOnly ? productsData.favoriteItems : productsData.items;
-    // Provider.of<Products>(context, listen: false).getRatedProductByUID();
-    // if (_showRatedOnly) {
-    //   Provider.of<Products>(context, listen: false)
-    //       .getRatedProductByUID()
-    //       .then((prods) {
-    //     setState(() {
-    //       products = prods;
-    //     });
-    //   });
-    // } else {
-    //   setState(() {
-    //     products = productsData.items;
-    //   });
-    // }
     return Scaffold(
         key: scaffoldKey,
         body: _isLoading
@@ -280,7 +267,7 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           return ChangeNotifierProvider.value(
             value: products[index],
-            child: RecipeCard(),
+            child: ProductCard(),
           );
         }, childCount: products.length),
       ),
@@ -288,76 +275,7 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   }
 }
 
-class Logo extends StatefulWidget {
-  final double height;
-  final double t;
-  const Logo({this.height, this.t});
-
-  @override
-  _LogoState createState() => _LogoState();
-}
-
-class _LogoState extends State<Logo> {
-  // Native sizes for logo and its image/text components.
-  static const double kLogoHeight = 150.0;
-  static const double kLogoWidth = 220.0;
-  static const double kImageHeight = 108.0;
-  static const double kTextHeight = 55.0;
-  final TextStyle titleStyle = const PestoStyle(
-      fontSize: kTextHeight,
-      fontWeight: FontWeight.w900,
-      color: Colors.black,
-      letterSpacing: 3.0);
-
-  final RectTween _textRectTween = RectTween(
-    begin: const Rect.fromLTWH(0.0, kLogoHeight, kLogoWidth, kTextHeight),
-    end: const Rect.fromLTWH(0.0, kImageHeight, kLogoWidth, kTextHeight),
-  );
-
-  final Curve _textOpacity = const Interval(0.4, 1.0, curve: Curves.easeInOut);
-  final RectTween _imageRectTween = RectTween(
-    begin: const Rect.fromLTWH(0.0, 0.0, kLogoWidth, kLogoHeight),
-    end: const Rect.fromLTWH(0.0, 0.0, kLogoWidth, kImageHeight),
-  );
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      namesRoute: true,
-      child: Transform(
-        transform: Matrix4.identity()..scale(widget.height / kLogoHeight),
-        alignment: Alignment.topCenter,
-        child: SizedBox(
-          width: kLogoWidth,
-          child: Stack(
-            overflow: Overflow.visible,
-            children: <Widget>[
-              Positioned.fromRect(
-                rect: _imageRectTween.lerp(widget.t),
-                child: Image.asset(
-                  'assets/images/shop.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              Positioned.fromRect(
-                rect: _textRectTween.lerp(widget.t),
-                child: Opacity(
-                  opacity: _textOpacity.transform(widget.t),
-                  child: Text(
-                    'Fashion Items',
-                    style: titleStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class RecipeCard extends StatelessWidget {
+class ProductCard extends StatelessWidget {
   TextStyle get titleStyle =>
       const PestoStyle(fontSize: 24.0, fontWeight: FontWeight.w600);
   TextStyle get authorStyle =>
@@ -379,109 +297,113 @@ class RecipeCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      topRight: Radius.circular(8.0)),
-                  child: Hero(
-                    tag: product.imageUrl,
-                    child: AspectRatio(
-                      aspectRatio: 4.0 / 3.0,
-                      child:
-                          // Image.network(
-                          //   product.imageUrl,
-                          //   fit: BoxFit.cover,
-                          //   semanticLabel: 'food',
-                          // ),
-                          CachedNetworkImage(
-                        imageUrl: product.imageUrl,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        imageBuilder: (BuildContext context,
-                                ImageProvider imageProvider) =>
-                            Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          )),
-                        ),
-                      ),
-                    ),
-                  ),
+                buildProductImage(product),
+                buildProductTitle(product)
+              ],
+            ),
+            buildFavoriteButton(product),
+            buildRatingNumber(context, product),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ClipRRect buildProductImage(Product product) {
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
+      child: Hero(
+        tag: product.imageUrl,
+        child: AspectRatio(
+          aspectRatio: 4.0 / 3.0,
+          child: CachedNetworkImage(
+            imageUrl: product.imageUrl,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            imageBuilder: (BuildContext context, ImageProvider imageProvider) =>
+                Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+              )),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded buildProductTitle(Product product) {
+    return Expanded(
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 20.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  product.title,
+                  style: titleStyle,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 20.0,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              product.title,
-                              style: titleStyle,
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Text(
-                                product.description,
-                                style: authorStyle,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Text(
+                    product.description,
+                    style: authorStyle,
                   ),
                 )
               ],
             ),
-            Positioned(
-              top: 6.0,
-              right: 6.0,
-              child: IconButton(
-                color: Colors.red,
-                icon: Icon(product.isFavorite
-                    ? Icons.favorite
-                    : Icons.favorite_border),
-                onPressed: () {
-                  product.toggleFavoriteStatus();
-                },
+          )
+        ],
+      ),
+    );
+  }
+
+  Positioned buildRatingNumber(BuildContext context, Product product) {
+    return Positioned(
+      top: 6.0,
+      left: 6.0,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+        child: Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.star,
+                color: Theme.of(context).accentColor,
+                size: 15,
               ),
-            ),
-            Positioned(
-              top: 6.0,
-              left: 6.0,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3.0)),
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.star,
-                        color: Theme.of(context).accentColor,
-                        size: 15,
-                      ),
-                      (product.rating / product.numOfRating).toString() == 'NaN'
-                          ? Text('0')
-                          : Text((product.rating / product.numOfRating)
-                              .toStringAsFixed(2))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+              (product.rating / product.numOfRating).toString() == 'NaN'
+                  ? Text('0')
+                  : Text(
+                      (product.rating / product.numOfRating).toStringAsFixed(2))
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Positioned buildFavoriteButton(Product product) {
+    return Positioned(
+      top: 6.0,
+      right: 6.0,
+      child: IconButton(
+        color: Colors.red,
+        icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
+        onPressed: () {
+          product.toggleFavoriteStatus();
+        },
       ),
     );
   }
