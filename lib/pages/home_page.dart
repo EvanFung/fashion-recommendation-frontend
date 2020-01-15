@@ -162,10 +162,16 @@ class _HomePageState extends State<HomePage> {
                       return Padding(
                         padding: EdgeInsets.only(right: 10.0),
                         child: SlideItem(
+                          product: product,
                           image: product.imageUrl,
                           title: product.title,
                           address: product.description,
-                          rating: product.rating.toString(),
+                          rating: (product.rating / product.numOfRating)
+                                      .toString() ==
+                                  'NaN'
+                              ? '0'
+                              : (product.rating / product.numOfRating)
+                                  .toStringAsFixed(2),
                         ),
                       );
                     },
