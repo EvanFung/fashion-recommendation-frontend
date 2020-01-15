@@ -45,13 +45,18 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isRated).toList();
   }
 
-  Future<void> fetchAndSetProducts([bool filterByUser]) async {
+  Future<void> fetchAndSetProducts([bool filterByUser, String category]) async {
     AVQuery queryProduct = AVQuery("Product");
     try {
       var response;
       if (filterByUser) {
         response = await queryProduct
             .whereEqualTo('createBy', this.userId)
+            .limit(10)
+            .find();
+      } else if (category != null) {
+        response = await queryProduct
+            .whereEqualTo('subCategory', category)
             .limit(10)
             .find();
       } else {
@@ -76,13 +81,6 @@ class Products with ChangeNotifier {
       });
       _items = loadedProducts;
       notifyListeners();
-
-      //TEST UPDATE
-      // AVObject o3 = AVObject("Product");
-      // o3.put("objectId", "5df7ed5f21b47e00755b6a6e");
-      // o3.put("title", "JJ");
-
-      // await o3.save();
     } catch (error) {
       throw error;
     }
@@ -399,16 +397,6 @@ class Products with ChangeNotifier {
       }
       _trendingProducts = loadedProducts;
       notifyListeners();
-    }
-  }
-
-  int compareRating(int a, int b) {
-    if (a > b) {
-      return 1;
-    } else if (a < b) {
-      return -1;
-    } else {
-      return 0;
     }
   }
 

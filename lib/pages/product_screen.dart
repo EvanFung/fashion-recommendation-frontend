@@ -50,17 +50,23 @@ final ThemeData _kTheme = ThemeData(
 
 class ProductScreen extends StatelessWidget {
   static String routeName = 'Products';
+
   @override
   Widget build(BuildContext context) {
+    final category = ModalRoute.of(context).settings.arguments as String;
+
     return ProductGridScreen(
       recipes: kPestoRecipes,
+      category: category,
     );
   }
 }
 
 class ProductGridScreen extends StatefulWidget {
   final List<Recipe> recipes;
-  const ProductGridScreen({this.recipes});
+  String category;
+  ProductGridScreen({this.recipes, this.category});
+
   @override
   _ProductGridScreenState createState() => _ProductGridScreenState();
 }
@@ -72,7 +78,6 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   var _isLoading = false;
   var indexOfPage = 1;
   var _showRatedOnly = false;
-  var products = null;
 
   ScrollController _scrollController = ScrollController();
 
@@ -84,9 +89,11 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
 
     _scrollController.addListener(() {
       //if we are bottom of the page
+      //only when show all products, we can infinite scroll products.
       if (_scrollController.position.pixels ==
               _scrollController.position.maxScrollExtent &&
-          !_showRatedOnly) {
+          !_showRatedOnly &&
+          widget.category == null) {
         print('scroll to bottom now.');
 
         fetchNextPageProduct(context);
@@ -101,11 +108,22 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
-        setState(() {
-          _isLoading = false;
+      if (widget.category != null) {
+        Provider.of<Products>(context)
+            .fetchAndSetProducts(false, widget.category)
+            .then((_) {
+          setState(() {
+            _isLoading = false;
+          });
         });
-      });
+      } else {
+        //all product
+        Provider.of<Products>(context).fetchAndSetProducts(false).then((_) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      }
 
       Provider.of<Products>(context).fetchProductTitle().then((_) {
         setState(() {
@@ -132,9 +150,9 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
     await Provider.of<Products>(context).fetchProductByPage(indexOfPage);
   }
 
-  Future<void> fetchProducts(BuildContext context) async {
-    await Provider.of<Products>(context).fetchAndSetProducts(false);
-  }
+  // Future<void> fetchProducts(BuildContext context) async {
+  //   await Provider.of<Products>(context).fetchAndSetProducts(false);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -169,11 +187,6 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
           icon: const Icon(Icons.search),
           tooltip: 'Search',
           onPressed: () {
-            // scaffoldKey.currentState.showSnackBar(const SnackBar(
-            //   content: Text('NOT SUPPORT RIGHT NOW'),
-            // ));
-            // Consumer<Products>(builder: (BuildContext context, productsData,_) =>,);
-
             showSearch(
                 context: context,
                 delegate: ProductSearch(productsData.sourceKeyWords));

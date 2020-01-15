@@ -1,6 +1,6 @@
 import 'package:fashion/pages/ProductDetailPage.dart';
 import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
-import 'package:fashion/pages/ProductPage.dart';
+// import 'package:fashion/pages/ProductPage.dart';
 import 'package:fashion/pages/chatPage.dart';
 import 'pages/splash_screen.dart';
 import 'pages/CartPage.dart';
@@ -20,6 +20,7 @@ import 'res/fashionAppTheme.dart';
 import 'pages/auth_screen.dart';
 import 'pages/login_page.dart';
 import 'pages/categories.dart';
+import 'pages/product_screen.dart';
 
 main() {
   initPlatformState();
@@ -84,7 +85,7 @@ class MyApp extends StatelessWidget {
             // initialRoute: '/',
             routes: {
               // '/': (context) => AuthScreen(),
-              ProductPage.routeName: (ctx) => ProductPage(),
+              ProductScreen.routeName: (ctx) => ProductScreen(),
               ProductDetailPage.routeName: (ctx) => ProductDetailPage(),
               CartPage.routeName: (ctx) => CartPage(),
               OrderPage.routeName: (ctx) => OrderPage(),
