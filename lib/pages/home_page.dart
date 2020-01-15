@@ -34,6 +34,10 @@ class _HomePageState extends State<HomePage> {
       Provider.of<Products>(context).getTrendingProduct().then((_) {
         _isLoading = false;
       });
+
+      Provider.of<Products>(context).getRecommendProduct().then((_) {
+        _isLoading = false;
+      });
     }
 
     _isInit = false;
@@ -122,6 +126,14 @@ class _HomePageState extends State<HomePage> {
 
                 SizedBox(height: 10.0),
 
+                buildRecommandTitle(context),
+
+                SizedBox(height: 10.0),
+
+                buildRecommendList(context, productsData),
+
+                SizedBox(height: 10.0),
+
                 buildCategoryTitle(context),
 
                 SizedBox(height: 10),
@@ -165,6 +177,69 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ],
+    );
+  }
+
+  Row buildRecommandTitle(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          "Recommend Fashion Items",
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        FlatButton(
+          child: Text(
+            "See all (10)",
+            style: TextStyle(
+//                      fontSize: 22,
+//                      fontWeight: FontWeight.w800,
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          onPressed: () {
+            print('was pressed');
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (BuildContext context){
+            //       return Trending();
+            //     },
+            //   ),
+            // );
+          },
+        ),
+      ],
+    );
+  }
+
+  Container buildRecommendList(BuildContext context, Products productsData) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 2.4,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        primary: false,
+        shrinkWrap: true,
+        itemCount: productsData.trendingProducts.length,
+        itemBuilder: (BuildContext cotext, int index) {
+          Product product = productsData.trendingProducts[index];
+          return Padding(
+            padding: EdgeInsets.only(right: 10.0),
+            child: SlideItem(
+              product: product,
+              image: product.imageUrl,
+              title: product.title,
+              address: product.description,
+              rating: (product.rating / product.numOfRating).toString() == 'NaN'
+                  ? '0'
+                  : (product.rating / product.numOfRating).toStringAsFixed(2),
+            ),
+          );
+        },
+      ),
     );
   }
 

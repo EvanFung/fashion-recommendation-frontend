@@ -131,6 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    String username = Provider.of<Auth>(context, listen: false).username;
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -157,8 +158,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'Ali Connors',
+              title: Text(
+                username,
                 style: TextStyle(color: Colors.black),
               ),
               background: Stack(
@@ -304,13 +305,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               .logout();
                         },
                       ),
-                      _storedImage != null
-                          ? Image.file(
-                              _storedImage,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                            )
-                          : Text('No image taken'),
+                      // _storedImage != null
+                      //     ? Image.file(
+                      //         _storedImage,
+                      //         fit: BoxFit.cover,
+                      //         width: double.infinity,
+                      //       )
+                      //     : Text('No image taken'),
                     ],
                   ),
                 ),

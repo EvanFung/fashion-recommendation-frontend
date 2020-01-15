@@ -16,6 +16,7 @@ class Auth with ChangeNotifier {
   Timer _authTimer;
   int expiresIn = 3600 * 24;
   String _uId;
+  String _username;
   Map<String, String> authHeaders = {
     "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
     "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
@@ -47,6 +48,10 @@ class Auth with ChangeNotifier {
 
   String get uId {
     return _uId;
+  }
+
+  String get username {
+    return _username;
   }
 
   Future<bool> signup(String email, String password, String username) async {
@@ -87,10 +92,12 @@ class Auth with ChangeNotifier {
       }
       //no error
       //I/flutter ( 2204): {email: hhhhhao@gmail.com, sessionToken: aymdwjz3ikpu0lzdim1i8luvo, updatedAt: 2019-12-16T15:23:32.609Z, objectId: 5df7a1747796d900684723f8, username: evanfungvsnsns, createdAt: 2019-12-16T15:23:32.609Z, emailVerified: false, mobilePhoneVerified: false}
+      print(response);
       _token = responseData['sessionToken'];
       _userId = responseData['objectId'];
       _uId = responseData['uId'].toString();
       _expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
+      _username = responseData['username'];
       _autoLogout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
@@ -98,7 +105,8 @@ class Auth with ChangeNotifier {
         'token': _token,
         'userId': _userId,
         'expiryDate': _expiryDate.toIso8601String(),
-        'uId': _uId
+        'uId': _uId,
+        'username': _username
       });
       prefs.setString('userData', userData);
     } catch (error) {
@@ -124,6 +132,7 @@ class Auth with ChangeNotifier {
     _userId = extractedUserData['userId'];
     _uId = extractedUserData['uId'];
     _expiryDate = expiryDate;
+    _username = extractedUserData['username'];
     notifyListeners();
     _autoLogout();
     return true;
@@ -134,6 +143,7 @@ class Auth with ChangeNotifier {
     _userId = null;
     _expiryDate = null;
     _uId = null;
+    _username = null;
     if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;

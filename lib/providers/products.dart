@@ -400,5 +400,9 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> getRecommendProduct() async {}
+  Future<void> getRecommendProduct() async {
+    const url = 'http://wwvo3d7kkogq.leanapp.cn/';
+    final response = await http.get(url + 'rec/$uId');
+    print(response.body);
+  }
 }

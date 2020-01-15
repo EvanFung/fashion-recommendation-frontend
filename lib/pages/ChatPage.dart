@@ -24,7 +24,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Chat'),
+          title: Text('CHATBOT'),
         ),
         body: Stack(
           children: <Widget>[
@@ -71,7 +71,7 @@ class _ChatPageState extends State<ChatPage> {
               margin: EdgeInsets.symmetric(horizontal: 1.0),
               child: IconButton(
                 icon: Icon(Icons.image),
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).accentColor,
                 onPressed: () {},
               ),
             ),
@@ -82,7 +82,7 @@ class _ChatPageState extends State<ChatPage> {
               margin: EdgeInsets.symmetric(horizontal: 1.0),
               child: IconButton(
                 icon: Icon(Icons.face),
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).accentColor,
                 onPressed: () {},
               ),
             ),
@@ -106,10 +106,9 @@ class _ChatPageState extends State<ChatPage> {
               child: IconButton(
                 icon: Icon(Icons.send),
                 onPressed: () {},
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).accentColor,
               ),
             ),
-            color: Colors.white,
           ),
         ],
       ),
