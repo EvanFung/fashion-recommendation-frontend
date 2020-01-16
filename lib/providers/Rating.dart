@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../providers/Product.dart';
 
 /** productId is the objectId of the product, pId is the auto increament id of the product which used for recommendation */
 class RatingItem {
@@ -35,8 +36,11 @@ class Rating with ChangeNotifier {
     return {..._items};
   }
 
-  Future<void> addRating(String productId, String pId, double rating,
+  Future<void> addRating(
+      String productId, String pId, double rating, Product product,
       [String objectId]) async {
+    product.numOfRating += 1;
+    product.rating += rating;
     //add rating object to leancloud.
     AVObject avRating = AVObject('Rating');
     if (objectId != null) avRating.put('objectId', objectId);
@@ -45,6 +49,8 @@ class Rating with ChangeNotifier {
     avRating.put('userId', this.userId);
     avRating.put('uId', this.uId);
     avRating.put('rating', rating);
+    //No number of rating field and rating field for this json serialized.
+    avRating.put('productStr', json.encode(product.toJson()));
 
     //update product #rating and total of the rating score, I will use REST API because there is no SDK for this operation
     final url =
@@ -72,12 +78,13 @@ class Rating with ChangeNotifier {
       _items.update(
           ratingItem['objectId'],
           (existingRatingItem) => RatingItem(
-              userId: this.userId,
-              productId: productId,
-              rating: rating,
-              uId: this.uId,
-              pId: pId,
-              objectId: ratingItem['objectId']));
+                userId: this.userId,
+                productId: productId,
+                rating: rating,
+                uId: this.uId,
+                pId: pId,
+                objectId: ratingItem['objectId'],
+              ));
     } else {
       _items.putIfAbsent(
           ratingItem['objectId'],

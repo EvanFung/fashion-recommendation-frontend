@@ -10,9 +10,9 @@ class Product with ChangeNotifier {
   final String createBy;
   final String mainCategory;
   final String subCategory;
-  final File image;
-  final double numOfRating;
-  final double rating;
+  File image;
+  double numOfRating;
+  double rating;
   final String pId; //auto increament id of product. use for rating.
   bool isFavorite;
   bool isRated;
@@ -33,6 +33,35 @@ class Product with ChangeNotifier {
     this.pId,
     this.isRated = false,
   });
+
+  Product.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        title = json['title'],
+        description = json['description'],
+        price = json['price'],
+        imageUrl = json['imageUrl'],
+        createBy = json['createBy'],
+        mainCategory = json['mainCategory'],
+        subCategory = json['subCategory'],
+        numOfRating = json['numOfRating'],
+        isFavorite = json['isFavorite'],
+        rating = json['rating'],
+        pId = json['pId'];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'description': description,
+        'price': price,
+        'imageUrl': imageUrl,
+        'createBy': createBy,
+        'mainCategory': mainCategory,
+        'subCategory': subCategory,
+        'numOfRating': numOfRating,
+        'isFavorite': isFavorite,
+        'rating': rating,
+        'pId': pId,
+      };
 
   void toggleFavoriteStatus() {
     isFavorite = !isFavorite;

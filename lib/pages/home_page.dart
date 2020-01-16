@@ -223,9 +223,9 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         primary: false,
         shrinkWrap: true,
-        itemCount: productsData.trendingProducts.length,
+        itemCount: productsData.recommendProducts.length,
         itemBuilder: (BuildContext cotext, int index) {
-          Product product = productsData.trendingProducts[index];
+          Product product = productsData.recommendProducts[index];
           return Padding(
             padding: EdgeInsets.only(right: 10.0),
             child: SlideItem(

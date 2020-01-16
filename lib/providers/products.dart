@@ -18,6 +18,7 @@ class Products with ChangeNotifier {
   Set<String> _sourceKeyWords = Set();
   List<Product> _items = [];
   List<Product> _trendingProducts = [];
+  List<Product> _recommendProducts = [];
 
   final String authToken;
   final String userId;
@@ -35,6 +36,10 @@ class Products with ChangeNotifier {
 
   Set<String> get sourceKeyWords {
     return _sourceKeyWords;
+  }
+
+  List<Product> get recommendProducts {
+    return [..._recommendProducts];
   }
 
   List<Product> get favoriteItems {
@@ -76,6 +81,8 @@ class Products with ChangeNotifier {
             rating: double.parse(prod.get('rating').toString()),
             numOfRating: double.parse(prod.get('numOfRating').toString()),
             pId: prod.get('pId').toString(),
+            mainCategory: prod.get('mainCategory'),
+            subCategory: prod.get('subCategory'),
           ),
         );
       });
@@ -263,6 +270,8 @@ class Products with ChangeNotifier {
         rating: double.parse(prod.get('rating').toString()),
         numOfRating: double.parse(prod.get('numOfRating').toString()),
         pId: prod.get('pId').toString(),
+        mainCategory: prod.get('mainCategory'),
+        subCategory: prod.get('subCategory'),
       ));
     });
     _items.addAll(loadedProducts);
@@ -302,6 +311,8 @@ class Products with ChangeNotifier {
         rating: double.parse(prod.get('rating').toString()),
         numOfRating: double.parse(prod.get('numOfRating').toString()),
         pId: prod.get('pId').toString(),
+        mainCategory: prod.get('mainCategory'),
+        subCategory: prod.get('subCategory'),
       );
     } else {
       return null;
@@ -363,6 +374,8 @@ class Products with ChangeNotifier {
           rating: double.parse(p.get('rating').toString()),
           numOfRating: double.parse(p.get('numOfRating').toString()),
           pId: p.get('pId').toString(),
+          mainCategory: p.get('mainCategory'),
+          subCategory: p.get('subCategory'),
         ));
       });
 
@@ -393,6 +406,8 @@ class Products with ChangeNotifier {
           rating: double.parse(products[i].get('rating').toString()),
           numOfRating: double.parse(products[i].get('numOfRating').toString()),
           pId: products[i].get('pId').toString(),
+          mainCategory: products[i].get('mainCategory'),
+          subCategory: products[i].get('subCategory'),
         ));
       }
       _trendingProducts = loadedProducts;
@@ -403,6 +418,26 @@ class Products with ChangeNotifier {
   Future<void> getRecommendProduct() async {
     const url = 'http://wwvo3d7kkogq.leanapp.cn/';
     final response = await http.get(url + 'rec/$uId');
-    print(response.body);
+    List<dynamic> responsedData =
+        json.decode(response.body)['products'] as List<dynamic>;
+    List<Product> loadedProduct = [];
+    responsedData.forEach((prod) {
+      Map<String, dynamic> p = json.decode(prod) as Map<String, dynamic>;
+      loadedProduct.add(Product(
+        id: p['objectId'],
+        title: p['title'],
+        description: p['description'],
+        price: p['price'],
+        imageUrl: p['imageUrl'],
+        createBy: p['createBy'],
+        rating: double.parse(p['rating'].toString()),
+        numOfRating: double.parse(p['numOfRating'].toString()),
+        pId: p['pId'].toString(),
+        mainCategory: p['mainCategory'],
+        subCategory: p['subCategory'],
+      ));
+    });
+    _recommendProducts = loadedProduct;
+    notifyListeners();
   }
 }

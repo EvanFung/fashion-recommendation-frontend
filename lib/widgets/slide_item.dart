@@ -122,22 +122,22 @@ class _SlideItemState extends State<SlideItem> {
                     ),
                   ],
                 ),
-                SizedBox(height: 7.0),
+                SizedBox(height: 5.0),
                 Padding(
                   padding: EdgeInsets.only(left: 15.0),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "${widget.title}",
+                      "${widget.title.length > 50 ? widget.title.substring(0, 15) : widget.title}...",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w800,
                       ),
                       textAlign: TextAlign.left,
                     ),
                   ),
                 ),
-                SizedBox(height: 7.0),
+                SizedBox(height: 10.0),
                 Padding(
                   padding: EdgeInsets.only(left: 15.0),
                   child: Container(
