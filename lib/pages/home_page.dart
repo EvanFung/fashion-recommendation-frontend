@@ -48,101 +48,107 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context, listen: false);
     return Scaffold(
-        appBar: PreferredSize(
-          child: Padding(
-            padding: EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5.0),
-                ),
+      appBar: PreferredSize(
+        child: Padding(
+          padding: EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(5.0),
               ),
-              child: TextField(
-                onTap: () {
-                  showSearch(
-                      context: context,
-                      delegate: ProductSearch(productsData.sourceKeyWords));
-                },
-                focusNode: _searchNode,
-                style: TextStyle(
+            ),
+            child: TextField(
+              onTap: () {
+                showSearch(
+                    context: context,
+                    delegate: ProductSearch(productsData.sourceKeyWords));
+              },
+              focusNode: _searchNode,
+              style: TextStyle(
+                fontSize: 15.0,
+                color: Colors.black,
+              ),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                  ),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                hintText: "Search..",
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.black,
+                ),
+                // suffixIcon: Icon(
+                //   Icons.filter_list,
+                //   color: Colors.black,
+                // ),
+                hintStyle: TextStyle(
                   fontSize: 15.0,
                   color: Colors.black,
                 ),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: Colors.white,
+              ),
+              maxLines: 1,
+              controller: _searchControl,
+            ),
+          ),
+        ),
+        preferredSize: Size(MediaQuery.of(context).size.width, 60.0),
+      ),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                // 触摸收起键盘
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+                child: ListView(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20.0,
                     ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  hintText: "Search..",
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.black,
-                  ),
-                  // suffixIcon: Icon(
-                  //   Icons.filter_list,
-                  //   color: Colors.black,
-                  // ),
-                  hintStyle: TextStyle(
-                    fontSize: 15.0,
-                    color: Colors.black,
-                  ),
+                    buildTrendingTitle(context),
+
+                    SizedBox(height: 10.0),
+
+                    //Horizontal List here
+
+                    buildTredingList(context, productsData),
+
+                    SizedBox(height: 10.0),
+
+                    buildRecommandTitle(context),
+
+                    SizedBox(height: 10.0),
+
+                    buildRecommendList(context, productsData),
+
+                    SizedBox(height: 10.0),
+
+                    buildCategoryTitle(context),
+
+                    SizedBox(height: 10),
+                    //Horizontal List here
+                    buildCategoryList(context),
+                  ],
                 ),
-                maxLines: 1,
-                controller: _searchControl,
               ),
             ),
-          ),
-          preferredSize: Size(MediaQuery.of(context).size.width, 60.0),
-        ),
-        body: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            // 触摸收起键盘
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-            child: ListView(
-              children: <Widget>[
-                SizedBox(
-                  height: 20.0,
-                ),
-                buildTrendingTitle(context),
-
-                SizedBox(height: 10.0),
-
-                //Horizontal List here
-                buildTredingList(context, productsData),
-
-                SizedBox(height: 10.0),
-
-                buildRecommandTitle(context),
-
-                SizedBox(height: 10.0),
-
-                buildRecommendList(context, productsData),
-
-                SizedBox(height: 10.0),
-
-                buildCategoryTitle(context),
-
-                SizedBox(height: 10),
-                //Horizontal List here
-                buildCategoryList(context),
-              ],
-            ),
-          ),
-        ));
+    );
   }
 
   Row buildTrendingTitle(BuildContext context) {

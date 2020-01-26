@@ -335,7 +335,6 @@ class Products with ChangeNotifier {
 
     //keyword container
     List<String> keywords = List();
-    print(results.length);
 
     results.forEach((prod) {
       Map<String, dynamic> p = prod as Map<String, dynamic>;
@@ -359,8 +358,7 @@ class Products with ChangeNotifier {
       ratings.forEach((rating) {
         pIds.add(rating.get('pId'));
       });
-      print(pIds);
-      print(products.length);
+
       pIds.forEach((pId) {
         AVObject p =
             products.firstWhere((prod) => prod.get('pId').toString() == pId);
@@ -418,6 +416,13 @@ class Products with ChangeNotifier {
   Future<void> getRecommendProduct() async {
     const url = 'http://wwvo3d7kkogq.leanapp.cn/';
     final response = await http.get(url + 'rec/$uId');
+    if (json.decode(response.body)['response'] != null &&
+        json.decode(response.body)['response'] == 'NO RECOMMEND ITEM') {
+      _recommendProducts = _trendingProducts;
+      notifyListeners();
+      return;
+    }
+
     List<dynamic> responsedData =
         json.decode(response.body)['products'] as List<dynamic>;
     List<Product> loadedProduct = [];
