@@ -33,6 +33,7 @@ class _ChatPageState extends State<ChatPage> {
         .build();
     Dialogflow dialogflow =
         Dialogflow(authGoogle: authGoogle, language: Language.english);
+    print(query);
     AIResponse response = await dialogflow.detectIntent(query);
     print(response.getMessage());
   }
