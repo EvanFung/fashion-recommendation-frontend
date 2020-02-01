@@ -2,6 +2,7 @@ import '../widgets/chat_msgItem.dart';
 import 'package:flutter/material.dart';
 import '../models/message.dart';
 import '../res/fashionAppTheme.dart';
+import 'package:flutter_dialogflow/dialogflow_v2.dart';
 
 class ChatPage extends StatefulWidget {
   static const routeName = '/chat';
@@ -12,12 +13,28 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final ScrollController listScrollController = ScrollController();
-
+  final TextEditingController _textController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void _submitQuery(String query) {
+    _textController.clear();
+    _dialogFlowResponse(query);
+  }
+
+  void _dialogFlowResponse(String query) async {
+    _textController.clear();
+    AuthGoogle authGoogle = await AuthGoogle(
+            fileJson: 'assets/creds/fashion-rec-sys-ejgagv-9d21e5b1b56d.json')
+        .build();
+    Dialogflow dialogflow =
+        Dialogflow(authGoogle: authGoogle, language: Language.english);
+    AIResponse response = await dialogflow.detectIntent(query);
+    print(response.getMessage());
   }
 
   @override
@@ -51,7 +68,6 @@ class _ChatPageState extends State<ChatPage> {
           reverse: true,
           controller: listScrollController,
           itemBuilder: (context, index) {
-            print(Messages.message[index].content);
             return ChatMsgItem(
               content: Messages.message[index].content,
             );
@@ -65,34 +81,14 @@ class _ChatPageState extends State<ChatPage> {
     return Container(
       child: Row(
         children: <Widget>[
-          Material(
-            color: Colors.white,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.image),
-                color: Theme.of(context).accentColor,
-                onPressed: () {},
-              ),
-            ),
-          ),
-          Material(
-            color: Colors.white,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.face),
-                color: Theme.of(context).accentColor,
-                onPressed: () {},
-              ),
-            ),
-          ),
           Flexible(
             child: Container(
+              padding: EdgeInsets.all(5.0),
               child: TextField(
+                controller: _textController,
                 style: TextStyle(color: Colors.black, fontSize: 15.0),
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
+                  hintText: '    Type your message...',
                   hintStyle: TextStyle(color: Colors.grey),
                 ),
                 focusNode: focusNode,
@@ -105,7 +101,9 @@ class _ChatPageState extends State<ChatPage> {
               margin: EdgeInsets.symmetric(horizontal: 8.0),
               child: IconButton(
                 icon: Icon(Icons.send),
-                onPressed: () {},
+                onPressed: () {
+                  _submitQuery(_textController.text);
+                },
                 color: Theme.of(context).accentColor,
               ),
             ),

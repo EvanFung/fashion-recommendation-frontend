@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "fashion-rec-sys-ejgagv",
+  "private_key_id": "9d21e5b1b56d46ca513173b0216345aacbc93a24",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDCMm+iKy/T+6i6\nkWG6ZkH4JWuvIukOMlEFhFC1UfkNmMPYLOSpOWtC6uNniGqzUs3uJ65immZfk7lC\n2TR9hIMWCOcxEYRkBJXaXMLH6Kx4/3NrzcFsnSm/TyTYcIFvkFpcGptoSv/KO5Yw\nVEzaAZL53cD7PofPvGLFLRrVvABJ3vEQoR0u1UutEp/EJSCNS/V72ymxag9BQjT0\nCfIps6qErHoT6sEVm3GJMSZXnm+daQ+XOf//IIjL625qGnMfnhAlLwpPRQjxTyPI\nM49ALW3K4v03zc9nS5MF/w25+/cH7qoaU/gG6OMFqWRIdh+vLW1ZpoQLRYTjIpCe\nZnit2p4nAgMBAAECggEAGcKh/1OWQRr5e2IsohLNfnLMUYuiebEgAUjXge3xSSXy\nGLt/y5jjyxkoeEPmz4nU6loWLltH6DbK1PzGEz5gOyyMKnyl4LShAjna1rTdKCHO\nuEaveU5xysBfZVyrNtbhvaUD53ZHbxavahLMrQCXdBC/+DQHxP065ugATsjlCudO\nTju3x3PhmLAiGDt48go/sr4gCALD9icQysGAg5mWXNe5GErnpvxNcj/Zlu16ShpJ\nrWJMNc3vconHJQK3n7/oVVkEPbPU3U4yWCT75+ZcpIxsv9Bet+zUA0g+1q3SaPdX\nIl+JkfnprCYulfy2kXp26mhcqtRGvJ+1CbrEekcvaQKBgQDi4Z+YBNs6ZOSZwCI/\nH9o1vR03Y87aG2yUxjnmCkaykC9qbJ9ZP9kakKxnZmm2ixbJwpGQ6bORLAQ2VDj5\n3uZ2UPAc8eZ95ZSXNUrxyXenqB9cMRdF9oLCp+zeIKCEkrsmhZdPeyzqqEC1QYe4\nUJy/sOqlGFD0uaF5jvhmZ7j0iQKBgQDbHvEWlZoY6+ZieCoCwvBV/EM3g9bl6FVA\newPLAwVQsk2fl2SdNiBwx6CX0DVR+WgdSpwbgmBXefBi88Un9uveDQoRE+z2hj4K\npHMW6GIoOjPFLjLGJvVtq+/RQI3feljdaxuvuwbwR59JagrCiFXNNzTWkM8l/iyZ\n3fMUJHuxLwKBgDPz1Fa8LfM2LT6jx3PK+G27y1fmq/Q3uWpr5dAuZDf5WlI1Y1vN\nigpSPJhE1EovmV1EB482ZJ8GhERojs9w4jcPm5wVLGGB07+4PVwWdSbYEa5Ls3ea\n1iB60Xuf3wHck6xjhN13aDanpoGa6tgi5XHjsidx5P/VDgvG2EyizbB5AoGAdMz7\niiRYrewhNGAFVM+AuPTtB4yZYpgDyYlJLk//51IEGovisAKILFXc/s+XfIjLvMFm\nkStgG4D+aGC0uWbft8+PjCbo60gHjji2uIFKwVK1AehsXD+sF7fM7+fPOE7JS82q\nRnQVcMNc3w9NiQCPbAJ/gdhS81eXgrVSu2vvGzUCgYEA1IhwswchHY7nnQusl81/\nJfH83I6v94vBdgx0khsuHo7U4a5K4qcCTh9WlZU6HrLk5XcXgCEWoHoGEm0x4gZN\n2oqdx4f67GVaXMybMJHQ9qxfmrdy2H6rN6/4FTCS6lE+0KJ/JNDuHWDXzN8bA86M\nMm97dH77H/18EjNK5pggAEg=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflow-integrations@fashion-rec-sys-ejgagv.iam.gserviceaccount.com",
+  "client_id": "105934812299002581549",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-integrations%40fashion-rec-sys-ejgagv.iam.gserviceaccount.com"
+}
