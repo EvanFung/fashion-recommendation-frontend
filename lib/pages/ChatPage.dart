@@ -1,3 +1,4 @@
+import '../widgets/ChatMessage.dart';
 import '../widgets/chat_msgItem.dart';
 import 'package:flutter/material.dart';
 import '../models/message.dart';
@@ -15,6 +16,7 @@ class _ChatPageState extends State<ChatPage> {
   final ScrollController listScrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
+  final List<ChatMessage> _messages = <ChatMessage>[];
 
   @override
   void initState() {
@@ -23,6 +25,14 @@ class _ChatPageState extends State<ChatPage> {
 
   void _submitQuery(String query) {
     _textController.clear();
+    ChatMessage message = ChatMessage(
+      text: query,
+      name: 'Evan',
+      type: true,
+    );
+    setState(() {
+      _messages.insert(0, message);
+    });
     _dialogFlowResponse(query);
   }
 
@@ -33,9 +43,18 @@ class _ChatPageState extends State<ChatPage> {
         .build();
     Dialogflow dialogflow =
         Dialogflow(authGoogle: authGoogle, language: Language.english);
-    print(query);
+    query = query.replaceAll('"', '\\"');
+    query = query.replaceAll("'", "\\'");
     AIResponse response = await dialogflow.detectIntent(query);
-    print(response.getMessage());
+    ChatMessage message = ChatMessage(
+      text: response.getMessage() ??
+          TypeMessage(response.getListMessage()[0]).platform,
+      name: 'Bot',
+      type: false,
+    );
+    setState(() {
+      _messages.insert(0, message);
+    });
   }
 
   @override
@@ -65,13 +84,11 @@ class _ChatPageState extends State<ChatPage> {
         },
         child: ListView.builder(
           padding: EdgeInsets.all(10.0),
-          itemCount: Messages.message.length,
+          itemCount: _messages.length,
           reverse: true,
           controller: listScrollController,
           itemBuilder: (context, index) {
-            return ChatMsgItem(
-              content: Messages.message[index].content,
-            );
+            return _messages[index];
           },
         ),
       ),

@@ -10,19 +10,18 @@ class ChatMessage extends StatelessWidget {
   //bot message
   List<Widget> otherMessage(context) {
     return <Widget>[
-      new Container(
+      Container(
         margin: const EdgeInsets.only(right: 16.0),
-        child: new CircleAvatar(child: new Image.asset("img/placeholder.png")),
+        child: CircleAvatar(child: Text('B')),
       ),
-      new Expanded(
-        child: new Column(
+      Expanded(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text(this.name,
-                style: new TextStyle(fontWeight: FontWeight.bold)),
-            new Container(
+            Text(this.name, style: TextStyle(fontWeight: FontWeight.bold)),
+            Container(
               margin: const EdgeInsets.only(top: 5.0),
-              child: new Text(text),
+              child: Text(text),
             ),
           ],
         ),
@@ -33,30 +32,30 @@ class ChatMessage extends StatelessWidget {
   //user message
   List<Widget> myMessage(context) {
     return <Widget>[
-      new Expanded(
-        child: new Column(
+      Expanded(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            new Text(this.name, style: Theme.of(context).textTheme.subhead),
-            new Container(
+            Text(this.name, style: Theme.of(context).textTheme.subhead),
+            Container(
               margin: const EdgeInsets.only(top: 5.0),
-              child: new Text(text),
+              child: Text(text),
             ),
           ],
         ),
       ),
-      new Container(
+      Container(
         margin: const EdgeInsets.only(left: 16.0),
-        child: new CircleAvatar(child: new Text(this.name[0])),
+        child: CircleAvatar(child: Text(this.name[0])),
       ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
-      child: new Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: this.type ? myMessage(context) : otherMessage(context),
       ),
