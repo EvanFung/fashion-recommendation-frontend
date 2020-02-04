@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import '../models/textDialogflow.dart';
 
 class ChatMessage extends StatelessWidget {
-  ChatMessage({this.text, this.name, this.type});
+  ChatMessage({
+    this.text,
+    this.name,
+    this.type,
+  });
 
   final String text;
   final String name;

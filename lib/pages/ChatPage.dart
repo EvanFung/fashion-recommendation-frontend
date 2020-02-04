@@ -1,9 +1,12 @@
+import 'package:fashion/widgets/basicCard.dart';
+
 import '../widgets/ChatMessage.dart';
-import '../widgets/chat_msgItem.dart';
 import 'package:flutter/material.dart';
 import '../models/message.dart';
 import '../res/fashionAppTheme.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
+import '../models/dialogFlowMessageType.dart';
+import '../models/textDialogflow.dart';
 
 class ChatPage extends StatefulWidget {
   static const routeName = '/chat';
@@ -16,7 +19,7 @@ class _ChatPageState extends State<ChatPage> {
   final ScrollController listScrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
-  final List<ChatMessage> _messages = <ChatMessage>[];
+  final List<dynamic> _messages = <dynamic>[];
 
   @override
   void initState() {
@@ -46,15 +49,40 @@ class _ChatPageState extends State<ChatPage> {
     query = query.replaceAll('"', '\\"');
     query = query.replaceAll("'", "\\'");
     AIResponse response = await dialogflow.detectIntent(query);
-    ChatMessage message = ChatMessage(
-      text: response.getMessage() ??
-          TypeMessage(response.getListMessage()[0]).platform,
-      name: 'Bot',
-      type: false,
-    );
-    setState(() {
-      _messages.insert(0, message);
+
+    List<dynamic> messages = response.getListMessage();
+    messages.forEach((messageMap) {
+      dynamic messageWidget = _getWidgetMessage(messageMap);
+      if (messageWidget != null) {
+        setState(() {
+          _messages.insert(0, messageWidget);
+        });
+      }
     });
+  }
+
+  dynamic _getWidgetMessage(message) {
+    DialogFlowMessageType tms = DialogFlowMessageType(message);
+
+    if (tms.type == 'simpleResponses') {
+      // return SimpleMessage();
+    }
+
+    if (tms.type == 'basicCard') {
+      return BasicCardWidget(
+        card: BasicCardDialogflow(message),
+      );
+    }
+    if (tms.type == 'text') {
+      return ChatMessage(
+        name: 'Bot',
+        type: false,
+        text: TextDialogFlow(message).text[0],
+      );
+    }
+
+    if (tms.type == 'carouselSelect') {}
+    return null;
   }
 
   @override
