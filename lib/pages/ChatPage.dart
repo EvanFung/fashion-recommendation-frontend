@@ -20,6 +20,7 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
   final List<dynamic> _messages = <dynamic>[];
+  bool typing = false;
 
   @override
   void initState() {
@@ -28,6 +29,9 @@ class _ChatPageState extends State<ChatPage> {
 
   void _submitQuery(String query) {
     _textController.clear();
+    setState(() {
+      typing = true;
+    });
     ChatMessage message = ChatMessage(
       text: query,
       name: 'Evan',
@@ -41,6 +45,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _dialogFlowResponse(String query) async {
     _textController.clear();
+
     AuthGoogle authGoogle = await AuthGoogle(
             fileJson: 'assets/creds/fashion-rec-sys-ejgagv-9d21e5b1b56d.json')
         .build();
@@ -49,7 +54,10 @@ class _ChatPageState extends State<ChatPage> {
     query = query.replaceAll('"', '\\"');
     query = query.replaceAll("'", "\\'");
     AIResponse response = await dialogflow.detectIntent(query);
-
+    setState(() {
+      typing = false;
+    });
+    print(response.getListMessage());
     List<dynamic> messages = response.getListMessage();
     messages.forEach((messageMap) {
       dynamic messageWidget = _getWidgetMessage(messageMap);
@@ -89,7 +97,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('CHATBOT'),
+          title: typing ? Text('Typing...') : Text('CHATBOT'),
         ),
         body: Stack(
           children: <Widget>[

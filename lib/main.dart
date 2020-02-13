@@ -13,6 +13,7 @@ import './providers/Orders.dart';
 import './providers/PagesInfo.dart';
 import './providers/auth.dart';
 import './providers/Rating.dart';
+import './providers/Favorites.dart';
 import 'pages/OrdersPage.dart';
 import 'pages/UserProductPage.dart';
 import 'pages/EditProductPage.dart';
@@ -21,6 +22,7 @@ import 'pages/auth_screen.dart';
 import 'pages/login_page.dart';
 import 'pages/categories.dart';
 import 'pages/product_screen.dart';
+import 'pages/webExplorer.dart';
 
 main() {
   initPlatformState();
@@ -66,7 +68,11 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProxyProvider<Auth, Rating>(
             builder: (ctx, auth, previousRating) =>
                 Rating(auth.token, auth.userId, auth.uId),
-          )
+          ),
+          ChangeNotifierProxyProvider<Auth, Favorites>(
+            builder: (ctx, auth, previousFavorite) =>
+                Favorites(auth.token, auth.userId, auth.uId),
+          ),
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -92,7 +98,8 @@ class MyApp extends StatelessWidget {
               UserProductPage.routeName: (ctx) => UserProductPage(),
               EditProductPage.routeName: (ctx) => EditProductPage(),
               ChatPage.routeName: (ctx) => ChatPage(),
-              Categories.routeName: (ctx) => Categories()
+              Categories.routeName: (ctx) => Categories(),
+              WebExplorer.routeName: (ctx) => WebExplorer(),
             },
           ),
         ));
