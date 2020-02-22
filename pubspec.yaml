@@ -38,6 +38,9 @@ dependencies:
   flutter_native_image:
     git: 
       url: https://github.com/btastic/flutter_native_image.git
+  flutter_dialogflow: ^0.1.2
+  webview_flutter: ^0.1.1
+  url_launcher: ^4.0.2
 
 dev_dependencies:
   flutter_test:
@@ -106,6 +109,7 @@ flutter:
    - assets/images/ties.jpeg
    - assets/images/wallets.jpeg
    - assets/images/watch.jpeg
+   - assets/creds/fashion-rec-sys-ejgagv-9d21e5b1b56d.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

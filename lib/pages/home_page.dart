@@ -25,17 +25,23 @@ class _HomePageState extends State<HomePage> {
 
     if (_isInit) {
       _isLoading = true;
-      Provider.of<Products>(context).fetchProductTitle().then((_) {
+      Provider.of<Products>(context, listen: false)
+          .fetchProductTitle()
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
       _isLoading = true;
-      Provider.of<Products>(context).getTrendingProduct().then((_) {
+      Provider.of<Products>(context, listen: false)
+          .getTrendingProduct()
+          .then((_) {
         _isLoading = false;
       });
 
-      Provider.of<Products>(context).getRecommendProduct().then((_) {
+      Provider.of<Products>(context, listen: false)
+          .getRecommendProduct()
+          .then((_) {
         _isLoading = false;
       });
     }
