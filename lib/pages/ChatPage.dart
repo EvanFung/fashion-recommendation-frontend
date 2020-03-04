@@ -8,6 +8,7 @@ import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import '../models/dialogFlowMessageType.dart';
 import '../models/textDialogflow.dart';
 import '../widgets/quickReply.dart';
+import '../widgets/chatCard.dart';
 import '../models/quickReplyDialogFlow.dart';
 
 class ChatPage extends StatefulWidget {
@@ -22,6 +23,20 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
   final List<dynamic> _messages = <dynamic>[];
+  final List<String> _quickReplies = [
+    "Men's Clothes",
+    "hsiuahdioahs",
+    "djsfijdsf",
+    "iasjdiajisd",
+    "sajidjhaisjd",
+    "Men's Clothes",
+    "hsiuahdioahs",
+    "djsfijdsf",
+    "iasjdiajisd",
+    "sajidjhaisjd"
+  ];
+
+  int _defaultChoiceIndex = 0;
   bool typing = false;
 
   @override
@@ -77,6 +92,11 @@ class _ChatPageState extends State<ChatPage> {
     if (tms.type == 'simpleResponses') {
       // return SimpleMessage();
     }
+    if (tms.type == 'card') {
+      return ChatCardWidget(
+        card: CardDialogflow(message),
+      );
+    }
 
     if (tms.type == 'basicCard') {
       return BasicCardWidget(
@@ -114,12 +134,33 @@ class _ChatPageState extends State<ChatPage> {
             Column(
               children: <Widget>[
                 buildMsgList(),
+                buildQuickReplyList(),
                 //is Sticker ? build sticker widget : empty widget
                 buildInput(context),
               ],
             )
           ],
         ));
+  }
+
+  Widget buildQuickReplyList() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: <Widget>[
+          ChoiceChip(
+            label: Text(_quickReplies[0]),
+            selected: _defaultChoiceIndex == 0,
+            selectedColor: Colors.grey,
+            onSelected: (bool selected) {
+              _defaultChoiceIndex = selected ? 0 : null;
+            },
+            backgroundColor: Colors.blue,
+            labelStyle: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildMsgList() {
@@ -137,6 +178,25 @@ class _ChatPageState extends State<ChatPage> {
             return _messages[index];
           },
         ),
+      ),
+    );
+  }
+
+  Widget chipForRow(String label, Color color) {
+    return Container(
+      margin: EdgeInsets.all(6.0),
+      child: Chip(
+        label: Text(
+          label,
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        labelPadding: EdgeInsets.all(5.0),
+        backgroundColor: color,
+        elevation: 6.0,
+        shadowColor: Colors.grey[60],
+        padding: EdgeInsets.all(6.0),
       ),
     );
   }
