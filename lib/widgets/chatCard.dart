@@ -61,7 +61,7 @@ class ChatCardWidget extends StatelessWidget {
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
                   new Text(
-                    "shuhsduhdushuhduhsu",
+                    this.card.subtitle,
                     style: TextStyle(color: Colors.black.withOpacity(0.6)),
                   ),
                   new Container(

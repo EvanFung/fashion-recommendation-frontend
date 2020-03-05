@@ -19,9 +19,8 @@ class DialogFlowMessageType {
     if (message.containsKey('text')) {
       this.type = 'text';
     }
-    if (message.containsKey('payload') &&
-        message['payload'].containsKey('quick_replies')) {
-      this.type = 'quick_replies';
+    if (message.containsKey('quickReplies')) {
+      this.type = 'quickReplies';
     }
   }
 }

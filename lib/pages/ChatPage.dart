@@ -23,18 +23,7 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
   final List<dynamic> _messages = <dynamic>[];
-  final List<String> _quickReplies = [
-    "Men's Clothes",
-    "hsiuahdioahs",
-    "djsfijdsf",
-    "iasjdiajisd",
-    "sajidjhaisjd",
-    "Men's Clothes",
-    "hsiuahdioahs",
-    "djsfijdsf",
-    "iasjdiajisd",
-    "sajidjhaisjd"
-  ];
+  List<dynamic> _quickReplies = [];
 
   int _defaultChoiceIndex = 0;
   bool typing = false;
@@ -114,11 +103,15 @@ class _ChatPageState extends State<ChatPage> {
     if (tms.type == 'carouselSelect') {
       return null;
     }
-    if (tms.type == 'quick_replies') {
-      return QuickReply(
-        quickReplyDialogFlow: QuickReplyDialogFlow(message),
-        onReply: this._submitQuery,
-      );
+    if (tms.type == 'quickReplies') {
+      setState(() {
+        _quickReplies = message['quickReplies']['quickReplies'];
+      });
+      return null;
+      // return QuickReply(
+      //   quickReplyDialogFlow: QuickReplyDialogFlow(message),
+      //   onReply: this._submitQuery,
+      // );
     }
     return null;
   }
@@ -134,7 +127,7 @@ class _ChatPageState extends State<ChatPage> {
             Column(
               children: <Widget>[
                 buildMsgList(),
-                buildQuickReplyList(),
+                _quickReplies.length == 0 ? Container() : buildQuickReplyList(),
                 //is Sticker ? build sticker widget : empty widget
                 buildInput(context),
               ],
@@ -144,21 +137,29 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget buildQuickReplyList() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: <Widget>[
-          ChoiceChip(
-            label: Text(_quickReplies[0]),
-            selected: _defaultChoiceIndex == 0,
-            selectedColor: Colors.grey,
-            onSelected: (bool selected) {
-              _defaultChoiceIndex = selected ? 0 : null;
-            },
-            backgroundColor: Colors.blue,
-            labelStyle: TextStyle(color: Colors.white),
-          ),
-        ],
+    return Container(
+      height: 50.0,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            margin: EdgeInsets.all(5.0),
+            child: ChoiceChip(
+              label: Text(_quickReplies[index]),
+              selected: _defaultChoiceIndex == 0,
+              selectedColor: Colors.grey,
+              onSelected: (bool selected) {
+                print(_quickReplies[index]);
+                _submitQuery(_quickReplies[index]);
+                _quickReplies.clear();
+                _defaultChoiceIndex = selected ? 0 : null;
+              },
+              backgroundColor: Colors.blue,
+              labelStyle: TextStyle(color: Colors.white),
+            ),
+          );
+        },
+        itemCount: _quickReplies.length,
       ),
     );
   }
@@ -178,25 +179,6 @@ class _ChatPageState extends State<ChatPage> {
             return _messages[index];
           },
         ),
-      ),
-    );
-  }
-
-  Widget chipForRow(String label, Color color) {
-    return Container(
-      margin: EdgeInsets.all(6.0),
-      child: Chip(
-        label: Text(
-          label,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        labelPadding: EdgeInsets.all(5.0),
-        backgroundColor: color,
-        elevation: 6.0,
-        shadowColor: Colors.grey[60],
-        padding: EdgeInsets.all(6.0),
       ),
     );
   }
