@@ -34,6 +34,9 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _submitQuery(String query) {
+    if (query == null) {
+      return;
+    }
     _textController.clear();
     setState(() {
       typing = true;
@@ -208,7 +211,11 @@ class _ChatPageState extends State<ChatPage> {
               child: IconButton(
                 icon: Icon(Icons.send),
                 onPressed: () {
-                  _submitQuery(_textController.text);
+                  if (_textController.text == "") {
+                    print("nothing to submit");
+                  } else {
+                    _submitQuery(_textController.text);
+                  }
                 },
                 color: Theme.of(context).accentColor,
               ),

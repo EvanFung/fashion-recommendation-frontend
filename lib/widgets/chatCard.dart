@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/v2/message.dart';
 import '../pages/webExplorer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatCardWidget extends StatelessWidget {
   ChatCardWidget({this.card});
@@ -19,9 +20,9 @@ class ChatCardWidget extends StatelessWidget {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => WebExplorer(
                         title: this.card.title,
-                        selectedUrl: this.card.buttons[i].postback,
+                        selectedUrl: "https://${this.card.buttons[i].postback}",
                       )));
-              print(this.card.buttons[i].postback);
+              // print(this.card.buttons[i].postback);
             },
             color: Colors.green,
             textColor: Colors.white,
@@ -81,5 +82,14 @@ class ChatCardWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> _buildCardImage() async {
+    if (await canLaunch(this.card.imageUri)) {
+      return true;
+    } else {
+      // return Image.asset("assets/image/belts.jpeg");
+      return false;
+    }
   }
 }
