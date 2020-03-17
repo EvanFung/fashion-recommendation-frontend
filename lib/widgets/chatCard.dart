@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/v2/message.dart';
 import '../pages/webExplorer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../utils/string_utils.dart';
+import 'package:provider/provider.dart';
+import '../providers/products.dart';
+import '../pages/ProductDetailPage.dart';
 
 class ChatCardWidget extends StatelessWidget {
   ChatCardWidget({this.card});
@@ -17,12 +21,27 @@ class ChatCardWidget extends StatelessWidget {
           child: new RaisedButton(
             onPressed: () {
               // Navigator.of(context).pushNamed(WebExplorer.routeName);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => WebExplorer(
-                        title: this.card.title,
-                        selectedUrl: "https://${this.card.buttons[i].postback}",
-                      )));
-              // print(this.card.buttons[i].postback);
+              if (StringUtils.isUrl(this.card.buttons[i].postback)) {
+                //if is url, redirect to the webview page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => WebExplorer(
+                      title: this.card.title,
+                      selectedUrl: "https://${this.card.buttons[i].postback}",
+                    ),
+                  ),
+                );
+              } else {
+                //redirect to the product detail page
+                //the postback is the pId
+                Provider.of<Products>(context)
+                    .getProductById(this.card.buttons[i].postback)
+                    .then((product) {
+                  print(product.title);
+                  Navigator.of(context).pushNamed(ProductDetailPage.routeName,
+                      arguments: product);
+                });
+              }
             },
             color: Colors.green,
             textColor: Colors.white,

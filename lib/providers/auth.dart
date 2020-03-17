@@ -81,6 +81,9 @@ class Auth with ChangeNotifier {
   Future<void> login(String email, String password) async {
     // return _authenticate(email, password, 'verifyPassword');
     const url = "https://wwvo3d7k.lc-cn-n1-shared.com/1.1/login";
+    //chat server API
+    const url2 = "https://0d66add3.ngrok.io/user/login";
+
     try {
       final response = await http.post(url,
           headers: authHeaders,
@@ -92,7 +95,6 @@ class Auth with ChangeNotifier {
       }
       //no error
       //I/flutter ( 2204): {email: hhhhhao@gmail.com, sessionToken: aymdwjz3ikpu0lzdim1i8luvo, updatedAt: 2019-12-16T15:23:32.609Z, objectId: 5df7a1747796d900684723f8, username: evanfungvsnsns, createdAt: 2019-12-16T15:23:32.609Z, emailVerified: false, mobilePhoneVerified: false}
-      print(response);
       _token = responseData['sessionToken'];
       _userId = responseData['objectId'];
       _uId = responseData['uId'].toString();
@@ -112,7 +114,6 @@ class Auth with ChangeNotifier {
     } catch (error) {
       throw error;
     }
-    // print(response.body);
   }
 
   Future<bool> tryAutoLogin() async {
@@ -151,6 +152,8 @@ class Auth with ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    // const url = "https://0d66add3.ngrok.io/user/logout";
+    // await http.post(url, headers: authHeaders);
   }
 
   void _autoLogout() {

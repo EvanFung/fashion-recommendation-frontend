@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
             home: auth.isAuth
                 ? MainPageWidget()
                 : FutureBuilder(
+                    // future: Future.value(false),
                     future: auth.tryAutoLogin(),
                     builder: (ctx, authResultSnashot) =>
                         authResultSnashot.connectionState ==

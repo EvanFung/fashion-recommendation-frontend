@@ -445,4 +445,23 @@ class Products with ChangeNotifier {
     _recommendProducts = loadedProduct;
     notifyListeners();
   }
+
+  Future<Product> getProductById(String id) async {
+    AVQuery query = AVQuery('Product');
+    var response = await query.whereEqualTo('pId', int.parse(id)).find();
+    List<AVObject> products = response.toList();
+    return Product(
+      id: products[0].get('objectId'),
+      title: products[0].get('title'),
+      description: products[0].get('description'),
+      price: products[0].get('price'),
+      imageUrl: products[0].get('imageUrl'),
+      createBy: products[0].get('createBy'),
+      rating: double.parse(products[0].get('rating').toString()),
+      numOfRating: double.parse(products[0].get('numOfRating').toString()),
+      pId: products[0].get('pId').toString(),
+      mainCategory: products[0].get('mainCategory'),
+      subCategory: products[0].get('subCategory'),
+    );
+  }
 }

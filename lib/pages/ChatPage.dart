@@ -111,10 +111,6 @@ class _ChatPageState extends State<ChatPage> {
         _quickReplies = message['quickReplies']['quickReplies'];
       });
       return null;
-      // return QuickReply(
-      //   quickReplyDialogFlow: QuickReplyDialogFlow(message),
-      //   onReply: this._submitQuery,
-      // );
     }
     return null;
   }
@@ -157,7 +153,6 @@ class _ChatPageState extends State<ChatPage> {
                 _quickReplies.clear();
                 _defaultChoiceIndex = selected ? 0 : null;
               },
-              backgroundColor: Colors.blue,
               labelStyle: TextStyle(color: Colors.white),
             ),
           );
