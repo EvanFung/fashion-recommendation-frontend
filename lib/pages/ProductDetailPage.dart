@@ -66,14 +66,15 @@ class ProductDetailPage extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Center(
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            width: double.infinity,
             child: Text(
-              '\$${product.price}',
-              style: TextStyle(color: Colors.grey, fontSize: 20),
+              (product.rating / product.numOfRating).toString(),
+              textAlign: TextAlign.center,
+              softWrap: true,
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
             ),
-          ),
-          SizedBox(
-            height: 10,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
@@ -139,164 +140,235 @@ class ProductDetailPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 10.0,
+          FutureBuilder(
+            future: _fetRatingDetails(context, product.id),
+            builder: (BuildContext ctx,
+                AsyncSnapshot<Map<String, dynamic>> snashot) {
+              if (snashot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (snashot.hasData && snashot.data['five'] != null) {
+                  return _buildChatBar(ctx, snashot, product);
+                } else {
+                  return Container();
+                }
+              }
+            },
           ),
+          _buildReview(context),
+          _buildReview(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatBar(BuildContext context,
+      AsyncSnapshot<Map<String, dynamic>> snashot, Product product) {
+    print(snashot.data['five'] / product.numOfRating);
+
+    /// Rating chart lines
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          /// 5 stars and progress bar
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 32.0),
+            padding: EdgeInsets.symmetric(vertical: 4.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'Ratings & Reviews',
-                  style: TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w800,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                  ],
                 ),
-                FlatButton(
-                  color: Colors.black38,
-                  onPressed: () {
-                    print('See All pressed');
-                  },
-                  child: Text(
-                    'See All',
-                    style: TextStyle(fontSize: 15.0),
+                Padding(padding: EdgeInsets.only(right: 24.0)),
+                Expanded(
+                  child: Theme(
+                    data: ThemeData(accentColor: Colors.green),
+                    child: LinearProgressIndicator(
+                      value: snashot.data['five'] != 0
+                          ? (snashot.data['five'] / product.numOfRating)
+                          : 0,
+                      backgroundColor: Colors.black12,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      (product.rating / product.numOfRating).toString(),
-                      style: TextStyle(
-                        fontSize: 70,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text('out of 5'),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
                   ],
                 ),
-              ),
-              FutureBuilder(
-                future: _fetRatingDetails(context, product.id),
-                builder: (BuildContext context,
-                    AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                  return Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 32.0, right: 2.0, top: 10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Row(
-                              children: List.generate(
-                                5,
-                                (int index) => Icon(
-                                  Icons.star,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              children: List.generate(
-                                  4,
-                                  (int index) => Icon(
-                                        Icons.star,
-                                      )),
-                            ),
-                            Row(
-                              children: List.generate(
-                                  3,
-                                  (int index) => Icon(
-                                        Icons.star,
-                                      )),
-                            ),
-                            Row(
-                              children: List.generate(
-                                  2,
-                                  (int index) => Icon(
-                                        Icons.star,
-                                      )),
-                            ),
-                            Row(
-                              children: List.generate(
-                                  1,
-                                  (int index) => Icon(
-                                        Icons.star,
-                                      )),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      snapshot.connectionState == ConnectionState.waiting
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10.0, right: 25.0),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text(
-                                    snapshot.data['five'].toString(),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    snapshot.data['four'].toString(),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    snapshot.data['three'].toString(),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    snapshot.data['two'].toString(),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    snapshot.data['one'].toString(),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                    ],
-                  );
-                },
-              ),
-            ],
+                Padding(padding: EdgeInsets.only(right: 24.0)),
+                Expanded(
+                  child: Theme(
+                    data: ThemeData(accentColor: Colors.lightGreen),
+                    child: LinearProgressIndicator(
+                      value: snashot.data['four'] != 0
+                          ? (snashot.data['four'] / product.numOfRating)
+                          : 0,
+                      backgroundColor: Colors.black12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.only(right: 24.0)),
+                Expanded(
+                  child: Theme(
+                    data: ThemeData(accentColor: Colors.yellow),
+                    child: LinearProgressIndicator(
+                      value: snashot.data['three'] != 0
+                          ? (snashot.data['three'] / product.numOfRating)
+                          : 0,
+                      backgroundColor: Colors.black12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.only(right: 24.0)),
+                Expanded(
+                  child: Theme(
+                    data: ThemeData(accentColor: Colors.orange),
+                    child: LinearProgressIndicator(
+                      value: snashot.data['two'] != 0
+                          ? (snashot.data['two'] / product.numOfRating)
+                          : 0,
+                      backgroundColor: Colors.black12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.star, color: Colors.black54, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                    Icon(Icons.star, color: Colors.black12, size: 16.0),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.only(right: 24.0)),
+                Expanded(
+                  child: Theme(
+                    data: ThemeData(accentColor: Colors.red),
+                    child: LinearProgressIndicator(
+                      value: snashot.data['one'] != 0
+                          ? (snashot.data['one'] / product.numOfRating)
+                          : 0,
+                      backgroundColor: Colors.black12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget buildComment() {}
+  Widget _buildReview(BuildContext context) {
+    /// Review
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 5.0),
+      child: Material(
+        elevation: 12.0,
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(20.0),
+          bottomLeft: Radius.circular(20.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+          child: Container(
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.purple,
+                child: Text('AI'),
+              ),
+              title: Text('Ivascu Adrian ★★★★★', style: TextStyle()),
+              subtitle: Text(
+                  'The shoes were shipped one day before the shipping date, but this wasn\'t at all a problem :). The shoes are very comfortable and good looking.',
+                  style: TextStyle()),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
