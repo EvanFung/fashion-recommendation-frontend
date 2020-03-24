@@ -126,7 +126,7 @@ class _ChatPageState extends State<ChatPage> {
             Column(
               children: <Widget>[
                 buildMsgList(),
-                _quickReplies.length == 0 ? Container() : buildQuickReplyList(),
+                buildQuickReplyList(),
                 //is Sticker ? build sticker widget : empty widget
                 buildInput(context),
               ],
@@ -136,30 +136,32 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget buildQuickReplyList() {
-    return Container(
-      height: 50.0,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            margin: EdgeInsets.all(5.0),
-            child: ChoiceChip(
-              label: Text(_quickReplies[index]),
-              selected: _defaultChoiceIndex == 0,
-              selectedColor: Colors.grey,
-              onSelected: (bool selected) {
-                print(_quickReplies[index]);
-                _submitQuery(_quickReplies[index]);
-                _quickReplies.clear();
-                _defaultChoiceIndex = selected ? 0 : null;
+    return _quickReplies.length == 0
+        ? Container()
+        : Container(
+            height: 50.0,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: ChoiceChip(
+                    label: Text(_quickReplies[index]),
+                    selected: _defaultChoiceIndex == 0,
+                    selectedColor: Colors.grey,
+                    onSelected: (bool selected) {
+                      print(_quickReplies[index]);
+                      _submitQuery(_quickReplies[index]);
+                      _quickReplies.clear();
+                      _defaultChoiceIndex = selected ? 0 : null;
+                    },
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                );
               },
-              labelStyle: TextStyle(color: Colors.white),
+              itemCount: _quickReplies.length,
             ),
           );
-        },
-        itemCount: _quickReplies.length,
-      ),
-    );
   }
 
   Widget buildMsgList() {

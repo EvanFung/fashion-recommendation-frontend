@@ -3,6 +3,7 @@ import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../providers/Product.dart';
+import '../utils/api_url.dart';
 
 /** productId is the objectId of the product, pId is the auto increament id of the product which used for recommendation */
 class RatingItem {
@@ -118,6 +119,15 @@ class Rating with ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  Future<Map<String, dynamic>> getProductDifferentRating(
+      String productId) async {
+    final url = "${SeverAPI.chatbotServerAPIUrl}/rating?productId=$productId";
+    final response = await http.get(url, headers: SeverAPI.authHeaders);
+    Map<String, dynamic> ratingDetails =
+        json.decode(response.body) as Map<String, dynamic>;
+    return ratingDetails;
   }
 
   void reverseRatingBack() {

@@ -21,6 +21,14 @@ class ProductDetailPage extends StatelessWidget {
     }
   }
 
+  Future<Map<String, dynamic>> _fetRatingDetails(
+      BuildContext context, String productId) async {
+    final Map<String, dynamic> ratingDetails =
+        await Provider.of<Rating>(context, listen: false)
+            .getProductDifferentRating(productId);
+    return ratingDetails;
+  }
+
   @override
   Widget build(BuildContext context) {
     //the id is comefrom
@@ -58,9 +66,11 @@ class ProductDetailPage extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Text(
-            '\$${product.price}',
-            style: TextStyle(color: Colors.grey, fontSize: 20),
+          Center(
+            child: Text(
+              '\$${product.price}',
+              style: TextStyle(color: Colors.grey, fontSize: 20),
+            ),
           ),
           SizedBox(
             height: 10,
@@ -74,57 +84,87 @@ class ProductDetailPage extends StatelessWidget {
               softWrap: true,
             ),
           ),
-          Container(
-            child: FutureBuilder(
-              future: _fetchRating(context, product.id),
-              builder: (ctx, AsyncSnapshot<RatingItem> snapshot) {
-                Widget returnedWidget;
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  returnedWidget = Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  if (snapshot.hasData && snapshot.data.rating != null) {
-                    //if ratingItem is exist
-                    returnedWidget = RatingBar(
-                      initialRating: snapshot.data.rating,
-                      glow: true,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) async {
-                        //not allow user to rate item twice.
-                        Provider.of<Rating>(context).reverseRatingBack();
-                      },
+          Center(
+            child: Container(
+              child: FutureBuilder(
+                future: _fetchRating(context, product.id),
+                builder: (ctx, AsyncSnapshot<RatingItem> snapshot) {
+                  Widget returnedWidget;
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    returnedWidget = Center(
+                      child: CircularProgressIndicator(),
                     );
                   } else {
-                    //rating item not exist
-                    returnedWidget = RatingBar(
-                      initialRating: 0.0,
-                      glow: true,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) async {
-                        await Provider.of<Rating>(context, listen: false)
-                            .addRating(
-                                product.id, product.pId, rating, product);
-                      },
-                    );
+                    if (snapshot.hasData && snapshot.data.rating != null) {
+                      //if ratingItem is exist
+                      returnedWidget = RatingBar(
+                        initialRating: snapshot.data.rating,
+                        glow: true,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) async {
+                          //not allow user to rate item twice.
+                          Provider.of<Rating>(context).reverseRatingBack();
+                        },
+                      );
+                    } else {
+                      //rating item not exist
+                      returnedWidget = RatingBar(
+                        initialRating: 0.0,
+                        glow: true,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) async {
+                          await Provider.of<Rating>(context, listen: false)
+                              .addRating(
+                                  product.id, product.pId, rating, product);
+                        },
+                      );
+                    }
                   }
-                }
-                return returnedWidget;
-              },
+                  return returnedWidget;
+                },
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 32.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Ratings & Reviews',
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                FlatButton(
+                  color: Colors.black38,
+                  onPressed: () {
+                    print('See All pressed');
+                  },
+                  child: Text(
+                    'See All',
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(
@@ -133,104 +173,123 @@ class ProductDetailPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                'Ratings & Reviews',
-                style: TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              FlatButton(
-                onPressed: () {
-                  print('See All pressed');
-                },
-                child: Text('See All'),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      '2.7',
+                      (product.rating / product.numOfRating).toString(),
                       style: TextStyle(
-                        fontSize: 23,
+                        fontSize: 70,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    Text('out of 5')
+                    Text('out of 5'),
                   ],
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+              FutureBuilder(
+                future: _fetRatingDetails(context, product.id),
+                builder: (BuildContext context,
+                    AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                  return Row(
                     children: <Widget>[
-                      Row(
-                        children:
-                            List.generate(5, (int index) => Icon(Icons.star)),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 32.0, right: 2.0, top: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Row(
+                              children: List.generate(
+                                5,
+                                (int index) => Icon(
+                                  Icons.star,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: List.generate(
+                                  4,
+                                  (int index) => Icon(
+                                        Icons.star,
+                                      )),
+                            ),
+                            Row(
+                              children: List.generate(
+                                  3,
+                                  (int index) => Icon(
+                                        Icons.star,
+                                      )),
+                            ),
+                            Row(
+                              children: List.generate(
+                                  2,
+                                  (int index) => Icon(
+                                        Icons.star,
+                                      )),
+                            ),
+                            Row(
+                              children: List.generate(
+                                  1,
+                                  (int index) => Icon(
+                                        Icons.star,
+                                      )),
+                            ),
+                          ],
+                        ),
                       ),
-                      Row(
-                        children:
-                            List.generate(4, (int index) => Icon(Icons.star)),
+                      SizedBox(
+                        width: 10.0,
                       ),
-                      Row(
-                        children:
-                            List.generate(3, (int index) => Icon(Icons.star)),
-                      ),
-                      Row(
-                        children:
-                            List.generate(2, (int index) => Icon(Icons.star)),
-                      ),
-                      Row(
-                        children:
-                            List.generate(1, (int index) => Icon(Icons.star)),
-                      ),
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10.0, right: 25.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    snapshot.data['five'].toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    snapshot.data['four'].toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    snapshot.data['three'].toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    snapshot.data['two'].toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    snapshot.data['one'].toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
                     ],
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text(
-                        '5',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '5',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '5',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '5',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '5',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
+                  );
+                },
               ),
             ],
           ),
@@ -239,9 +298,5 @@ class ProductDetailPage extends StatelessWidget {
     );
   }
 
-  Row buildStarRow(int star) {
-    return Row(
-      children: <Widget>[],
-    );
-  }
+  Widget buildComment() {}
 }

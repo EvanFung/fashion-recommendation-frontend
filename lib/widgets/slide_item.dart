@@ -48,32 +48,33 @@ class _SlideItemState extends State<SlideItem> {
                       height: MediaQuery.of(context).size.height / 3.9,
                       width: MediaQuery.of(context).size.width,
                       child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          ),
-                          child:
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                        child:
 
-                              // Image.network(
-                              //   "${widget.image}",
-                              //   fit: BoxFit.cover,
-                              // ),
-                              CachedNetworkImage(
-                            imageUrl: "${widget.image}",
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                            imageBuilder: (BuildContext context,
-                                    ImageProvider imageProvider) =>
-                                Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              )),
-                            ),
-                          )),
+                            // Image.network(
+                            //   "${widget.image}",
+                            //   fit: BoxFit.cover,
+                            // ),
+                            CachedNetworkImage(
+                          imageUrl: "${widget.image}",
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          imageBuilder: (BuildContext context,
+                                  ImageProvider imageProvider) =>
+                              Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            )),
+                          ),
+                        ),
+                      ),
                     ),
                     Positioned(
                       top: 6.0,

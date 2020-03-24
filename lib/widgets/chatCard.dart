@@ -6,6 +6,7 @@ import '../utils/string_utils.dart';
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
 import '../pages/ProductDetailPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ChatCardWidget extends StatelessWidget {
   ChatCardWidget({this.card});
@@ -20,33 +21,61 @@ class ChatCardWidget extends StatelessWidget {
           width: double.infinity,
           child: new RaisedButton(
             onPressed: () {
-              // Navigator.of(context).pushNamed(WebExplorer.routeName);
-              if (StringUtils.isUrl(this.card.buttons[i].postback)) {
-                //if is url, redirect to the webview page
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => WebExplorer(
-                      title: this.card.title,
-                      selectedUrl: "https://${this.card.buttons[i].postback}",
-                    ),
-                  ),
-                );
-              } else {
-                //redirect to the product detail page
-                //the postback is the pId
-                Provider.of<Products>(context)
-                    .getProductById(this.card.buttons[i].postback)
-                    .then((product) {
-                  print(product.title);
-                  Navigator.of(context).pushNamed(ProductDetailPage.routeName,
-                      arguments: product);
-                });
-              }
+              Provider.of<Products>(context)
+                  .getProductById(this.card.buttons[i].postback)
+                  .then((product) {
+                print(product.title);
+                Navigator.of(context)
+                    .pushNamed(ProductDetailPage.routeName, arguments: product);
+              });
             },
-            color: Colors.green,
+            color: Colors.black38,
             textColor: Colors.white,
             child: Text(this.card.buttons[i].text),
           )));
+
+      buttons.add(
+        new SizedBox(
+          width: double.infinity,
+          child: new RaisedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => WebExplorer(
+                    title: this.card.title,
+                    selectedUrl:
+                        "https://www.myntra.com/${this.card.title.replaceAll(' ', '-')}",
+                  ),
+                ),
+              );
+            },
+            color: Colors.black38,
+            textColor: Colors.white,
+            child: Text("Buy it"),
+          ),
+        ),
+      );
+      buttons.add(
+        new SizedBox(
+          width: double.infinity,
+          child: new RaisedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => WebExplorer(
+                    title: this.card.title,
+                    selectedUrl:
+                        "https://www.amazon.com/s?k=${this.card.title.replaceAll(' ', '-')}",
+                  ),
+                ),
+              );
+            },
+            color: Colors.black38,
+            textColor: Colors.white,
+            child: Text("Find Similar"),
+          ),
+        ),
+      );
     }
     return buttons;
   }
@@ -64,9 +93,15 @@ class ChatCardWidget extends StatelessWidget {
           children: <Widget>[
             Center(
               child: Container(
-                child: Image.network(
-                  this.card.imageUri,
-                  fit: BoxFit.contain,
+                child:
+                    // Image.network(
+                    //   this.card.imageUri,
+                    //   fit: BoxFit.contain,
+                    // ),
+                    CachedNetworkImage(
+                  imageUrl: "${this.card.imageUri}",
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
             ),
@@ -101,14 +136,5 @@ class ChatCardWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<bool> _buildCardImage() async {
-    if (await canLaunch(this.card.imageUri)) {
-      return true;
-    } else {
-      // return Image.asset("assets/image/belts.jpeg");
-      return false;
-    }
   }
 }
