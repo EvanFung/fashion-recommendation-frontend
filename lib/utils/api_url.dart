@@ -1,5 +1,5 @@
 class SeverAPI {
-  static const chatbotServerAPIUrl = "https://4171fad0.ngrok.io";
+  static const chatbotServerAPIUrl = "http://10.0.2.2:8080";
   static const databaseAPIUrl = "https://wwvo3d7k.lc-cn-n1-shared.com/1.1";
   static const recommendServerAPIUrl = 'http://wwvo3d7kkogq.leanapp.cn/';
   static const Map<String, String> authHeaders = {

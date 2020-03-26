@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/products.dart';
 import '../providers/Product.dart';
 import '../providers/Rating.dart';
+import '../providers/Comments.dart';
+import '../providers/Comment.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../pages/newComment.dart';
+import '../pages/replyCommentPage.dart';
 
 class ProductDetailPage extends StatelessWidget {
   static const routeName = '/product-detail';
@@ -29,11 +32,16 @@ class ProductDetailPage extends StatelessWidget {
     return ratingDetails;
   }
 
+  Future<List<Comment>> _fetchComments(
+      BuildContext context, String productId) async {
+    return await Provider.of<Comments>(context, listen: false)
+        .fetchCommentByProductId(productId);
+  }
+
   @override
   Widget build(BuildContext context) {
     //the id is comefrom
     final product = ModalRoute.of(context).settings.arguments as Product;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title),
@@ -95,7 +103,9 @@ class ProductDetailPage extends StatelessWidget {
                     returnedWidget = Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else {
+                  } else if (snapshot.hasError) {
+                    return Text('NETWORK ERROR, PLEASE TRY AGAIN LATER');
+                  } else if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData && snapshot.data.rating != null) {
                       //if ratingItem is exist
                       returnedWidget = RatingBar(
@@ -144,21 +154,66 @@ class ProductDetailPage extends StatelessWidget {
             future: _fetRatingDetails(context, product.id),
             builder: (BuildContext ctx,
                 AsyncSnapshot<Map<String, dynamic>> snashot) {
-              if (snashot.connectionState == ConnectionState.waiting) {
+              if (snashot.connectionState == ConnectionState.done) {
+                if (snashot.hasError) {
+                  return Text('NETWORK ERROR, PLEASE TRY AGAIN LATER');
+                } else {
+                  return _buildChatBar(ctx, snashot, product);
+                }
+              } else {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
-              } else {
-                if (snashot.hasData && snashot.data['five'] != null) {
-                  return _buildChatBar(ctx, snashot, product);
-                } else {
-                  return Container();
-                }
               }
             },
           ),
-          _buildReview(context),
-          _buildReview(context),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Reviews',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                ),
+                IconButton(
+                  icon: Icon(Icons.comment),
+                  tooltip: 'Leave a comment',
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      NewComment.routeName,
+                      arguments: {
+                        'product': product,
+                        'comment': null,
+                      },
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+          FutureBuilder(
+            future: _fetchComments(context, product.id),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return Text('NETWORK ERROR, PLEASE TRY AGAIN LATER');
+                } else {
+                  List<Comment> comments = snapshot.data;
+                  List<Widget> reviews = comments
+                      .map((comment) => _buildReview(context, comment, product))
+                      .toList();
+                  return Column(
+                    children: reviews,
+                  );
+                }
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
@@ -166,8 +221,6 @@ class ProductDetailPage extends StatelessWidget {
 
   Widget _buildChatBar(BuildContext context,
       AsyncSnapshot<Map<String, dynamic>> snashot, Product product) {
-    print(snashot.data['five'] / product.numOfRating);
-
     /// Rating chart lines
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
@@ -341,7 +394,7 @@ class ProductDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildReview(BuildContext context) {
+  Widget _buildReview(BuildContext context, Comment comment, Product product) {
     /// Review
     return Padding(
       padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 5.0),
@@ -356,17 +409,38 @@ class ProductDetailPage extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
           child: Container(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.purple,
-                child: Text('AI'),
+              child: Column(
+            children: <Widget>[
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.purple,
+                  child: Text(comment.authorName.substring(0, 2).toUpperCase()),
+                ),
+                title: Text(comment.authorName, style: TextStyle()),
+                subtitle: Text(comment.text, style: TextStyle()),
               ),
-              title: Text('Ivascu Adrian ★★★★★', style: TextStyle()),
-              subtitle: Text(
-                  'The shoes were shipped one day before the shipping date, but this wasn\'t at all a problem :). The shoes are very comfortable and good looking.',
-                  style: TextStyle()),
-            ),
-          ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.favorite_border),
+                    color: Colors.black,
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.speaker_notes),
+                    color: Colors.black,
+                    onPressed: () {
+                      print('with parent is press....');
+                      Navigator.of(context).pushNamed(
+                          ReplyCommentPage.routeName,
+                          arguments: {'product': product, 'comment': comment});
+                    },
+                  ),
+                ],
+              ),
+            ],
+          )),
         ),
       ),
     );
