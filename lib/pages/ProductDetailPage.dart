@@ -78,7 +78,7 @@ class ProductDetailPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10),
             width: double.infinity,
             child: Text(
-              (product.rating / product.numOfRating).toString(),
+              (product.rating / product.numOfRating).toStringAsFixed(1),
               textAlign: TextAlign.center,
               softWrap: true,
               style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),

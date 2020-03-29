@@ -17,6 +17,8 @@ class Auth with ChangeNotifier {
   int expiresIn = 3600 * 24;
   String _uId;
   String _username;
+  String _email;
+  String _bio;
   Map<String, String> authHeaders = {
     "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
     "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
@@ -52,6 +54,14 @@ class Auth with ChangeNotifier {
 
   String get username {
     return _username;
+  }
+
+  String get email {
+    return _email;
+  }
+
+  String get bio {
+    return _bio;
   }
 
   Future<bool> signup(String email, String password, String username) async {
@@ -97,6 +107,8 @@ class Auth with ChangeNotifier {
       _uId = responseData['uId'].toString();
       _expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
       _username = responseData['username'];
+      _email = responseData['email'];
+      _bio = responseData['bio'];
       _autoLogout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
@@ -105,7 +117,9 @@ class Auth with ChangeNotifier {
         'userId': _userId,
         'expiryDate': _expiryDate.toIso8601String(),
         'uId': _uId,
-        'username': _username
+        'username': _username,
+        'email': _email,
+        'bio': _bio,
       });
       prefs.setString('userData', userData);
     } catch (error) {
@@ -131,6 +145,8 @@ class Auth with ChangeNotifier {
     _uId = extractedUserData['uId'];
     _expiryDate = expiryDate;
     _username = extractedUserData['username'];
+    _email = extractedUserData['email'];
+    _bio = extractedUserData['bio'];
     notifyListeners();
     _autoLogout();
     return true;
@@ -142,6 +158,8 @@ class Auth with ChangeNotifier {
     _expiryDate = null;
     _uId = null;
     _username = null;
+    _email = null;
+    _bio = null;
     if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;
@@ -178,5 +196,28 @@ class Auth with ChangeNotifier {
         body: json.encode({
           'profilePic': {'id': responsedData['objectId'], '__type': 'File'}
         }));
+  }
+
+  updateUser(String atrr, String value) async {
+    var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users/$userId';
+    final response = await http.put(
+      url,
+      headers: {
+        "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+        "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+        "Content-Type": "application/json",
+        "X-LC-Session": this._token
+      },
+      body: json.encode({'$atrr': '$value'}),
+    );
+
+    if (atrr == 'username') {
+      _username = value;
+    }
+    if (atrr == 'bio') {
+      _bio = value;
+    }
+    print(json.decode(response.body));
+    notifyListeners();
   }
 }

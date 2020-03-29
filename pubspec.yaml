@@ -36,7 +36,7 @@ dependencies:
   flutter_staggered_grid_view: "^0.2.7"
   cached_network_image: ^1.0.0
   flutter_native_image:
-    git: 
+    git:
       url: https://github.com/btastic/flutter_native_image.git
   flutter_dialogflow: ^0.1.2
   webview_flutter: ^0.1.1
@@ -46,13 +46,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -60,56 +58,57 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/images/interFace1.png
-   - assets/images/interFace2.png
-   - assets/images/interFace3.png
-   - assets/images/interFace4.png
-   - assets/images/food1.jpeg
-   - assets/images/food2.jpeg
-   - assets/images/food3.jpeg
-   - assets/images/food4.jpeg
-   - assets/images/food5.jpeg
-   - assets/images/food6.jpeg
-   - assets/images/food7.jpeg
-   - assets/images/food8.jpeg
-   - assets/images/food9.jpeg
-   - assets/images/food10.jpeg
-   - assets/images/food11.jpeg
-   - assets/images/food12.jpg
-   - assets/images/cm1.jpeg
-   - assets/images/cm2.jpeg
-   - assets/images/cm3.jpeg
-   - assets/images/cm4.jpeg
-   - assets/images/accessories.jpg
-   - assets/images/shoes.jpeg
-   - assets/images/personalCare.jpeg
-   - assets/images/clothes.jpeg
-   - assets/images/people.jpeg
-   - assets/images/people2.jpeg
-   - assets/images/login_logo.png
-   - assets/images/logo_small.png
-   - assets/images/shop.png
-   - assets/images/bags.jpeg
-   - assets/images/belts.jpeg
-   - assets/images/bottomwear.jpeg
-   - assets/images/dress.jpeg
-   - assets/images/eyewear.jpeg
-   - assets/images/flipflops.jpeg
-   - assets/images/fragrance.jpeg
-   - assets/images/innerwear.jpeg
-   - assets/images/jewellery.jpeg
-   - assets/images/lips.jpeg
-   - assets/images/makeup.jpeg
-   - assets/images/nightwear.jpeg
-   - assets/images/sandal.jpeg
-   - assets/images/saree.jpeg
-   - assets/images/shoe_accesories.jpeg
-   - assets/images/skincare.jpeg
-   - assets/images/socks.jpeg
-   - assets/images/ties.jpeg
-   - assets/images/wallets.jpeg
-   - assets/images/watch.jpeg
-   - assets/creds/fashion-rec-sys-ejgagv-9d21e5b1b56d.json
+    - assets/images/interFace1.png
+    - assets/images/interFace2.png
+    - assets/images/interFace3.png
+    - assets/images/interFace4.png
+    - assets/images/food1.jpeg
+    - assets/images/food2.jpeg
+    - assets/images/food3.jpeg
+    - assets/images/food4.jpeg
+    - assets/images/food5.jpeg
+    - assets/images/food6.jpeg
+    - assets/images/food7.jpeg
+    - assets/images/food8.jpeg
+    - assets/images/food9.jpeg
+    - assets/images/food10.jpeg
+    - assets/images/food11.jpeg
+    - assets/images/food12.jpg
+    - assets/images/cm1.jpeg
+    - assets/images/cm2.jpeg
+    - assets/images/cm3.jpeg
+    - assets/images/cm4.jpeg
+    - assets/images/accessories.jpg
+    - assets/images/shoes.jpeg
+    - assets/images/personalCare.jpeg
+    - assets/images/clothes.jpeg
+    - assets/images/people.jpeg
+    - assets/images/people2.jpeg
+    - assets/images/login_logo.png
+    - assets/images/logo_small.png
+    - assets/images/shop.png
+    - assets/images/bags.jpeg
+    - assets/images/belts.jpeg
+    - assets/images/bottomwear.jpeg
+    - assets/images/dress.jpeg
+    - assets/images/eyewear.jpeg
+    - assets/images/flipflops.jpeg
+    - assets/images/fragrance.jpeg
+    - assets/images/innerwear.jpeg
+    - assets/images/jewellery.jpeg
+    - assets/images/lips.jpeg
+    - assets/images/makeup.jpeg
+    - assets/images/nightwear.jpeg
+    - assets/images/sandal.jpeg
+    - assets/images/saree.jpeg
+    - assets/images/shoe_accesories.jpeg
+    - assets/images/skincare.jpeg
+    - assets/images/socks.jpeg
+    - assets/images/ties.jpeg
+    - assets/images/wallets.jpeg
+    - assets/images/watch.jpeg
+    - assets/creds/fashion-rec-sys-ejgagv-9d21e5b1b56d.json
+    - assets/images/smileface.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -130,6 +129,10 @@ flutter:
     - family: Anton
       fonts:
         - asset: assets/fonts/Anton-Regular.ttf
+
+    - family: Edge
+      fonts:
+        - asset: assets/fonts/edge.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

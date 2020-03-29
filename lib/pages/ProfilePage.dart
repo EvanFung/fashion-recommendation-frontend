@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
 import '../providers/auth.dart';
+import 'dart:math';
 
 class _ContactCategory extends StatelessWidget {
   const _ContactCategory({Key key, this.icon, this.children}) : super(key: key);
@@ -36,7 +37,7 @@ class _ContactCategory extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 24.0),
                 width: 72.0,
-                child: Icon(icon),
+                // child: Icon(icon),
               ),
               Expanded(
                   child: Column(
@@ -50,25 +51,49 @@ class _ContactCategory extends StatelessWidget {
   }
 }
 
-class _ContactItem extends StatelessWidget {
-  const _ContactItem(
-      {Key key, this.icon, this.lines, this.tooltip, this.onPressed})
-      : assert(lines.length > 1),
+class _ContactItem extends StatefulWidget {
+  _ContactItem({
+    Key key,
+    this.icon,
+    this.lines,
+    this.tooltip,
+    this.onPressed,
+    final this.type,
+  })  : assert(lines.length > 1),
         super(key: key);
 
   final IconData icon;
   final List<String> lines;
   final String tooltip;
-  final VoidCallback onPressed;
+  final Function onPressed;
+  //user table field
+  final String type;
+
+  bool isChange = false;
 
   @override
-  Widget build(BuildContext context) {
-    final List<Widget> columnChildren = lines
-        .sublist(0, lines.length - 1)
-        .map<Widget>((String line) => Text(line))
-        .toList();
-    columnChildren.add(Text(lines.last));
+  __ContactItemState createState() => __ContactItemState();
+}
 
+class __ContactItemState extends State<_ContactItem> {
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController editingController = TextEditingController();
+    final List<Widget> columnChildren = widget.lines
+        .sublist(0, widget.lines.length - 1)
+        .map<Widget>((String line) {
+      if (widget.isChange) {
+        return TextField(
+          controller: editingController,
+          decoration: InputDecoration(labelText: line),
+        );
+      } else {
+        return Text(line);
+      }
+    }).toList();
+    if (!widget.isChange) {
+      columnChildren.add(Text(widget.lines.last));
+    }
     final List<Widget> rowChildren = <Widget>[
       Expanded(
         child: Column(
@@ -77,14 +102,26 @@ class _ContactItem extends StatelessWidget {
         ),
       ),
     ];
-    if (icon != null) {
+    if (widget.icon != null &&
+        (widget.type == 'username' || widget.type == 'bio')) {
       rowChildren.add(SizedBox(
         width: 72.0,
         child: IconButton(
           icon: const Icon(
             Icons.create,
           ),
-          onPressed: onPressed,
+          onPressed: () {
+            setState(() {
+              widget.isChange = !widget.isChange;
+              print(widget.isChange);
+              print(editingController.text);
+              if (widget.isChange == false) {
+                Provider.of<Auth>(context)
+                    .updateUser(widget.type, editingController.text);
+              }
+              widget.onPressed();
+            });
+          },
         ),
       ));
     }
@@ -115,6 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // upload image
   File _storedImage;
+  DateTime _birthDay;
 
   Future<void> _takePicture() async {
     final imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -131,7 +169,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    String username = Provider.of<Auth>(context, listen: false).username;
+    String username = Provider.of<Auth>(context).username;
+    String uId = Provider.of<Auth>(context).uId;
+    String email = Provider.of<Auth>(context).email;
+    String bio = Provider.of<Auth>(context).bio;
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -159,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                username,
+                username == null ? 'n/a' : username,
                 style: TextStyle(color: Colors.black),
               ),
               background: Stack(
@@ -201,57 +242,61 @@ class _ProfilePageState extends State<ProfilePage> {
                     _ContactItem(
                       icon: Icons.message,
                       tooltip: 'Send message',
+                      type: 'username',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
                           content: Text(
                               'Pretend that this opened your SMS application.'),
                         ));
                       },
-                      lines: const <String>[
-                        '(650) 555-1234',
-                        'Mobile',
+                      lines: <String>[
+                        'Username',
+                        username == null ? 'n/a' : username,
                       ],
                     ),
                     _ContactItem(
                       icon: Icons.message,
                       tooltip: 'Send message',
+                      type: 'uId',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
                           content: Text(
                               'Pretend that this opened your SMS application.'),
                         ));
                       },
-                      lines: const <String>[
-                        '(650) 555-1234',
-                        'Mobile',
+                      lines: <String>[
+                        'User ID',
+                        uId == null ? 'n/a' : uId,
                       ],
                     ),
                     _ContactItem(
                       icon: Icons.message,
                       tooltip: 'Send message',
+                      type: 'email',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
                           content: Text(
                               'Pretend that this opened your SMS application.'),
                         ));
                       },
-                      lines: const <String>[
-                        '(650) 555-1234',
-                        'Mobile',
+                      lines: <String>[
+                        'Email',
+                        email == null ? 'n/a' : email,
                       ],
                     ),
                     _ContactItem(
                       icon: Icons.message,
                       tooltip: 'Send message',
+                      type: 'bio',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
                           content: Text(
                               'Pretend that this opened your SMS application.'),
                         ));
                       },
-                      lines: const <String>[
-                        '(650) 555-1234',
-                        'Mobile',
+                      lines: <String>[
+                        'Bio',
+                        bio == null ? "n/a" : bio,
                       ],
                     ),
                   ],
@@ -266,14 +311,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   child: Column(
                     children: <Widget>[
-                      Divider(),
-                      ListTile(
-                        leading: Icon(Icons.payment),
-                        title: Text('Orders'),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(OrderPage.routeName);
-                        },
-                      ),
                       Divider(),
                       ListTile(
                         leading: Icon(Icons.edit),
