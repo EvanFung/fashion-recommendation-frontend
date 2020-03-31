@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import '../providers/Tweet.dart';
 import 'dart:io';
 import '../utils/location.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspath;
 
 class UploadImageScreen extends StatefulWidget {
   static const routeName = '/upload-image';
@@ -18,6 +22,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   Map<String, double> currentLocation = Map();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController locationController = TextEditingController();
+  bool posting = false;
 
   @override
   void initState() {
@@ -69,14 +74,29 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
               ),
               actions: <Widget>[
                 FlatButton(
-                    onPressed: postImage,
-                    child: Text(
-                      "Post",
-                      style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0),
-                    ))
+                  onPressed: () {
+                    if (posting) {
+                      print('posting....');
+                    } else {
+                      postImage();
+                    }
+                  },
+                  child: posting
+                      ? Text(
+                          'Posting...',
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0),
+                        )
+                      : Text(
+                          "Post",
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0),
+                        ),
+                )
               ],
             ),
             body: ListView(
@@ -110,10 +130,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   }
 
   Future<Null> _selectImage(BuildContext parentContext) async {
-    // var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-    // setState(() {
-    //   file = imageFile;
-    // });
     return showDialog<Null>(
       context: parentContext,
       barrierDismissible: false, // user must tap button!
@@ -196,10 +212,36 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     });
   }
 
-  void postImage() {
-    Future<String> upload = uploadImage(file).then((String data) {
-      postToFireStore(mediaUrl: data, description: descriptionController.text);
+  void postImage() async {
+    setState(() {
+      posting = true;
     });
+    Map<String, dynamic> fileJson = await uploadImage(file);
+    var imgae = fileJson['objectId'];
+    var createBy = Provider.of<Tweets>(context).userID;
+    var likes = "0";
+    var location = locationController.text;
+    var description = descriptionController.text;
+    await Provider.of<Tweets>(context).addTweet(
+      imgae: imgae,
+      createBy: createBy,
+      likes: likes,
+      location: location,
+      description: description,
+    );
+    setState(() {
+      posting = false;
+    });
+    Navigator.of(context).pop();
+  }
+
+  Future<Map<String, dynamic>> uploadImage(File imageFile) async {
+    final appDir = await syspath.getApplicationDocumentsDirectory();
+    final fileName = await path.basename(imageFile.path);
+    final saveImage = await imageFile.copy('${appDir.path}/$fileName');
+    Map<String, dynamic> fileJson =
+        await Provider.of<Tweets>(context).uploadImage(saveImage, fileName);
+    return fileJson;
   }
 }
 
@@ -266,9 +308,3 @@ class PostForm extends StatelessWidget {
     );
   }
 }
-
-Future<String> uploadImage(var imageFile) async {
-  return 'url string';
-}
-
-void postToFireStore({String mediaUrl, String location, String description}) {}

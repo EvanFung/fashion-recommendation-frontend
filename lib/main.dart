@@ -15,6 +15,7 @@ import './providers/auth.dart';
 import './providers/Rating.dart';
 import './providers/Favorites.dart';
 import './providers/Comments.dart';
+import './providers/Tweet.dart';
 import 'pages/OrdersPage.dart';
 import 'pages/UserProductPage.dart';
 import 'pages/EditProductPage.dart';
@@ -80,6 +81,10 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProxyProvider<Auth, Comments>(
             builder: (ctx, auth, previousComment) =>
                 Comments(auth.token, auth.userId, auth.uId),
+          ),
+          ChangeNotifierProxyProvider<Auth, Tweets>(
+            builder: (ctx, auth, previousTweets) =>
+                Tweets(authID: auth.token, userID: auth.userId, uId: auth.uId),
           )
         ],
         child: Consumer<Auth>(
