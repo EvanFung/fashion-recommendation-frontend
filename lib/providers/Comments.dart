@@ -26,6 +26,7 @@ class Comments with ChangeNotifier {
     Map<String, dynamic> responseBody = json.decode(response.body);
     //Get the list of comment
     List<dynamic> commentsJson = responseBody['comments'] as List<dynamic>;
+    // print(commentsJson);
     commentsJson
         .where((comment) => comment['parentId'] == null)
         .forEach((comment) {
@@ -37,6 +38,7 @@ class Comments with ChangeNotifier {
               ? comment['parentId']['objectId']
               : null,
           authorName: comment['authorId']['username'],
+          authorProfilePicUrl: comment['authorId']['profilePic']['url'],
           text: comment['text']));
     });
     return loadedComment;
@@ -62,6 +64,7 @@ class Comments with ChangeNotifier {
           authorId: comment['authorId']['objectId'],
           parentId: comment['parentId']['objectId'],
           authorName: comment['authorId']['username'],
+          authorProfilePicUrl: comment['authorId']['profilePic']['url'],
           text: comment['text']));
     });
     return loadedComment;

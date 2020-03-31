@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:async';
-import 'package:leancloud_flutter_plugin/leancloud_flutter_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/http_exception.dart';
-import 'package:async/async.dart';
 import 'dart:io';
+import '../utils/image_utils.dart';
 
 class Auth with ChangeNotifier {
   String _token;
@@ -19,6 +18,7 @@ class Auth with ChangeNotifier {
   String _username;
   String _email;
   String _bio;
+  String _profilePicUrl;
   Map<String, String> authHeaders = {
     "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
     "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
@@ -62,6 +62,10 @@ class Auth with ChangeNotifier {
 
   String get bio {
     return _bio;
+  }
+
+  String get profilePicUrl {
+    return _profilePicUrl;
   }
 
   Future<bool> signup(String email, String password, String username) async {
@@ -109,6 +113,7 @@ class Auth with ChangeNotifier {
       _username = responseData['username'];
       _email = responseData['email'];
       _bio = responseData['bio'];
+      _profilePicUrl = responseData['profilePic']['url'];
       _autoLogout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
@@ -120,6 +125,7 @@ class Auth with ChangeNotifier {
         'username': _username,
         'email': _email,
         'bio': _bio,
+        'profilePicUrl': _profilePicUrl,
       });
       prefs.setString('userData', userData);
     } catch (error) {
@@ -147,6 +153,7 @@ class Auth with ChangeNotifier {
     _username = extractedUserData['username'];
     _email = extractedUserData['email'];
     _bio = extractedUserData['bio'];
+    _profilePicUrl = extractedUserData['profilePicUrl'];
     notifyListeners();
     _autoLogout();
     return true;
@@ -160,6 +167,7 @@ class Auth with ChangeNotifier {
     _username = null;
     _email = null;
     _bio = null;
+    _profilePicUrl = null;
     if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;
@@ -178,24 +186,35 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> uploadProfilePic(File image, String fileName) async {
+    File compressedImage = await EImageUtils(image).compress(
+      quality: 60,
+    );
+    File resizedImage = await EImageUtils(compressedImage).resize(width: 512);
     var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$fileName';
     final response = await http.post(url,
-        headers: imgHeaders, body: image.readAsBytesSync());
+        headers: imgHeaders, body: resizedImage.readAsBytesSync());
     print(response.body);
     final responsedData = json.decode(response.body) as Map<String, dynamic>;
+
     print(responsedData['objectId']);
+    print(responsedData['url']);
+
     //attach this file object to current user.
     url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users/$_userId';
-    final responseInUserReq = await http.put(url,
-        headers: {
-          "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
-          "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
-          "Content-Type": "application/json",
-          "X-LC-Session": this._token
-        },
-        body: json.encode({
-          'profilePic': {'id': responsedData['objectId'], '__type': 'File'}
-        }));
+    final responseInUserReq = await http.put(
+      url,
+      headers: {
+        "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+        "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+        "Content-Type": "application/json",
+        "X-LC-Session": this._token
+      },
+      body: json.encode({
+        'profilePic': {'id': responsedData['objectId'], '__type': 'File'}
+      }),
+    );
+    _profilePicUrl = responsedData['url'];
+    notifyListeners();
   }
 
   updateUser(String atrr, String value) async {

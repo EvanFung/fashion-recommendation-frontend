@@ -66,6 +66,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       typing = false;
     });
+
     print(response.queryResult.fulfillmentMessages);
     List<dynamic> messages = response.getListMessage();
     messages.forEach((messageMap) {

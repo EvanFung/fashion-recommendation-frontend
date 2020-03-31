@@ -173,6 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
     String uId = Provider.of<Auth>(context).uId;
     String email = Provider.of<Auth>(context).email;
     String bio = Provider.of<Auth>(context).bio;
+    String profilePicUrl = Provider.of<Auth>(context).profilePicUrl;
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -206,17 +207,25 @@ class _ProfilePageState extends State<ProfilePage> {
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  _storedImage != null
-                      ? Image.file(
-                          _storedImage,
-                          fit: BoxFit.cover,
-                          height: _appBarHeight,
-                        )
+                  profilePicUrl != null
+                      ? Image.network(profilePicUrl,
+                          fit: BoxFit.cover, height: _appBarHeight)
                       : Image.asset(
                           'assets/images/people2.jpeg',
                           fit: BoxFit.cover,
                           height: _appBarHeight,
                         ),
+                  // _storedImage != null
+                  //     ? Image.file(
+                  //         _storedImage,
+                  //         fit: BoxFit.cover,
+                  //         height: _appBarHeight,
+                  //       )
+                  //     : Image.asset(
+                  //         'assets/images/people2.jpeg',
+                  //         fit: BoxFit.cover,
+                  //         height: _appBarHeight,
+                  //       ),
                   // This gradient ensures that the toolbar icons are distinct
                   // against the background image.
                   const DecoratedBox(
@@ -245,8 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       type: 'username',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                          content: Text(
-                              'Pretend that this opened your SMS application.'),
+                          content: Text('Username has been updated!'),
                         ));
                       },
                       lines: <String>[
@@ -260,8 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       type: 'uId',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                          content: Text(
-                              'Pretend that this opened your SMS application.'),
+                          content: Text('Username has been updated!'),
                         ));
                       },
                       lines: <String>[
@@ -290,8 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       type: 'bio',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                          content: Text(
-                              'Pretend that this opened your SMS application.'),
+                          content: Text('Bio has been updated!'),
                         ));
                       },
                       lines: <String>[

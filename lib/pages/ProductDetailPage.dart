@@ -5,9 +5,11 @@ import '../providers/Product.dart';
 import '../providers/Rating.dart';
 import '../providers/Comments.dart';
 import '../providers/Comment.dart';
+import '../providers/auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../pages/newComment.dart';
 import '../pages/replyCommentPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProductDetailPage extends StatelessWidget {
   static const routeName = '/product-detail';
@@ -414,7 +416,8 @@ class ProductDetailPage extends StatelessWidget {
               ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.purple,
-                  child: Text(comment.authorName.substring(0, 2).toUpperCase()),
+                  backgroundImage:
+                      CachedNetworkImageProvider(comment.authorProfilePicUrl),
                 ),
                 title: Text(comment.authorName, style: TextStyle()),
                 subtitle: Text(comment.text, style: TextStyle()),
