@@ -223,7 +223,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     var location = locationController.text;
     var description = descriptionController.text;
     await Provider.of<Tweets>(context).addTweet(
-      imgae: imgae,
+      image: imgae,
       createBy: createBy,
       likes: likes,
       location: location,

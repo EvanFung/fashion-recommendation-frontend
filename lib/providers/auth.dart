@@ -71,10 +71,21 @@ class Auth with ChangeNotifier {
   Future<bool> signup(String email, String password, String username) async {
     const url = "https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users";
     try {
-      final response = await http.post(url,
-          headers: authHeaders,
-          body: json.encode(
-              {"email": email, "password": password, "username": username}));
+      final response = await http.post(
+        url,
+        headers: authHeaders,
+        body: json.encode(
+          {
+            "email": email,
+            "password": password,
+            "username": username,
+            'profilePic': {
+              '__type': 'File',
+              'id': "5e836db38a84ab008cd35b8f" //default profile picture id
+            },
+          },
+        ),
+      );
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         print(responseData['code']);
@@ -189,10 +200,10 @@ class Auth with ChangeNotifier {
     File compressedImage = await EImageUtils(image).compress(
       quality: 60,
     );
-    File resizedImage = await EImageUtils(compressedImage).resize(width: 512);
+    // File resizedImage = await EImageUtils(compressedImage).resize(width: 512);
     var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$fileName';
     final response = await http.post(url,
-        headers: imgHeaders, body: resizedImage.readAsBytesSync());
+        headers: imgHeaders, body: compressedImage.readAsBytesSync());
     print(response.body);
     final responsedData = json.decode(response.body) as Map<String, dynamic>;
 

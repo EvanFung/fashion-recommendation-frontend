@@ -56,7 +56,7 @@ class _ImagePostState extends State<ImagePost> {
           ),
           Image.network(
             mediaUrl,
-            height: 250.0,
+            fit: BoxFit.fill,
           ),
           ButtonBar(
             alignment: MainAxisAlignment.start,

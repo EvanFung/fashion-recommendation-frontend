@@ -83,8 +83,11 @@ class MyApp extends StatelessWidget {
                 Comments(auth.token, auth.userId, auth.uId),
           ),
           ChangeNotifierProxyProvider<Auth, Tweets>(
-            builder: (ctx, auth, previousTweets) =>
-                Tweets(authID: auth.token, userID: auth.userId, uId: auth.uId),
+            builder: (ctx, auth, previousTweets) => Tweets(
+                authID: auth.token,
+                userID: auth.userId,
+                uId: auth.uId,
+                username: auth.username),
           )
         ],
         child: Consumer<Auth>(
