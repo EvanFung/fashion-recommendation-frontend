@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/twitter_profile_page_screen.dart';
 
 class ImagePost extends StatefulWidget {
   final String mediaUrl;
@@ -50,7 +51,12 @@ class _ImagePostState extends State<ImagePost> {
         children: <Widget>[
           ListTile(
             leading: const CircleAvatar(),
-            title: Text(this.username, style: boldStyle),
+            title: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(TwitterProfilePage.routeName);
+              },
+              child: Text(this.username, style: boldStyle),
+            ),
             subtitle: Text(this.location),
             trailing: const Icon(Icons.more_vert),
           ),
