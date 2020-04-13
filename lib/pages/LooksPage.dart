@@ -25,11 +25,11 @@ class LooksPage extends StatelessWidget {
                   tabs: <Widget>[
                     Tab(
                       icon: Icon(Icons.people),
-                      child: Text('Explore'),
+                      child: Text('MOMENTS'),
                     ),
                     Tab(
                       icon: Icon(Icons.thumb_up),
-                      child: Text('Following'),
+                      child: Text('FOLLOWING'),
                     ),
                   ],
                 ),

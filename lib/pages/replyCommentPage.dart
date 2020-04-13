@@ -5,6 +5,7 @@ import '../providers/Comments.dart';
 import '../providers/Comment.dart';
 import '../providers/Product.dart';
 import '../providers/auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ReplyCommentPage extends StatelessWidget {
   static const routeName = '/reply-comment';
@@ -37,8 +38,8 @@ class ReplyCommentPage extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(
                   radius: 25.0,
-                  backgroundImage: NetworkImage(
-                      'https://www.inovex.de/blog/wp-content/uploads/2019/01/Flutter-1-1.png'),
+                  backgroundImage: CachedNetworkImageProvider(
+                      parentComment.authorProfilePicUrl),
                 ),
                 title: Text(
                   parentComment.authorName,
@@ -131,8 +132,8 @@ class ReplyCommentPage extends StatelessWidget {
           child: ListTile(
             leading: CircleAvatar(
               radius: 25.0,
-              backgroundImage: NetworkImage(
-                  'https://www.inovex.de/blog/wp-content/uploads/2019/01/Flutter-1-1.png'),
+              backgroundImage:
+                  CachedNetworkImageProvider(comment.authorProfilePicUrl),
             ),
             title: Text(
               comment.authorName,

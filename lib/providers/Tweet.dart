@@ -106,7 +106,7 @@ class Tweets with ChangeNotifier {
         "createBy": createBy, //user objectId
         "image": image, //image objectId
         "description": description,
-        "likes": "0",
+        "likes": 0,
         "location": location
       }),
     );
@@ -132,18 +132,20 @@ class Tweets with ChangeNotifier {
         responseData['thisTweet']['createBy']['profilePic']['url'];
     String imageUrl = responseData['thisTweet']['image']['url'];
     String tweetId = responseData['thisTweet']['objectId'];
-    _items.add(Tweet(
-      objectID: objectID,
-      author: author,
-      profilePicUrl: profilePicUrl,
-      imageUrl: imageUrl,
-      imageID: image,
-      location: location,
-      likes: 0,
-      description: description,
-      createByID: createBy,
-      tweetObjectId: tweetId,
-    ));
+    _items.insert(
+        0,
+        Tweet(
+          objectID: objectID,
+          author: author,
+          profilePicUrl: profilePicUrl,
+          imageUrl: imageUrl,
+          imageID: image,
+          location: location,
+          likes: 0,
+          description: description,
+          createByID: createBy,
+          tweetObjectId: tweetId,
+        ));
     notifyListeners();
   }
 

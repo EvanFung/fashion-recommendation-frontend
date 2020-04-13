@@ -327,6 +327,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                       ),
                       Divider(),
+
+                      ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Profile'),
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(UserProductPage.routeName);
+                        },
+                      ),
+                      Divider(),
                       ListTile(
                         leading: Icon(Icons.chat),
                         title: Text('Chat with fashion expert'),
