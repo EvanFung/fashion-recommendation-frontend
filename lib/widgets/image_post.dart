@@ -1,5 +1,11 @@
+import 'package:fashion/pages/replyCommentPage.dart';
 import 'package:flutter/material.dart';
 import '../pages/twitter_profile_page_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../providers/Tweet.dart';
+import 'package:provider/provider.dart';
+import '../pages/reply_tweet.dart';
+import '../pages/newComment.dart';
 
 class ImagePost extends StatefulWidget {
   final String mediaUrl;
@@ -8,17 +14,36 @@ class ImagePost extends StatefulWidget {
   final String description;
   final int likes;
   final String postId;
-  ImagePost(
-      {this.mediaUrl,
-      this.username,
-      this.location,
-      this.description,
-      this.likes,
-      this.postId});
+  final String createById;
+  final String tweetId;
+  final String profileUrl;
+  final bool isInComment;
+  ImagePost({
+    this.mediaUrl,
+    this.username,
+    this.location,
+    this.description,
+    this.likes,
+    this.postId,
+    this.createById,
+    this.tweetId,
+    this.profileUrl,
+    this.isInComment,
+  });
 
   @override
-  _ImagePostState createState() => _ImagePostState(this.mediaUrl, this.username,
-      this.location, this.description, this.likes, this.postId);
+  _ImagePostState createState() => _ImagePostState(
+        this.mediaUrl,
+        this.username,
+        this.location,
+        this.description,
+        this.likes,
+        this.postId,
+        this.createById,
+        this.tweetId,
+        this.profileUrl,
+        this.isInComment,
+      );
 }
 
 class _ImagePostState extends State<ImagePost> {
@@ -26,17 +51,28 @@ class _ImagePostState extends State<ImagePost> {
   final String username;
   final String location;
   final String description;
-  final int likes;
+  int likes;
+  //status id
   final String postId;
+  final String createById;
+  //tweet id
+  final String tweetId;
+  final String profileUrl;
+
+  bool _isLiked = false;
+  bool isInComment = false;
 
   _ImagePostState(
-    this.mediaUrl,
-    this.username,
-    this.location,
-    this.description,
-    this.likes,
-    this.postId,
-  );
+      this.mediaUrl,
+      this.username,
+      this.location,
+      this.description,
+      this.likes,
+      this.postId,
+      this.createById,
+      this.tweetId,
+      this.profileUrl,
+      this.isInComment);
 
   TextStyle boldStyle = new TextStyle(
     color: Colors.black,
@@ -50,10 +86,16 @@ class _ImagePostState extends State<ImagePost> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
-            leading: const CircleAvatar(),
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(profileUrl),
+            ),
             title: GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(TwitterProfilePage.routeName);
+                // print(this.createById);
+                Navigator.of(context).pushNamed(
+                  TwitterProfilePage.routeName,
+                  arguments: {"createById": this.createById},
+                );
               },
               child: Text(this.username, style: boldStyle),
             ),
@@ -67,11 +109,50 @@ class _ImagePostState extends State<ImagePost> {
           ButtonBar(
             alignment: MainAxisAlignment.start,
             children: <Widget>[
-              FlatButton(child: const Icon(Icons.thumb_up), onPressed: () {}),
+              FlatButton(
+                  child: Icon(
+                    _isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    _likePost(tweetId);
+                  }),
               FlatButton(
                   child: const Icon(Icons.comment),
                   onPressed: () {
-                    _likePost(postId);
+                    if (isInComment) {
+                      Navigator.of(context)
+                          .pushNamed(NewComment.routeName, arguments: {
+                        'product': null,
+                        'comment': null,
+                        'tweet': Tweet(
+                          description: description,
+                          author: username,
+                          location: location,
+                          profilePicUrl: profileUrl,
+                          objectID: postId,
+                          tweetObjectId: tweetId,
+                          imageUrl: mediaUrl,
+                        ),
+                        'type': 'tweet'
+                      });
+                    } else {
+                      // is in explore page, then redirect to reply tweet page.
+                      Navigator.of(context)
+                          .pushNamed(ReplyTweetScreen.routeName, arguments: {
+                        'Tweet': Tweet(
+                          objectID: postId,
+                          tweetObjectId: tweetId,
+                          location: location,
+                          likes: likes,
+                          createByID: createById,
+                          imageUrl: mediaUrl,
+                          description: description,
+                          profilePicUrl: profileUrl,
+                          author: username,
+                        )
+                      });
+                    }
                   }),
             ],
           ),
@@ -103,7 +184,12 @@ class _ImagePostState extends State<ImagePost> {
     );
   }
 
-  void _likePost(String postId) {
-    // reference.document(postId).updateData({'likes': likes + 1}); //make this more error proof maybe with cloud functions
+  void _likePost(String tweetId) {
+    Provider.of<Tweets>(context, listen: false).likes(tweetId).then((_) {
+      setState(() {
+        _isLiked = true;
+        likes = likes + 1;
+      });
+    });
   }
 }

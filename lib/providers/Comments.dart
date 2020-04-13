@@ -70,6 +70,37 @@ class Comments with ChangeNotifier {
     return loadedComment;
   }
 
+  Future<List<Comment>> fetchCommentByTweetId(String tweetId) async {
+    final response = await http.get(
+      SeverAPI.chatbotServerAPIUrl + '/comment/tweet?tweetId=$tweetId',
+      headers: SeverAPI.authHeaders,
+    );
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    // print(responseData);
+    final List<Comment> loadedComment = [];
+
+    List<dynamic> commentsJson = responseData['comments'] as List<dynamic>;
+    commentsJson
+        .where((comment) => comment['parentId'] == null)
+        .forEach((comment) {
+      loadedComment.add(Comment(
+          objectId: comment['objectId'],
+          productId: null,
+          authorId: comment['authorId']['objectId'],
+          parentId: comment['parentId'] != null
+              ? comment['parentId']['objectId']
+              : null,
+          authorName: comment['authorId']['username'],
+          authorProfilePicUrl: comment['authorId']['profilePic']['url'],
+          text: comment['text'],
+          tweetId: comment['tweetId']['objectId']));
+    });
+    print(loadedComment);
+    // _items = loadedComment;
+    // notifyListeners();
+    return loadedComment;
+  }
+
   Future<void> addComment(Comment comment) async {
     await http.post(SeverAPI.chatbotServerAPIUrl + '/comment/post',
         headers: SeverAPI.authHeaders,
@@ -78,6 +109,8 @@ class Comments with ChangeNotifier {
           'parentId': comment.parentId,
           'authorId': comment.authorId,
           'text': comment.text,
+          'type': comment.type,
+          'tweetId': comment.tweetId,
         }));
   }
 }

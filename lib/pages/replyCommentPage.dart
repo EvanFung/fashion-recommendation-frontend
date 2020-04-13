@@ -14,12 +14,6 @@ class ReplyCommentPage extends StatelessWidget {
         .fetchCommentByParentId(parentId);
   }
 
-  Future<String> mockNetworkData() async {
-    return Future.delayed(Duration(seconds: 2), () {
-      print('sjidsd');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final data =
@@ -27,6 +21,8 @@ class ReplyCommentPage extends StatelessWidget {
     final userId = Provider.of<Auth>(context).userId;
     Product product = data['product'] as Product;
     Comment parentComment = data['comment'] as Comment;
+    String commentType = data['type'];
+
     // _fetchReply(context, parentComment.objectId);
     return Scaffold(
       appBar: AppBar(
@@ -74,17 +70,20 @@ class ReplyCommentPage extends StatelessWidget {
                     icon: Icon(Icons.speaker_notes),
                     color: Colors.black,
                     onPressed: () {
-                      Navigator.of(context).pushNamed(NewComment.routeName,
-                          arguments: {
-                            'product': product,
-                            'comment': parentComment
-                          });
+                      Navigator.of(context)
+                          .pushNamed(NewComment.routeName, arguments: {
+                        'product': product,
+                        'comment': parentComment,
+                        'type': commentType,
+                      });
                     },
                   ),
                 ],
               ),
             ),
-            Divider(),
+            Divider(
+              thickness: 4.0,
+            ),
             // _buildReplyComment(parentComment),
             FutureBuilder(
               future: _fetchReply(context, parentComment.objectId),
@@ -94,8 +93,8 @@ class ReplyCommentPage extends StatelessWidget {
                   if (snapshot.hasError) {
                     return Text('NETWORK ERROR, PLEASE TRY AGAIN LATER');
                   } else {
-                    print(snapshot.data);
-                    
+                    // print(snapshot.data);
+
                     List<Comment> comments = snapshot.data;
                     List<Widget> reviews = comments
                         .map((comment) =>
@@ -118,12 +117,17 @@ class ReplyCommentPage extends StatelessWidget {
   }
 
   Widget _buildReplyComment(
-      BuildContext context, Comment comment, Product product) {
+    BuildContext context,
+    Comment comment,
+    Product product,
+  ) {
     return Column(
       children: <Widget>[
         Container(
           color: Colors.white10,
-          padding: EdgeInsets.only(top: 10.0, left: 30.0),
+          padding: EdgeInsets.only(
+            top: 10.0,
+          ),
           child: ListTile(
             leading: CircleAvatar(
               radius: 25.0,

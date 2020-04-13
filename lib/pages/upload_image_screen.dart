@@ -219,7 +219,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     Map<String, dynamic> fileJson = await uploadImage(file);
     var imgae = fileJson['objectId'];
     var createBy = Provider.of<Tweets>(context).userID;
-    var likes = "0";
+    var likes = 0;
     var location = locationController.text;
     var description = descriptionController.text;
     await Provider.of<Tweets>(context).addTweet(

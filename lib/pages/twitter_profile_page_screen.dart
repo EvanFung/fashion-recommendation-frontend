@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/Tweet.dart';
+import '../providers/auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TwitterProfilePage extends StatefulWidget {
   static const routeName = '/twitter-profile-page';
@@ -12,6 +16,42 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
   int postCount = 0;
   int followerCount = 0;
   int followingCount = 0;
+  var _isInit = true;
+  var _isLoading = false;
+
+  List<dynamic> followers;
+  List<dynamic> followings;
+  List<Tweet> posts;
+
+  String username;
+  String profilePic;
+  String bio;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    //it will run after the app fully operate.
+    final thisTweetUserId =
+        ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      await getFollowerAndFollowing();
+      await getThisTweetUser(thisTweetUserId['createById']);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   Future editProfile() {
     return showDialog(
@@ -29,11 +69,14 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
   }
 
   followUser() {
-    print('following user');
     setState(() {
       this.isFollowing = true;
       followButtonClicked = true;
     });
+    final thisTweetUserId =
+        ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+    Provider.of<Tweets>(context, listen: false)
+        .follow(thisTweetUserId['createById']);
   }
 
   unfollowUser() {
@@ -41,6 +84,11 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
       isFollowing = false;
       followButtonClicked = true;
     });
+    final thisTweetUserId =
+        ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+
+    Provider.of<Tweets>(context, listen: false)
+        .unfollow(thisTweetUserId['createById']);
   }
 
   Widget buildStateColumn(String label, int number) {
@@ -67,21 +115,57 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
     );
   }
 
-  Container buildProfileFollowButton() {
-    //if current user id == profile id(userid)
+  Container buildProfileFollowButton(
+    String currentUserId,
+    String thisTweetUserId,
+  ) {
+    if (followings.length > 0) {
+      followings.forEach((user) {
+        if (user['objectId'] == thisTweetUserId) {
+          setState(() {
+            isFollowing = true;
+          });
+        }
+      });
+    }
 
+    if (currentUserId == thisTweetUserId) {
+      return buildFollowButton(
+        text: "Edit Profile",
+        backgroundcolor: Colors.white,
+        textColor: Colors.black,
+        borderColor: Colors.grey,
+        function: editProfile,
+      );
+    }
     //already following user - should show unfollow button
+    if (isFollowing) {
+      return buildFollowButton(
+        text: "Unfollow",
+        backgroundcolor: Colors.white,
+        textColor: Colors.black,
+        borderColor: Colors.grey,
+        function: unfollowUser,
+      );
+    }
 
     //does not follow user - should show follow button
-
+    if (!isFollowing) {
+      return buildFollowButton(
+        text: "Follow",
+        backgroundcolor: Colors.blue,
+        textColor: Colors.white,
+        borderColor: Colors.blue,
+        function: followUser,
+      );
+    }
     // loding button
 
     return buildFollowButton(
-      text: 'Follow',
-      backgroundcolor: Colors.blue,
-      borderColor: Colors.blue,
-      textColor: Colors.white,
-      function: followUser,
+      text: "loading...",
+      backgroundcolor: Colors.white,
+      textColor: Colors.black,
+      borderColor: Colors.grey,
     );
   }
 
@@ -135,26 +219,77 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
     );
   }
 
-  Container buildImageGrid() {
+  Container buildImageGrid(List<Tweet> tweets) {
     return Container(
       child: GridView.count(
         crossAxisCount: 3,
         childAspectRatio: 1.0,
-        mainAxisSpacing: 1.5,
-        crossAxisSpacing: 1.5,
+        mainAxisSpacing: 2.0,
+        crossAxisSpacing: 2.0,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          GridTile(child: ImageTile()),
-          GridTile(child: ImageTile()),
-          GridTile(child: ImageTile()),
-        ],
+        children: tweets.map((tweet) {
+          return ImageTile(tweet);
+        }).toList(),
+        // <Widget>[
+        //   GridTile(child: ImageTile()),
+        // ],
       ),
     );
   }
 
+  Future<void> getFollowerAndFollowing() async {
+    //get followee info
+    await Provider.of<Tweets>(context, listen: false).queryFollowingList();
+    //get following info
+    await Provider.of<Tweets>(context, listen: false).queryFollowersList();
+    final followersUser = Provider.of<Tweets>(context, listen: false).followers;
+    final followingsUser =
+        Provider.of<Tweets>(context, listen: false).followings;
+
+    setState(() {
+      followings = followingsUser;
+      followers = followersUser;
+    });
+  }
+
+  Future<List<Tweet>> getPost(String userId) async {
+    List<Tweet> tweets =
+        await Provider.of<Tweets>(context, listen: false).queryTweets(userId);
+    // setState(() {
+    //   postCount = posts;
+    // });
+    return tweets;
+  }
+
+  Future<void> getThisTweetUser(String userId) async {
+    await Provider.of<Tweets>(context, listen: false).getThisTweetUser(userId);
+    final usernameData =
+        Provider.of<Tweets>(context, listen: false).thisTweetUsername;
+    final profilePicUrl =
+        Provider.of<Tweets>(context, listen: false).thisTweetProfilePic;
+    final bioData = Provider.of<Tweets>(context, listen: false).thisTweetBio;
+    setState(() {
+      username = usernameData;
+      profilePic = profilePicUrl;
+      bio = bioData;
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentUserId = Provider.of<Auth>(context, listen: false).userId;
+
+    final thisTweetUserId =
+        ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+    final postCount =
+        Provider.of<Tweets>(context, listen: false).currentPost.length;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -163,75 +298,108 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: ListView(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 40.0,
-                      backgroundColor: Colors.grey,
-                    ),
-                    Expanded(
-                      child: Column(
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              //build state column (post , followers, following)
-                              buildStateColumn('Posts', 5),
-                              buildStateColumn('Followers', 500),
-                              buildStateColumn('Following', 1),
-                            ],
+                          CircleAvatar(
+                            radius: 40.0,
+                            backgroundColor: Colors.grey,
+                            backgroundImage:
+                                CachedNetworkImageProvider(profilePic),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              //build profile follow button
-                              buildProfileFollowButton(),
-                            ],
+                          Expanded(
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    //build state column (post , followers, following)
+                                    buildStateColumn('Posts', postCount),
+                                    buildStateColumn(
+                                        'Followers', followers.length),
+                                    buildStateColumn(
+                                        'Following', followings.length),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    //build profile follow button
+                                    buildProfileFollowButton(currentUserId,
+                                        thisTweetUserId['createById']),
+                                  ],
+                                )
+                              ],
+                            ),
                           )
                         ],
                       ),
-                    )
-                  ],
-                ),
-                Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(
-                      top: 5.0,
-                      left: 15.0,
-                    ),
-                    child: Text(
-                      'Evan',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(
-                    top: 1.0,
-                    left: 15.0,
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(
+                          top: 5.0,
+                          left: 15.0,
+                        ),
+                        child: Text(
+                          username == null ? 'N/A' : username,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20.0),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(
+                          top: 1.0,
+                          left: 15.0,
+                        ),
+                        child: bio == null ? Container() : Text(bio),
+                      ),
+                    ],
                   ),
-                  child: Text('I LOVE HK'),
+                ),
+                Divider(),
+                buildImageViewButtonBar(),
+                Divider(height: 0.0),
+
+                // FutureBuilder(),
+                FutureBuilder(
+                  future: getPost(thisTweetUserId['createById']),
+                  builder: (context, snapshot) {
+                    if (ConnectionState.done == snapshot.connectionState) {
+                      if (snapshot.hasError) {
+                        return Text('NETWORK ERROR, PLEASE TRY AGAIN LATER');
+                      } else {
+                        return buildImageGrid(snapshot.data);
+                      }
+                    } else {
+                      //request not done
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
                 ),
               ],
             ),
-          ),
-          Divider(),
-          buildImageViewButtonBar(),
-          Divider(height: 0.0),
-          buildImageGrid(),
-        ],
-      ),
     );
   }
 }
 
 class ImageTile extends StatelessWidget {
+  final Tweet tweet;
+
+  ImageTile(this.tweet);
+
   // final ImagePost imagePost;
 
   // ImageTile(this.imagePost);
@@ -260,7 +428,7 @@ class ImageTile extends StatelessWidget {
     return new GestureDetector(
       onTap: () => print('shsudhushu'),
       child: new Image.network(
-        'http://lc-wwvo3d7k.cn-n1.lcfile.com/0QTS3UFektwFS0TcxzvcQ1tdcr4f2JJPjSBxWxyQ.jpg',
+        tweet.imageUrl,
         fit: BoxFit.cover,
       ),
     );

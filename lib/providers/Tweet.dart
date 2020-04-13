@@ -14,10 +14,11 @@ class Tweet with ChangeNotifier {
   final String location;
   final String imageUrl;
   final String description;
-  final String likes;
+  final int likes;
   final String createByID;
   final String imageID;
   final String objectID;
+  final String tweetObjectId;
 
   Tweet({
     this.objectID, //is the status objectId, not tweet id
@@ -29,6 +30,7 @@ class Tweet with ChangeNotifier {
     this.createByID,
     this.likes,
     this.description,
+    this.tweetObjectId,
   });
 }
 
@@ -41,7 +43,21 @@ class Tweets with ChangeNotifier {
   final String uId;
   final String username;
 
+  List<dynamic> followings = [];
+
+  List<dynamic> followers = [];
+
   List<Tweet> _items = [];
+
+  List<Tweet> _currentPost = [];
+
+  int _postCount;
+
+  String _thisTweetUsername;
+  String _thisTweetProfilePic;
+  String _thisTweetBio;
+
+  String _thisTweetPostCount;
 
   Tweets({
     this.authID,
@@ -52,6 +68,26 @@ class Tweets with ChangeNotifier {
 
   List<Tweet> get items {
     return _items;
+  }
+
+  List<Tweet> get currentPost {
+    return _currentPost;
+  }
+
+  String get thisTweetUsername {
+    return _thisTweetUsername;
+  }
+
+  String get thisTweetProfilePic {
+    return _thisTweetProfilePic;
+  }
+
+  String get thisTweetBio {
+    return _thisTweetBio;
+  }
+
+  int get postCount {
+    return _postCount;
   }
 
   Future<void> addTweet({
@@ -89,20 +125,13 @@ class Tweets with ChangeNotifier {
     // print(responseInSocial.body);
     final responseData =
         json.decode(responseInSocial.body) as Map<String, dynamic>;
-    // print(responseData['thisTweet']['image']['url']);
-    // print(responseData['thisTweet']['createBy']['username']);
-    // print(responseData['thisTweet']['createBy']['profilePic']['url']);
-    // print(responseData['result']['id']);
-    // print(createBy);
-    // print(image);
-    // print(likes);
-    // print(location);
 
     String objectID = responseData['result']['id'];
     String author = responseData['thisTweet']['createBy']['username'];
     String profilePicUrl =
         responseData['thisTweet']['createBy']['profilePic']['url'];
     String imageUrl = responseData['thisTweet']['image']['url'];
+    String tweetId = responseData['thisTweet']['objectId'];
     _items.add(Tweet(
       objectID: objectID,
       author: author,
@@ -110,9 +139,10 @@ class Tweets with ChangeNotifier {
       imageUrl: imageUrl,
       imageID: image,
       location: location,
-      likes: "0",
+      likes: 0,
       description: description,
       createByID: createBy,
+      tweetObjectId: tweetId,
     ));
     notifyListeners();
   }
@@ -154,20 +184,15 @@ class Tweets with ChangeNotifier {
       String imageUrl = status['data']['image'];
       String description = status['data']['message'];
       String profilePic = status['data']['source']['profilePic']['url'];
-      String likes = status['data']['likes'];
+      // int likes = status['data']['likes'];
       String location = status['data']['location'];
       String imageID = status['data']['imageID'];
       String createByID = status['data']['creatorID'];
       String objectID = status['id'];
-      // print(authorName);
-      // print(imageUrl);
-      // print(description);
-      // print(profilePic);
-      // print(likes);
-      // print(imageID);
-      // print(createByID);
-      // print(objectID);
-      print(location);
+      String tweetId = status['data']['tweet']['objectId'];
+      int likes = status['data']['tweet']['likes'];
+      // print(status['data']['tweet']['likes']);
+
       loadedTweet.add(Tweet(
           author: authorName,
           description: description,
@@ -177,10 +202,121 @@ class Tweets with ChangeNotifier {
           location: location,
           profilePicUrl: profilePic,
           imageUrl: imageUrl,
-          objectID: objectID));
+          objectID: objectID,
+          tweetObjectId: tweetId));
     });
     //update provider
     _items = loadedTweet;
     notifyListeners();
+  }
+
+  Future<void> queryFollowingList() async {
+    final response = await http.post(
+      SeverAPI.chatbotServerAPIUrl + '/social/queryFollowees',
+      headers: SeverAPI.authHeaders,
+      body: json.encode({'followerSessionId': authID}),
+    );
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    final loadedFollowees = responseData['followees'] as List<dynamic>;
+    followings = loadedFollowees;
+    print(followings);
+    notifyListeners();
+  }
+
+  Future<void> queryFollowersList() async {
+    final response = await http.post(
+      SeverAPI.chatbotServerAPIUrl + '/social/queryFollower',
+      headers: SeverAPI.authHeaders,
+      body: json.encode({'followerSessionId': authID}),
+    );
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    final loadedFollowers = responseData['followers'] as List<dynamic>;
+    followers = loadedFollowers;
+    notifyListeners();
+  }
+
+  //query user's tweets
+  Future<List<Tweet>> queryTweets(String userId) async {
+    final response = await http.post(
+      SeverAPI.chatbotServerAPIUrl + '/tweet/userId',
+      headers: SeverAPI.authHeaders,
+      body: json.encode({'userId': userId}),
+    );
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    final tweets = responseData['tweets'] as List<dynamic>;
+    List<Tweet> loadedTweets = [];
+
+    if (tweets.length > 0) {
+      tweets.forEach((tweet) {
+        loadedTweets.add(Tweet(
+            createByID: tweet['createBy']['objectId'],
+            author: tweet['createBy']['username'],
+            imageID: tweet['image']['objectId'],
+            likes: tweet['likes'],
+            location: tweet['location'],
+            profilePicUrl: tweet['createBy']['profilePic']['url'],
+            imageUrl: tweet['image']['url'],
+            objectID: tweet['objectId']));
+      });
+      _currentPost = loadedTweets;
+      _postCount = tweets.length;
+      notifyListeners();
+    }
+
+    return loadedTweets;
+  }
+
+  Future<void> getThisTweetUser(String userId) async {
+    final response = await http.get(
+        'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users/$userId',
+        headers: SeverAPI.authHeaders);
+    final responseData = json.decode(response.body);
+    _thisTweetUsername = responseData['username'];
+    _thisTweetBio = responseData['bio'];
+    _thisTweetProfilePic = responseData['profilePic']['url'];
+    notifyListeners();
+  }
+
+  //id of the user who was followed.
+  Future<void> follow(String followeeId) async {
+    final response = await http.post(
+      SeverAPI.chatbotServerAPIUrl + '/social/follow',
+      headers: SeverAPI.authHeaders,
+      body: json.encode(
+        {
+          'followerSessionId': authID,
+          'followeeId': followeeId,
+        },
+      ),
+    );
+
+    final responseData = json.decode(response.body);
+    print(responseData);
+  }
+
+  Future<void> unfollow(String followeeId) async {
+    final response = await http.post(
+      SeverAPI.chatbotServerAPIUrl + '/social/unfollow',
+      headers: SeverAPI.authHeaders,
+      body: json.encode(
+        {
+          'followerSessionId': authID,
+          'followeeId': followeeId,
+        },
+      ),
+    );
+
+    final responseData = json.decode(response.body);
+    print(responseData);
+  }
+
+  Future<void> likes(String tweetId) async {
+    final response = await http.post(
+        SeverAPI.chatbotServerAPIUrl + '/tweet/like',
+        headers: SeverAPI.authHeaders,
+        body: json.encode({"tweetID": tweetId}));
+
+    final responseData = json.decode(response.body);
+    print(responseData);
   }
 }

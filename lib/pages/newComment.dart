@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/Comments.dart';
 import '../providers/Product.dart';
 import '../providers/auth.dart';
+import '../providers/Tweet.dart';
 
 class NewComment extends StatefulWidget {
   static const routeName = '/new-comment';
@@ -22,16 +23,25 @@ class _NewCommentState extends State<NewComment> {
     _isPostButtonDisabled = false;
   }
 
-  void _addComment(Product product, String userId, Comment parentComment) {
+  void _addComment(
+    Product product,
+    String userId,
+    Comment parentComment,
+    String type,
+    Tweet tweet,
+  ) {
     setState(() {
       _isPostButtonDisabled = true;
     });
     Provider.of<Comments>(context)
         .addComment(Comment(
-            productId: product.id,
-            authorId: userId,
-            parentId: parentComment == null ? null : parentComment.objectId,
-            text: tweetController.text))
+      productId: product == null ? null : product.id,
+      authorId: userId,
+      parentId: parentComment == null ? null : parentComment.objectId,
+      text: tweetController.text,
+      type: type,
+      tweetId: tweet == null ? null : tweet.tweetObjectId,
+    ))
         .then((onValue) {
       setState(() {
         _isPostButtonDisabled = false;
@@ -48,10 +58,8 @@ class _NewCommentState extends State<NewComment> {
     final userId = Provider.of<Auth>(context).userId;
     Product product = data['product'] as Product;
     Comment parentComment = data['comment'] as Comment;
-    print(userId);
-    if (parentComment != null) {
-      print(parentComment.text);
-    }
+    String commentType = data['type'];
+    Tweet tweet = data['tweet'] as Tweet;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -72,7 +80,8 @@ class _NewCommentState extends State<NewComment> {
             child: RaisedButton(
               onPressed: _isPostButtonDisabled
                   ? null
-                  : () => _addComment(product, userId, parentComment),
+                  : () => _addComment(
+                      product, userId, parentComment, commentType, tweet),
               elevation: 0.0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.0),

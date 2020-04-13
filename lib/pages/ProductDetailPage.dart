@@ -10,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../pages/newComment.dart';
 import '../pages/replyCommentPage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../pages/twitter_profile_page_screen.dart';
 
 class ProductDetailPage extends StatelessWidget {
   static const routeName = '/product-detail';
@@ -187,6 +188,7 @@ class ProductDetailPage extends StatelessWidget {
                       arguments: {
                         'product': product,
                         'comment': null,
+                        'type': 'product',
                       },
                     );
                   },
@@ -419,7 +421,16 @@ class ProductDetailPage extends StatelessWidget {
                   backgroundImage:
                       CachedNetworkImageProvider(comment.authorProfilePicUrl),
                 ),
-                title: Text(comment.authorName, style: TextStyle()),
+                title: GestureDetector(
+                  onTap: () {
+                    print('user is press');
+                    Navigator.of(context).pushNamed(
+                      TwitterProfilePage.routeName,
+                      arguments: {"createById": comment.authorId},
+                    );
+                  },
+                  child: Text(comment.authorName, style: TextStyle()),
+                ),
                 subtitle: Text(comment.text, style: TextStyle()),
               ),
               Row(
@@ -435,9 +446,12 @@ class ProductDetailPage extends StatelessWidget {
                     color: Colors.black,
                     onPressed: () {
                       print('with parent is press....');
-                      Navigator.of(context).pushNamed(
-                          ReplyCommentPage.routeName,
-                          arguments: {'product': product, 'comment': comment});
+                      Navigator.of(context)
+                          .pushNamed(ReplyCommentPage.routeName, arguments: {
+                        'product': product,
+                        'comment': comment,
+                        'type': 'product',
+                      });
                     },
                   ),
                 ],

@@ -53,19 +53,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 children: tweetData == null
                     ? Container()
                     : tweetData.map((tweet) {
-                        print(tweet.author);
-                        print(tweet.location);
-                        print(tweet.imageUrl);
-                        print(tweet.likes);
-                        print(tweet.description);
-                        print(tweet.objectID);
                         return ImagePost(
                           username: tweet.author,
                           location: tweet.location,
                           mediaUrl: tweet.imageUrl,
-                          likes: int.parse(tweet.likes),
+                          likes: tweet.likes,
                           description: tweet.description,
                           postId: tweet.objectID,
+                          createById: tweet.createByID,
+                          tweetId: tweet.tweetObjectId,
+                          profileUrl: tweet.profilePicUrl,
+                          isInComment: false,
                         );
                       }).toList()
                 // <Widget>[
@@ -78,15 +76,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 //     description: 'Hello this is my first post',
                 //     postId: 'wjiojoi22a',
                 //   ),
-                //   ImagePost(
-                //     username: 'David',
-                //     location: 'U.S',
-                //     mediaUrl:
-                //         'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png',
-                //     likes: 5,
-                //     description: 'Hello this is my first post',
-                //     postId: 'wjiojoi22a',
-                //   )
                 // ],
                 ),
           );

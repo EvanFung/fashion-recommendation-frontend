@@ -29,6 +29,7 @@ import 'pages/newComment.dart';
 import 'pages/replyCommentPage.dart';
 import 'pages/upload_image_screen.dart';
 import 'pages/twitter_profile_page_screen.dart';
+import 'pages/reply_tweet.dart';
 
 main() {
   initPlatformState();
@@ -122,6 +123,7 @@ class MyApp extends StatelessWidget {
               ReplyCommentPage.routeName: (ctx) => ReplyCommentPage(),
               UploadImageScreen.routeName: (ctx) => UploadImageScreen(),
               TwitterProfilePage.routeName: (ctx) => TwitterProfilePage(),
+              ReplyTweetScreen.routeName: (ctx) => ReplyTweetScreen(),
             },
           ),
         ));

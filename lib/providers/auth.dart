@@ -207,8 +207,8 @@ class Auth with ChangeNotifier {
     print(response.body);
     final responsedData = json.decode(response.body) as Map<String, dynamic>;
 
-    print(responsedData['objectId']);
-    print(responsedData['url']);
+    // print(responsedData['objectId']);
+    // print(responsedData['url']);
 
     //attach this file object to current user.
     url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/users/$_userId';
