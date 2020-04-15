@@ -55,28 +55,32 @@ class _ChatPageState extends State<ChatPage> {
   void _dialogFlowResponse(String query) async {
     _textController.clear();
 
-    AuthGoogle authGoogle = await AuthGoogle(
-            fileJson: 'assets/creds/fashion-rec-sys-ejgagv-9d21e5b1b56d.json')
-        .build();
-    Dialogflow dialogflow =
-        Dialogflow(authGoogle: authGoogle, language: Language.english);
-    query = query.replaceAll('"', '\\"');
-    query = query.replaceAll("'", "\\'");
-    AIResponse response = await dialogflow.detectIntent(query);
-    setState(() {
-      typing = false;
-    });
+    try {
+      AuthGoogle authGoogle = await AuthGoogle(
+              fileJson: 'assets/creds/fashion-rec-sys-ejgagv-9d21e5b1b56d.json')
+          .build();
+      Dialogflow dialogflow =
+          Dialogflow(authGoogle: authGoogle, language: Language.english);
+      query = query.replaceAll('"', '\\"');
+      query = query.replaceAll("'", "\\'");
+      AIResponse response = await dialogflow.detectIntent(query);
+      setState(() {
+        typing = false;
+      });
 
-    print(response.queryResult.fulfillmentMessages);
-    List<dynamic> messages = response.getListMessage();
-    messages.forEach((messageMap) {
-      dynamic messageWidget = _getWidgetMessage(messageMap);
-      if (messageWidget != null) {
-        setState(() {
-          _messages.insert(0, messageWidget);
-        });
-      }
-    });
+      print(response.queryResult.fulfillmentMessages);
+      List<dynamic> messages = response.getListMessage();
+      messages.forEach((messageMap) {
+        dynamic messageWidget = _getWidgetMessage(messageMap);
+        if (messageWidget != null) {
+          setState(() {
+            _messages.insert(0, messageWidget);
+          });
+        }
+      });
+    } catch (error) {
+      print(error);
+    }
   }
 
   dynamic _getWidgetMessage(message) {

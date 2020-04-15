@@ -168,25 +168,27 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.w800,
           ),
         ),
-        FlatButton(
-          child: Text(
-            "See all (10)",
-            style: TextStyle(
+        Flexible(
+          child: FlatButton(
+            child: Text(
+              "See all (10)",
+              style: TextStyle(
 //                      fontSize: 22,
 //                      fontWeight: FontWeight.w800,
-              color: Theme.of(context).accentColor,
+                color: Theme.of(context).accentColor,
+              ),
             ),
+            onPressed: () {
+              print('was pressed');
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (BuildContext context){
+              //       return Trending();
+              //     },
+              //   ),
+              // );
+            },
           ),
-          onPressed: () {
-            print('was pressed');
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (BuildContext context){
-            //       return Trending();
-            //     },
-            //   ),
-            // );
-          },
         ),
       ],
     );
@@ -203,25 +205,27 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.w800,
           ),
         ),
-        FlatButton(
-          child: Text(
-            "See all (10)",
-            style: TextStyle(
+        Flexible(
+          child: FlatButton(
+            child: Text(
+              "See all (10)",
+              style: TextStyle(
 //                      fontSize: 22,
 //                      fontWeight: FontWeight.w800,
-              color: Theme.of(context).accentColor,
+                color: Theme.of(context).accentColor,
+              ),
             ),
+            onPressed: () {
+              print('was pressed');
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (BuildContext context){
+              //       return Trending();
+              //     },
+              //   ),
+              // );
+            },
           ),
-          onPressed: () {
-            print('was pressed');
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (BuildContext context){
-            //       return Trending();
-            //     },
-            //   ),
-            // );
-          },
         ),
       ],
     );

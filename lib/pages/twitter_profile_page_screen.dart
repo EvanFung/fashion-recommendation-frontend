@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/Tweet.dart';
 import '../providers/auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../widgets/image_post.dart';
 
 class TwitterProfilePage extends StatefulWidget {
   static const routeName = '/twitter-profile-page';
@@ -229,7 +230,28 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: tweets.map((tweet) {
-          return ImageTile(tweet);
+          print(tweet.tweetObjectId);
+          print(tweet.author);
+          print(tweet.imageUrl);
+          print(tweet.description);
+          print(tweet.likes);
+          print(tweet.objectID);
+          print(tweet.createByID);
+          print(tweet.profilePicUrl);
+          return ImageTile(
+              tweet,
+              ImagePost(
+                tweetId: tweet.tweetObjectId,
+                isInComment: true,
+                mediaUrl: tweet.imageUrl,
+                location: tweet.location,
+                description: tweet.description,
+                likes: tweet.likes,
+                postId: tweet.objectID,
+                createById: tweet.createByID,
+                profileUrl: tweet.profilePicUrl,
+                username: tweet.author,
+              ));
         }).toList(),
         // <Widget>[
         //   GridTile(child: ImageTile()),
@@ -397,36 +419,36 @@ class _TwitterProfilePageState extends State<TwitterProfilePage> {
 
 class ImageTile extends StatelessWidget {
   final Tweet tweet;
+  final ImagePost imagePost;
 
-  ImageTile(this.tweet);
+  ImageTile(this.tweet, this.imagePost);
 
   // final ImagePost imagePost;
 
   // ImageTile(this.imagePost);
 
-  // clickedImage(BuildContext context) {
-  //   Navigator
-  //       .of(context)
-  //       .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-  //     return new Center(
-  //       child: new Scaffold(
-  //           appBar: new AppBar(
-  //             title: new Text('Photo'),
-  //           ),
-  //           body: new ListView(
-  //             children: <Widget>[
-  //               new Container(
-  //                 child: imagePost,
-  //               ),
-  //             ],
-  //           )),
-  //     );
-  //   }));
-  // }
+  clickedImage(BuildContext context) {
+    Navigator.of(context)
+        .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
+      return new Center(
+        child: new Scaffold(
+            appBar: new AppBar(
+              title: new Text('Photo'),
+            ),
+            body: new ListView(
+              children: <Widget>[
+                new Container(
+                  child: imagePost,
+                ),
+              ],
+            )),
+      );
+    }));
+  }
 
   Widget build(BuildContext context) {
     return new GestureDetector(
-      onTap: () => print('shsudhushu'),
+      onTap: () => clickedImage(context),
       child: new Image.network(
         tweet.imageUrl,
         fit: BoxFit.cover,

@@ -12,6 +12,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
 import '../providers/auth.dart';
 import 'dart:math';
+import '../pages/twitter_profile_page_screen.dart';
 
 class _ContactCategory extends StatelessWidget {
   const _ContactCategory({Key key, this.icon, this.children}) : super(key: key);
@@ -170,6 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     String username = Provider.of<Auth>(context).username;
+    String userId = Provider.of<Auth>(context).userId;
     String uId = Provider.of<Auth>(context).uId;
     String email = Provider.of<Auth>(context).email;
     String bio = Provider.of<Auth>(context).bio;
@@ -318,22 +320,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: <Widget>[
                       Divider(),
-                      ListTile(
-                        leading: Icon(Icons.edit),
-                        title: Text('Manage Product'),
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(UserProductPage.routeName);
-                        },
-                      ),
-                      Divider(),
 
                       ListTile(
                         leading: Icon(Icons.edit),
                         title: Text('Profile'),
                         onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(UserProductPage.routeName);
+                          Navigator.of(context).pushNamed(
+                            TwitterProfilePage.routeName,
+                            arguments: {"createById": userId},
+                          );
                         },
                       ),
                       Divider(),

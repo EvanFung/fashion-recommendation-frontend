@@ -1,5 +1,8 @@
 class SeverAPI {
-  static const chatbotServerAPIUrl = "http://10.0.2.2:8080";
+  //FOR CONNECTING THE EMULATOR
+  // static const chatbotServerAPIUrl = "http://10.0.2.2:8080";
+  //FOR CONNECTING THE ANDROID REAL MACHINE
+  static const chatbotServerAPIUrl = "http://192.168.1.212:8080";
   static const databaseAPIUrl = "https://wwvo3d7k.lc-cn-n1-shared.com/1.1";
   static const recommendServerAPIUrl = 'http://wwvo3d7kkogq.leanapp.cn/';
   static const Map<String, String> authHeaders = {

@@ -17,7 +17,6 @@ class PagesInfo with ChangeNotifier {
     LooksPage(),
     // ProductPage(),
     ProductScreen(),
-    NotificationScreen(),
     ProfilePage()
   ];
   int selectedPage = 0;

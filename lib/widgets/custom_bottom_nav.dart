@@ -66,9 +66,24 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               _navigationTap(currentIndex, pagesInfo);
             },
           ),
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.notifications,
+          //     size: 24.0,
+          //   ),
+          //   color: currentIndex == 3
+          //       ? Theme.of(context).accentColor
+          //       : Theme.of(context).textTheme.caption.color,
+          //   onPressed: () {
+          //     setState(() {
+          //       currentIndex = 3;
+          //     });
+          //     _navigationTap(currentIndex, pagesInfo);
+          //   },
+          // ),
           IconButton(
             icon: Icon(
-              Icons.notifications,
+              Icons.person,
               size: 24.0,
             ),
             color: currentIndex == 3
@@ -77,21 +92,6 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
             onPressed: () {
               setState(() {
                 currentIndex = 3;
-              });
-              _navigationTap(currentIndex, pagesInfo);
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.person,
-              size: 24.0,
-            ),
-            color: currentIndex == 4
-                ? Theme.of(context).accentColor
-                : Theme.of(context).textTheme.caption.color,
-            onPressed: () {
-              setState(() {
-                currentIndex = 4;
               });
               _navigationTap(currentIndex, pagesInfo);
             },

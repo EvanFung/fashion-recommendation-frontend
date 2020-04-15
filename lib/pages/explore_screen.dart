@@ -24,7 +24,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Tweets>(context, listen: false).queryStatus().then((_) {
+      Provider.of<Tweets>(context).queryStatus().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -43,7 +43,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tweetData = Provider.of<Tweets>(context).items;
+    final tweetData = Provider.of<Tweets>(context, listen: false).items;
     return _isLoading
         ? Center(
             child: CircularProgressIndicator(),

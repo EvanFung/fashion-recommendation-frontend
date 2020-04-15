@@ -209,259 +209,296 @@ class Products with ChangeNotifier {
 //return the file id
   Future<FileMeta> updateUploadProductImage(
       File image, String productId, Product newProduct, String fileName) async {
-    //update the provider product.
-    int prodIndex = _items.indexWhere((prod) => prod.id == productId);
-    //product was found
-    if (prodIndex >= 0) {
-      _items[prodIndex] = newProduct;
-    }
-    notifyListeners();
-    //compress the images
-    File compressedImage = await EImageUtils(image).compress(
-      quality: 60,
-    );
-    File resizedImage = await EImageUtils(compressedImage).resize(width: 512);
-    //upload file to server and attach this file to the corresponding product object.
+    try {
+      //update the provider product.
+      int prodIndex = _items.indexWhere((prod) => prod.id == productId);
+      //product was found
+      if (prodIndex >= 0) {
+        _items[prodIndex] = newProduct;
+      }
+      notifyListeners();
+      //compress the images
+      File compressedImage = await EImageUtils(image).compress(
+        quality: 60,
+      );
+      File resizedImage = await EImageUtils(compressedImage).resize(width: 512);
+      //upload file to server and attach this file to the corresponding product object.
 
-    var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$fileName';
-    final response = await http.post(url,
-        headers: imgHeaders, body: resizedImage.readAsBytesSync());
-    Map<String, dynamic> fileData =
-        json.decode(response.body) as Map<String, dynamic>;
-    String fileId = fileData['objectId'];
-    if (productId != null) {
-      url =
-          'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$productId';
-      final responseOnUpdate = await http.put(url,
-          headers: {
-            "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
-            "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
-            "Content-Type": "application/json",
-          },
-          body: json.encode({
-            'profilePic': {'id': fileId, '__type': 'File'}
-          }));
+      var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/files/$fileName';
+      final response = await http.post(url,
+          headers: imgHeaders, body: resizedImage.readAsBytesSync());
+      Map<String, dynamic> fileData =
+          json.decode(response.body) as Map<String, dynamic>;
+      String fileId = fileData['objectId'];
+      if (productId != null) {
+        url =
+            'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product/$productId';
+        final responseOnUpdate = await http.put(url,
+            headers: {
+              "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+              "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+              "Content-Type": "application/json",
+            },
+            body: json.encode({
+              'profilePic': {'id': fileId, '__type': 'File'}
+            }));
+      }
+      return FileMeta(
+          url: fileData['url'],
+          name: fileData['name'],
+          objectId: fileData['objectId']);
+    } catch (error) {
+      throw error;
     }
-    return FileMeta(
-        url: fileData['url'],
-        name: fileData['name'],
-        objectId: fileData['objectId']);
   }
 
   Future<void> fetchProductByPage(int page) async {
-    print('pages = $page');
-    AVQuery query = AVQuery('Product');
-    var response = await query
-        .limit(10)
-        .skip(10 * page)
-        .orderByDescending('createAt')
-        .find();
+    try {
+      print('pages = $page');
+      AVQuery query = AVQuery('Product');
+      var response = await query
+          .limit(10)
+          .skip(10 * page)
+          .orderByDescending('createAt')
+          .find();
 
-    List<AVObject> products = response.toList();
-    final List<Product> loadedProducts = [];
-    products.forEach((prod) {
-      loadedProducts.add(Product(
-        id: prod.get("objectId"),
-        title: prod.get("title"),
-        description: prod.get("description"),
-        price: prod.get("price"),
-        imageUrl: prod.get("imageUrl"),
-        createBy: this.userId,
-        rating: double.parse(prod.get('rating').toString()),
-        numOfRating: double.parse(prod.get('numOfRating').toString()),
-        pId: prod.get('pId').toString(),
-        mainCategory: prod.get('mainCategory'),
-        subCategory: prod.get('subCategory'),
-      ));
-    });
-    _items.addAll(loadedProducts);
-    notifyListeners();
+      List<AVObject> products = response.toList();
+      final List<Product> loadedProducts = [];
+      products.forEach((prod) {
+        loadedProducts.add(Product(
+          id: prod.get("objectId"),
+          title: prod.get("title"),
+          description: prod.get("description"),
+          price: prod.get("price"),
+          imageUrl: prod.get("imageUrl"),
+          createBy: this.userId,
+          rating: double.parse(prod.get('rating').toString()),
+          numOfRating: double.parse(prod.get('numOfRating').toString()),
+          pId: prod.get('pId').toString(),
+          mainCategory: prod.get('mainCategory'),
+          subCategory: prod.get('subCategory'),
+        ));
+      });
+      _items.addAll(loadedProducts);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 
   // fetch all products title and article type for user seaching keyword...
   Future<void> fetchProductTitle() async {
     //adding title to the source keywords list
     //adding article type to the source keywords list
-    AVQuery query = AVQuery('Product');
-    var response = await query.limit(1000).find();
-    List<AVObject> products = response.toList();
-    Set<String> keywords = Set();
-    products.forEach((prod) {
-      keywords.add(prod.get('title'));
-    });
-    _sourceKeyWords = keywords;
-    notifyListeners();
+    try {
+      AVQuery query = AVQuery('Product');
+      var response = await query.limit(1000).find();
+      List<AVObject> products = response.toList();
+      Set<String> keywords = Set();
+      products.forEach((prod) {
+        keywords.add(prod.get('title'));
+      });
+      _sourceKeyWords = keywords;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 
   //when user select source keyword, return a products object.
   Future<Product> searchByTitle(String title) async {
-    AVQuery query = AVQuery('Product');
-    var response = await query.whereEqualTo('title', title).find();
-    List<AVObject> products = response.toList();
-    //if found
-    if (products.length > 0) {
-      AVObject prod = products[0];
-      return Product(
-        id: prod.get("objectId"),
-        title: prod.get("title"),
-        description: prod.get("description"),
-        price: prod.get("price"),
-        imageUrl: prod.get("imageUrl"),
-        createBy: this.userId,
-        rating: double.parse(prod.get('rating').toString()),
-        numOfRating: double.parse(prod.get('numOfRating').toString()),
-        pId: prod.get('pId').toString(),
-        mainCategory: prod.get('mainCategory'),
-        subCategory: prod.get('subCategory'),
-      );
-    } else {
-      return null;
+    try {
+      AVQuery query = AVQuery('Product');
+      var response = await query.whereEqualTo('title', title).find();
+      List<AVObject> products = response.toList();
+      //if found
+      if (products.length > 0) {
+        AVObject prod = products[0];
+        return Product(
+          id: prod.get("objectId"),
+          title: prod.get("title"),
+          description: prod.get("description"),
+          price: prod.get("price"),
+          imageUrl: prod.get("imageUrl"),
+          createBy: this.userId,
+          rating: double.parse(prod.get('rating').toString()),
+          numOfRating: double.parse(prod.get('numOfRating').toString()),
+          pId: prod.get('pId').toString(),
+          mainCategory: prod.get('mainCategory'),
+          subCategory: prod.get('subCategory'),
+        );
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
   Future<List<String>> fetchProductTitleByQuery(String query) async {
-    var searchCondition =
-        'where={"title":{"\$regex":"$query","\$options":"i"}}';
-    var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product?' +
-        searchCondition;
-    var uri = Uri.encodeFull(url);
-    final response = await http.get(uri, headers: {
-      "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
-      "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
-      "Content-Type": "application/json",
-    });
-    final responseResult = json.decode(response.body) as Map<String, dynamic>;
-    List results = responseResult['results'] as List<dynamic>;
+    try {
+      var searchCondition =
+          'where={"title":{"\$regex":"$query","\$options":"i"}}';
+      var url = 'https://wwvo3d7k.lc-cn-n1-shared.com/1.1/classes/Product?' +
+          searchCondition;
+      var uri = Uri.encodeFull(url);
+      final response = await http.get(uri, headers: {
+        "X-LC-Id": "WWVO3d7KG8fUpPvTY9mt1OT5-gzGzoHsz",
+        "X-LC-Key": "2nDU7yqQoMpsGMTFbWYTdxgG",
+        "Content-Type": "application/json",
+      });
+      final responseResult = json.decode(response.body) as Map<String, dynamic>;
+      List results = responseResult['results'] as List<dynamic>;
 
-    //keyword container
-    List<String> keywords = List();
+      //keyword container
+      List<String> keywords = List();
 
-    results.forEach((prod) {
-      Map<String, dynamic> p = prod as Map<String, dynamic>;
-      //add title to keywords set
-      keywords.add(p['title']);
-    });
+      results.forEach((prod) {
+        Map<String, dynamic> p = prod as Map<String, dynamic>;
+        //add title to keywords set
+        keywords.add(p['title']);
+      });
 
-    return keywords;
+      return keywords;
+    } catch (error) {
+      throw error;
+    }
   }
 
   Future<void> getRatedProduct() async {
-    AVQuery queryRating = AVQuery('Rating');
-    AVQuery queryProduct = AVQuery('Product');
-    List<AVObject> ratings =
-        await queryRating.whereEqualTo('uId', this.uId).find();
-    List<AVObject> products = await queryProduct.limit(1000).find();
-    List<Product> loadedProducts = [];
+    try {
+      AVQuery queryRating = AVQuery('Rating');
+      AVQuery queryProduct = AVQuery('Product');
+      List<AVObject> ratings =
+          await queryRating.whereEqualTo('uId', this.uId).find();
+      List<AVObject> products = await queryProduct.limit(1000).find();
+      List<Product> loadedProducts = [];
 
-    if (ratings.length > 0) {
-      List<String> pIds = List();
-      ratings.forEach((rating) {
-        pIds.add(rating.get('pId'));
-      });
+      if (ratings.length > 0) {
+        List<String> pIds = List();
+        ratings.forEach((rating) {
+          pIds.add(rating.get('pId'));
+        });
 
-      pIds.forEach((pId) {
-        AVObject p =
-            products.firstWhere((prod) => prod.get('pId').toString() == pId);
-        loadedProducts.add(Product(
-          id: p.get("objectId"),
-          title: p.get("title"),
-          description: p.get("description"),
-          price: p.get("price"),
-          imageUrl: p.get("imageUrl"),
-          createBy: this.userId,
-          rating: double.parse(p.get('rating').toString()),
-          numOfRating: double.parse(p.get('numOfRating').toString()),
-          pId: p.get('pId').toString(),
-          mainCategory: p.get('mainCategory'),
-          subCategory: p.get('subCategory'),
-        ));
-      });
+        pIds.forEach((pId) {
+          AVObject p =
+              products.firstWhere((prod) => prod.get('pId').toString() == pId);
+          loadedProducts.add(Product(
+            id: p.get("objectId"),
+            title: p.get("title"),
+            description: p.get("description"),
+            price: p.get("price"),
+            imageUrl: p.get("imageUrl"),
+            createBy: this.userId,
+            rating: double.parse(p.get('rating').toString()),
+            numOfRating: double.parse(p.get('numOfRating').toString()),
+            pId: p.get('pId').toString(),
+            mainCategory: p.get('mainCategory'),
+            subCategory: p.get('subCategory'),
+          ));
+        });
 
-      _items = loadedProducts;
-      notifyListeners();
-    } else {
-      return null;
+        _items = loadedProducts;
+        notifyListeners();
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
   Future<void> getTrendingProduct() async {
-    AVQuery query = AVQuery('Product');
-    List<Product> loadedProducts = [];
-    //get the most ratted products
-    List<AVObject> products =
-        await query.orderByDescending('numOfRating').find();
-    if (products.length > 10) {
-      products.sort(
-          (prodA, prodB) => prodB.get('rating').compareTo(prodA.get('rating')));
-      for (int i = 0; i < 10; i++) {
-        loadedProducts.add(Product(
-          id: products[i].get("objectId"),
-          title: products[i].get("title"),
-          description: products[i].get("description"),
-          price: products[i].get("price"),
-          imageUrl: products[i].get("imageUrl"),
-          createBy: this.userId,
-          rating: double.parse(products[i].get('rating').toString()),
-          numOfRating: double.parse(products[i].get('numOfRating').toString()),
-          pId: products[i].get('pId').toString(),
-          mainCategory: products[i].get('mainCategory'),
-          subCategory: products[i].get('subCategory'),
-        ));
+    try {
+      AVQuery query = AVQuery('Product');
+      List<Product> loadedProducts = [];
+      //get the most ratted products
+      List<AVObject> products =
+          await query.orderByDescending('numOfRating').find();
+      if (products.length > 10) {
+        products.sort((prodA, prodB) =>
+            prodB.get('rating').compareTo(prodA.get('rating')));
+        for (int i = 0; i < 10; i++) {
+          loadedProducts.add(Product(
+            id: products[i].get("objectId"),
+            title: products[i].get("title"),
+            description: products[i].get("description"),
+            price: products[i].get("price"),
+            imageUrl: products[i].get("imageUrl"),
+            createBy: this.userId,
+            rating: double.parse(products[i].get('rating').toString()),
+            numOfRating:
+                double.parse(products[i].get('numOfRating').toString()),
+            pId: products[i].get('pId').toString(),
+            mainCategory: products[i].get('mainCategory'),
+            subCategory: products[i].get('subCategory'),
+          ));
+        }
+        _trendingProducts = loadedProducts;
+        notifyListeners();
       }
-      _trendingProducts = loadedProducts;
-      notifyListeners();
+    } catch (error) {
+      throw error;
     }
   }
 
   Future<void> getRecommendProduct() async {
-    const url = 'http://wwvo3d7kkogq.leanapp.cn/';
-    final response = await http.get(url + 'rec/$uId');
-    if (json.decode(response.body)['response'] != null &&
-        json.decode(response.body)['response'] == 'NO RECOMMEND ITEM') {
-      _recommendProducts = _trendingProducts;
-      notifyListeners();
-      return;
-    }
+    try {
+      const url = 'http://wwvo3d7kkogq.leanapp.cn/';
+      final response = await http.get(url + 'rec/$uId');
+      if (json.decode(response.body)['response'] != null &&
+          json.decode(response.body)['response'] == 'NO RECOMMEND ITEM') {
+        _recommendProducts = _trendingProducts;
+        notifyListeners();
+        return;
+      }
 
-    List<dynamic> responsedData =
-        json.decode(response.body)['products'] as List<dynamic>;
-    List<Product> loadedProduct = [];
-    responsedData.forEach((prod) {
-      Map<String, dynamic> p = json.decode(prod) as Map<String, dynamic>;
-      loadedProduct.add(Product(
-        id: p['objectId'],
-        title: p['title'],
-        description: p['description'],
-        price: p['price'],
-        imageUrl: p['imageUrl'],
-        createBy: p['createBy'],
-        rating: double.parse(p['rating'].toString()),
-        numOfRating: double.parse(p['numOfRating'].toString()),
-        pId: p['pId'].toString(),
-        mainCategory: p['mainCategory'],
-        subCategory: p['subCategory'],
-      ));
-    });
-    _recommendProducts = loadedProduct;
-    notifyListeners();
+      List<dynamic> responsedData =
+          json.decode(response.body)['products'] as List<dynamic>;
+      List<Product> loadedProduct = [];
+      responsedData.forEach((prod) {
+        Map<String, dynamic> p = json.decode(prod) as Map<String, dynamic>;
+        loadedProduct.add(Product(
+          id: p['objectId'],
+          title: p['title'],
+          description: p['description'],
+          price: p['price'],
+          imageUrl: p['imageUrl'],
+          createBy: p['createBy'],
+          rating: double.parse(p['rating'].toString()),
+          numOfRating: double.parse(p['numOfRating'].toString()),
+          pId: p['pId'].toString(),
+          mainCategory: p['mainCategory'],
+          subCategory: p['subCategory'],
+        ));
+      });
+      _recommendProducts = loadedProduct;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 
   Future<Product> getProductById(String id) async {
-    AVQuery query = AVQuery('Product');
-    var response = await query.whereEqualTo('pId', int.parse(id)).find();
-    List<AVObject> products = response.toList();
-    return Product(
-      id: products[0].get('objectId'),
-      title: products[0].get('title'),
-      description: products[0].get('description'),
-      price: products[0].get('price'),
-      imageUrl: products[0].get('imageUrl'),
-      createBy: products[0].get('createBy'),
-      rating: double.parse(products[0].get('rating').toString()),
-      numOfRating: double.parse(products[0].get('numOfRating').toString()),
-      pId: products[0].get('pId').toString(),
-      mainCategory: products[0].get('mainCategory'),
-      subCategory: products[0].get('subCategory'),
-    );
+    try {
+      AVQuery query = AVQuery('Product');
+      var response = await query.whereEqualTo('pId', int.parse(id)).find();
+      List<AVObject> products = response.toList();
+      return Product(
+        id: products[0].get('objectId'),
+        title: products[0].get('title'),
+        description: products[0].get('description'),
+        price: products[0].get('price'),
+        imageUrl: products[0].get('imageUrl'),
+        createBy: products[0].get('createBy'),
+        rating: double.parse(products[0].get('rating').toString()),
+        numOfRating: double.parse(products[0].get('numOfRating').toString()),
+        pId: products[0].get('pId').toString(),
+        mainCategory: products[0].get('mainCategory'),
+        subCategory: products[0].get('subCategory'),
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 }
