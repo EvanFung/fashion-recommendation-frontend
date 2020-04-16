@@ -97,9 +97,10 @@ class ReplyCommentPage extends StatelessWidget {
                     // print(snapshot.data);
 
                     List<Comment> comments = snapshot.data;
+                    print(comments);
                     List<Widget> reviews = comments
-                        .map((comment) =>
-                            _buildReplyComment(context, comment, product))
+                        .map((comment) => _buildReplyComment(
+                            context, comment, product, commentType))
                         .toList();
                     return Column(
                       children: reviews,
@@ -121,6 +122,7 @@ class ReplyCommentPage extends StatelessWidget {
     BuildContext context,
     Comment comment,
     Product product,
+    String type,
   ) {
     return Column(
       children: <Widget>[
@@ -167,7 +169,11 @@ class ReplyCommentPage extends StatelessWidget {
                 onPressed: () {
                   print('with parent is press....');
                   Navigator.of(context).pushNamed(ReplyCommentPage.routeName,
-                      arguments: {'product': product, 'comment': comment});
+                      arguments: {
+                        'product': product,
+                        'comment': comment,
+                        'type': type
+                      });
                 },
               ),
             ],
